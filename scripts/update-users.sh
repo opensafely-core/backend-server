@@ -16,7 +16,7 @@ add_user() {
         echo "User $user already exists"
     else
         echo "Adding user $user"
-        useradd "$user"
+        useradd "$user" --create-home --shell /bin/bash
     fi
 
     for group in $groups; do
