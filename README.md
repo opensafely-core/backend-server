@@ -24,15 +24,19 @@ on that backend.
 
 Directory layout:
 
-./scripts 	    - various bash scripts to perform specific actions, designed to
-            	  be idempotent
-./tpp     	    - scripts for tpp backend
-./emis    	    - scripts for emis backend
-./keys/$USER 	- public keys to add to ssh for $USER
-developers      - developers gh account list. To be replaced by
-	              authenticated API call to job-server later, perhaps.
-
-./tests         - test scripts
+* ./scripts
+  * various bash scripts to perform specific actions, designed to be idempotent
+* ./tpp
+  * scripts for tpp backend
+* ./emis
+  * scripts for emis backend
+* /keys/$USER
+  * public keys to add to ssh for $USER
+* ./developers
+  * developers gh account list. To be replaced by authenticated API call to
+    job-server later, perhaps.
+* ./tests
+  * test scripts, run in docker container by makefile
 
 ## Testing
 
