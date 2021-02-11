@@ -1,0 +1,11 @@
+# security
+unattended-upgrades
+# core dependencies
+docker.io
+ssh-import-id
+# debug tools
+tree
+silversearcher-ag
+sysstat
+iotop
+tcpdump
