@@ -28,4 +28,4 @@ test: $(TESTS)
 
 .PHONY: $(TESTS)
 $(TESTS): .test-image
-	cat $@ | docker run -i --rm -e SHELLOPTS=xtrace -e RATELIMITED=$(RATELIMITED) -v $$PWD:/tests -w /tests $(TEST_IMAGE) bash -euo pipefail
+	tests/run $@

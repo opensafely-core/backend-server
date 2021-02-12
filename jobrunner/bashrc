@@ -1,0 +1,15 @@
+set -a
+# shellcheck disable=SC1090
+. /srv/jobrunner/environ/*.env
+set +a
+cat << EOF
+You have logged into the shared jobrunner account for managing the jobrunner services.
+
+Environment variables have been set from /etc/jobrunner/environ/*.env"
+
+The service lives at /srv/jobrunner.
+
+Please consult ~/playbook.md for operational documentation
+
+Thank you.
+EOF
