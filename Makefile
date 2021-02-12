@@ -3,6 +3,9 @@ TESTS ?= $(shell ls tests/*.sh)
 RATELIMITED ?= false
 TEST_IMAGE=backend-server-test
 
+# disable default rules
+.SUFFIXES:
+
 
 .PHONY: lint
 lint:
