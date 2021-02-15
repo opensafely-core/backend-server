@@ -17,9 +17,9 @@
 # We also pre-install our packages, so that tests run faster.
 FROM ubuntu:20.04
 
-ENV container docker
-ENV LC_ALL C
-ENV DEBIAN_FRONTEND noninteractive
+ENV container=docker
+ENV LC_ALL=C
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list
 
