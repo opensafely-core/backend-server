@@ -11,6 +11,8 @@
 #     make test-image
 #
 set -euo pipefail
+SCRIPT=$1
+LOG=$SCRIPT.log
 TEST_IMAGE=backend-server-test
 DEBUG=${DEBUG:-}
 
@@ -23,12 +25,27 @@ CONTAINER="$(
 
 trap 'docker rm -f $CONTAINER >/dev/null' EXIT
 
-test -n "$DEBUG" && set +e  # DEBUG mode: do not exit if the test errors
-
 # run test script
-docker exec -i -e SHELLOPTS=xtrace -e TEST=true -w /tests "$CONTAINER" "$@"
+set +e # we handle the error manually
+echo -n "Running $1 in container..."
+docker exec -i -e SHELLOPTS=xtrace -e TEST=true -w /tests "$CONTAINER" "$SCRIPT" > "$LOG" 2>&1
+success=$?
+
+set -e
+if test $success -eq 0; then
+    echo "SUCCESS"
+else
+    echo "FAILED - output logged to $LOG"
+    echo "### $1 ###"
+    echo "..."
+    tail -10 "$LOG"
+    echo "### $1 ###"
+fi
 
 if test -n "$DEBUG"; then
+    cat "$LOG"
     echo "Running bash inside container (container will be deleted on exit)"
     docker exec -it -e TEST=true -w /tests "$CONTAINER" bash
+else
+    exit $success
 fi

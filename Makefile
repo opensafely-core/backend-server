@@ -19,7 +19,7 @@ lint:
 
 # fetch and cache gh keys for users, so we can avoid ratelimits when testing locally
 .ssh-key-cache: .gh-users
-	mkdir -p .ssh-key-cache
+	mkdir -p $@
 	for u in $$(cat .gh-users); do ssh-import-id gh:$$u -o $@/$$u; done
 
 
