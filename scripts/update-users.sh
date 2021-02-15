@@ -43,14 +43,20 @@ add_group() {
     done < "$file"
 }
 
-# developers is mandatory
-add_group "$developers" developers researchers reviewers
+# developers is mandatory. They get docker and sudo access
+add_group "$developers" developers researchers reviewers docker sudo
 
-# other groups depend on backend
+# Note: the following groups are optional, depends on how the users will
+# authenticate with the specific backend
+
+# optional researchers (level 3) group. They got docker to be able manually run stuff if needed.
 if test -f "$researchers"; then
-    add_group "$researchers" researchers reviewers
+    add_group "$researchers" researchers reviewers docker
 fi
 
+# optional reviewers (level 4) group. Minimial permissions. Long term goal is
+# no local accounts needed for this group, but early EMIS backend set up
+# requires them.
 if test -f "$reviewers"; then
     add_group "$reviewers" reviewers
 fi

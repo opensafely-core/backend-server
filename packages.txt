@@ -4,8 +4,9 @@ unattended-upgrades
 docker.io
 ssh-import-id
 # debug tools
+vim
 tree
 silversearcher-ag
-sysstat
+#temp disabled sysstat
 iotop
 tcpdump

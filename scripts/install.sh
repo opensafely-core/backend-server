@@ -15,3 +15,5 @@ for group in developers researchers reviewers; do
         groupadd $group
     fi
 done
+
+cp etc/developers-sudo-access /etc/sudoers.d
