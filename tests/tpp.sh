@@ -1,7 +1,7 @@
 #!/bin/bash
-./tpp/manage.sh
+./tpp-backend/manage.sh
 # run again to check for idempotency
-./tpp/manage.sh
+./tpp-backend/manage.sh
 
 # Some assertions
 set -e

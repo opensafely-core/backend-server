@@ -17,7 +17,7 @@ differences, but they are unavoidable.
 
 To manage a backend run the script BACKEND/manage.sh as root. e.g.:
 
-    sudo ./tpp/manage.sh
+    sudo ./tpp-backend/manage.sh
 
 This will ensure the right packages, users, groups and configuration is set up
 on that backend. 
@@ -26,17 +26,23 @@ Directory layout:
 
 * ./scripts
   * various bash scripts to perform specific actions, designed to be idempotent
-* ./tpp
-  * scripts for tpp backend
-* ./emis
-  * scripts for emis backend
-* /keys/$USER
+* ./etc
+  * system configuration files/templates
+* ./tpp-backend
+  * scripts and config for tpp backend
+* ./emis-backend
+  * scripts for config for emis backend
+* ./keys/$USER
   * public keys to add to ssh for $USER
 * ./developers
   * developers gh account list. To be replaced by authenticated API call to
     job-server later, perhaps.
 * ./tests
   * test scripts, run in docker container by makefile
+* ./run-in-docker.sh
+  * runner for above tests. Uses docker to emulate a VM to run scripts on.
+* ./run-in-vm.sh
+  * helper for running the scripts inside an actual vm for manual debugging/testing
 
 ## Testing
 
@@ -48,10 +54,19 @@ To run specific tests (tab completes)
 
     make tests/$TEST
 
-Note: if you see tests failing because of github ratelimits, then:
+If you specify DEBUG=1, then you will be dropped into a shell inside the docker
+container after the tests has run.
 
-    export RATELIMITED=true
-    make test
+To to create and run a specific backend, you can do:
+
+    make tpp-backend
+
+or
+
+    make emis-backend
+
+These will setup a VM with that backend both drop you into a shell. The VM will
+be destroyed when you exit the shell.
 
 
 ## Base assumptions

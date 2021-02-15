@@ -1,5 +1,8 @@
 #!/bin/bash
-./emis/manage.sh
+./emis-backend/manage.sh
 #run again to check for idempotency
-./emis/manage.sh
+./emis-backend/manage.sh
 
+# Some assertions
+set -e
+grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
