@@ -7,7 +7,7 @@ BACKEND=$1
 # for directories
 umask 027
 
-# ensure shared sysytem user is set up properly
+# ensure shared user is set up properly
 id -u jobrunner >/dev/null 2>&1 || useradd jobrunner --create-home --shell /bin/bash -G docker
 
 DIR=/srv/jobrunner
