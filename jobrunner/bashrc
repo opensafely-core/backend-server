@@ -1,0 +1,21 @@
+# load config into this shell so we can just run stuff
+set -a
+# shellcheck disable=SC1090
+. /srv/jobrunner/environ/*.env
+set +a
+cat << EOF
+You have logged into the shared jobrunner account for managing the jobrunner service.
+
+Current status:
+
+$(systemctl status -n0 jobrunner)
+
+Environment variables have been set from /srv/jobrunner/environ/*.env"
+Code is at /srv/jobrunner/code
+Dependencies are at /srv/jobrunner/lib
+
+Medium privacy files are at $MEDIUM_PRIVACY_STORAGE_BASE
+High privacy files are at $HIGH_PRIVACY_STORAGE_BASE
+
+Please consult ~/playbook.md for operational documentation.
+EOF

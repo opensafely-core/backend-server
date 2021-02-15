@@ -1,5 +1,5 @@
 #!/bin/bash
-./emis/manage.sh
+./emis-backend/manage.sh
 #run again to check for idempotency
-./emis/manage.sh
+./emis-backend/manage.sh
 

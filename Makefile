@@ -1,4 +1,5 @@
 TESTS ?= $(shell ls tests/*.sh)
+BACKENDS=tpp-backend emis-backend
 TEST_IMAGE=backend-server-test
 CACHE_DIR=.ssh-key-cache
 export TEST=true
@@ -43,6 +44,13 @@ test: $(TESTS)
 .PHONY: $(TESTS)
 $(TESTS): .test-image $(CACHE_DIR)/updated
 	./run-in-docker.sh $@
+
+
+# create a backend and drop you into a shell on it
+.PHONY: $(BACKENDS)
+$(BACKENDS): export VMNAME=$@
+$(BACKENDS): $(CACHE_DIR)/updated
+	./run-in-vm.sh $@/manage.sh
 
 
 clean:

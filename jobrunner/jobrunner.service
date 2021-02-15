@@ -1,0 +1,20 @@
+[Unit]
+Description=OpenSAFELY Jobrunner
+Documentation=https://github.com/opensafely-core/job-runner
+
+[Service]
+Environment=PYTHONPATH=/srv/jobrunner/lib
+EnvironmentFile=/srv/jobrunner/environ/01_defaults.env
+EnvironmentFile=/srv/jobrunner/environ/02_secrets.env
+EnvironmentFile=/srv/jobrunner/environ/03_backend.env
+EnvironmentFile=/srv/jobrunner/environ/04_local.env
+WorkingDirectory=/srv/jobrunner/code
+#ExecStartPre=TODO
+ExecStart=/usr/bin/python3 -m jobrunner.service
+ExecStop=/bin/kill -INT ${MAINPID}
+User=jobrunner
+Group=jobrunner
+
+
+[Install]
+WantedBy=multi-user.target
