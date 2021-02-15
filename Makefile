@@ -1,5 +1,6 @@
 TESTS ?= $(shell ls tests/*.sh)
 TEST_IMAGE=backend-server-test
+CACHE_DIR=.ssh-key-cache
 export TEST=true
 
 
@@ -16,11 +17,11 @@ lint:
 .gh-users: developers */researchers */reviewers
 	cat $^ | sort | uniq | grep -v '^#' > $@
 
-
 # fetch and cache gh keys for users, so we can avoid ratelimits when testing locally
-.ssh-key-cache: .gh-users
-	mkdir -p $@
-	for u in $$(cat .gh-users); do ssh-import-id gh:$$u -o $@/$$u; done
+$(CACHE_DIR)/updated: .gh-users 
+	mkdir -p $(CACHE_DIR)
+	for u in $$(cat .gh-users); do ssh-import-id gh:$$u -o $(CACHE_DIR)/$$u; done
+	touch $@
 
 
 # proxy file to track image needing to be rebuilt
@@ -40,7 +41,7 @@ test: $(TESTS)
 
 # run specific test
 .PHONY: $(TESTS)
-$(TESTS): .test-image | .ssh-key-cache
+$(TESTS): .test-image $(CACHE_DIR)/updated
 	./run-in-docker.sh $@
 
 
