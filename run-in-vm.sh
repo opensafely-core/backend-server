@@ -1,35 +1,30 @@
 #!/bin/bash
 set -euo pipefail
 name=${VMNAME:-backend-server}
-
-# TODO use multipass instead for x-platform support? 
+test -x "$(command -v multipass)" || { echo "You need multipass installed to run this script: https://multipass.run"; exit 1; }
 
 delete() {
     echo "Removing $name..."
-    lxc delete -f "$name" >/dev/null 2>&1 &
+    multipass delete --purge "$name" >/dev/null 2>&1 || true &
 }
 
 
 # always start clean
-lxc delete -f "$name" 2>/dev/null || true
+multipass delete --purge "$name" 2>/dev/null || true
 
-# launch temporary container, and map current $USER uid to root on the container
-lxc launch --ephemeral ubuntu:20.04 -c raw.idmap="both $(id -u) 0" "$name"
+multipass launch 20.04 --name "$name"
 trap delete EXIT
 
-# add this directory in host as /host
-lxc config device add "$name" cwd disk source="$PWD" path=/host
-
-# allow docker to run inside container
-lxc config set "$name" security.nesting true
+# add this directory in VM as /host, with current user mapped to root
+multipass mount "$PWD" "$name:/host" --uid-map "$(id -u):0"
 
 # wait for first boot to finish
-lxc exec "$name" -- cloud-init status --wait || true
+#multipass exec "$name" -- cloud-init status --wait || true
 
 # run our command
-lxc exec "$name" --cwd /host --env TEST=true --env SHELLOPTS=xtrace -- "$@"
+multipass exec "$name"  -- sudo /usr/bin/env --chdir /host TEST=true SHELLOPTS=xtrace "$@"
 
 echo "Running shell inside VM (will be deleted on exit)"
-lxc exec --cwd /host --env TEST=true "$name" -- bash
+multipass exec "$name"  -- sudo /usr/bin/env --chdir /host TEST=true SHELLOPTS=xtrace bash
 
 
