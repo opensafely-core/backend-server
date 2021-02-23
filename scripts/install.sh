@@ -4,9 +4,12 @@ set -euo pipefail
 
 # packages
 export DEBIAN_FRONTEND="noninteractive"
+# running this set -u sometimes causes issues with packaging scripts, it seems
+set +u
 apt-get update
 apt-get upgrade -y
 sed 's/^#.*//' packages.txt | xargs apt-get install -y
+set -u
 
 # ensure groups
 for group in developers researchers reviewers; do

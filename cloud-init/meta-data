@@ -1,0 +1,3 @@
+#cloud-config
+instance-id: opensafely-tpp
+local-hostname: opensafely-tpp
