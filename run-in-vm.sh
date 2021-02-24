@@ -15,7 +15,7 @@ multipass delete --purge "$name" 2>/dev/null || true
 multipass launch 20.04 --name "$name"
 test -z "${KEEP:-}" && trap delete EXIT
 
-# add this directory in VM as /host, with current user mapped to root
+# add this directory in VM as /host
 multipass mount "$PWD" "$name:/host" 
 
 # wait for first boot to finish

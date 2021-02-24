@@ -1,9 +1,11 @@
 #!/bin/bash
 # This script is meant to be run in git-bash on Windows, and builds a hyper-v image
 # You probably want an ssh-agent set up to run it.
-# It's a bit awkward and manual in places, as windows is both.
+# It is not fully automated, as Windows has no easy equivalent of sudo, and the
+# final commands require running as Administrator. So, we launch an
+# Administrator powershell and print some commands for you to copy/paste into
+# it.
 #
-# It has a much higher four-letter-words-per-line ratio
 #
 set -euo pipefail
 name=opensafely-tpp
@@ -12,19 +14,34 @@ sshuser=${1:-bloodearnest}
 # path to export image to
 path=${2:-D:\\}
 
-# Create a new Gen 1 Ubuntu Hyper-v instance
-# This is booted by multipass with default cloud-init config
-# Ideally, we'd to this ourselves, and create a Gen 2 Hyper-V rather than Gen
-# 1, but the benefits were not worth the cost.
+# Use multipass to create a base Ubuntu Server Hyper-v instance.
+#
+# Note: this is a Gen 1 instance, as that's what multipass creates.
+# Ideally, we use a Gen 2 instance simply to be more up to date, but there's no
+# compelling benefits for our use case. Gen 1 supports up to 64 cors and 1TB of
+# RAM, which is enough for current hardware.
+#
+# More information on the differences here:
+# https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v#whats-the-difference-in-device-support
+# 
+# Note: the defaults are 1 cpu, 1G ram, and 5G disk
 multipass info $name || multipass launch 20.04 --name $name
 
-# Udate and install hyper-v specific stuff kernel and services
+# Udpate and install the virtual kernel flavour, which has  hyper-v specific
+# kernel modules and services. 
+# Note: HWE version is important for a more recent kernel, which has better
+# Hyper-V guest support.
 multipass exec $name -- sudo apt-get update
 multipass exec $name -- sudo apt-get upgrade -y
 multipass exec $name -- sudo apt-get install -y linux-virtual-hwe-20.04 linux-tools-virtual-hwe-20.04 linux-cloud-tools-virtual-hwe-20.04
-# Make sure it boots. Note: the reboot is important, as the installed hv-* services
-# will not come up properly without it, which can mean our image does not boot
-# down the line.
+
+# Make sure it boots, which is important, as the installed hyper-v integration
+# services will not come up properly without it, which can mean our image does
+# not boot down the line.
+#
+# More information about integration services here:
+# https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/integration-services
+#
 multipass restart $name
 
 # Note: multipass mount is hella weird, so we just copy.
@@ -36,7 +53,7 @@ multipass transfer "$tarball" "$name://tmp/current.tar"
 multipass exec $name -- sudo mkdir -p //tmp/config
 multipass exec $name -- sudo tar xvf //tmp/current.tar -C //tmp/config
 
-# save this for later
+# grab the address for ssh later on
 vmaddress="$(multipass exec $name -- hostname -I)"
 echo "IP: $vmaddress"
 
@@ -50,8 +67,8 @@ multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./tpp-bac
 
 
 # We do not want the default ubuntu user. But as multipass relies on it, we can
-# not delete it via multipass exec.  Instead we ssh in with a known good user (who's
-# a different user in order to delete it
+# not delete it via multipass exec.  Instead we ssh in with a different known
+# good user
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$sshuser@$vmaddress" -- sudo pkill -u ubuntu
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$sshuser@$vmaddress" -- sudo userdel --remove ubuntu
 
