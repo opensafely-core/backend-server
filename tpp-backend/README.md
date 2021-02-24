@@ -47,7 +47,7 @@ repository. Once this is merged, you should be able to log in to the backend VM.
  - The backend runs in a Hyper-V VM on the host.
  - login to host is via authenticated firewall and RDP, accounts managed by
    TPP.
- - outgoing internet is restrictied to https to our our cloudflare IPs,
+ - outgoing internet is restricted to https to our our cloudflare IPs,
    and https and ssh to github.com
  - TPP maintain a one-way push of medium privacy output files to the
    Level 4 server.
