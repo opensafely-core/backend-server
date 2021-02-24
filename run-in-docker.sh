@@ -37,8 +37,12 @@ if test $success -eq 0; then
 else
     echo "FAILED - output logged to $LOG"
     echo "### $1 ###"
-    echo "..."
-    tail -10 "$LOG"
+    if test -x "${CI:-}"; then
+        echo "..."
+        tail -20 "$LOG"
+    else
+        cat "$LOG"
+    fi
     echo "### $1 ###"
 fi
 

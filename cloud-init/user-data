@@ -1,0 +1,9 @@
+#cloud-config
+# having an explict user specified disables the default ubuntu user
+# we may end up enabling this user for Hyper-V console login later.
+users:
+  - name: opensafely
+    shell: /bin/bash
+    lock_passwd: true
+# ensure we have the hostname in /etc/hosts
+manage_etc_hosts: true

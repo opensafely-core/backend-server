@@ -105,28 +105,7 @@ reviewers: read/write access to medium privacy files. level 4.
 Note: Long-term, reviewers will not have local accounts, but instead review via a webapp.
 
 
-## TPP 
+## Specific Backend Details
 
-The TPP environment:
-
- - The backend runs in a Hyper-V VM on a Windows host
- - behind an authenticated firewall
- - user access is managed by TPP at the windows host level
- - seperate level 4 server for level 4 access - files are currently
-   copied across, and redaction happens there.
-
-Implications:
-
- - developers need an SSH key on the windows host to log in to the
-   backend server (RDP doesn't do agent forwarding!)
- - backend needs to write files to host files system for sync to level 4
-   server, which requires an SMB mount in the backend.
-
-
-# EMIS
-
-EMIS is an ubuntu VM on AWS, and we have root access. So is simpler in
-many ways to TPP. But we need to add a basic level 4 redaction process:
-
- - Give level 4 users local accounts with passwords.
- - allow RDP login to those accounts.
+ - [TPP](tpp-backend/README.md)
+ - [EMIS](emis-backend/README.md)
