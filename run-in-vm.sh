@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x -euo pipefail
 name=${VMNAME:-backend-server}
-test -x "$(command -v multipass)" || { echo "You need multipass installed to run this script: https:/multipass.run"; exit 1; }
+test -x "$(command -v multipass)" || { echo "You need multipass installed to run this script: https://multipass.run"; exit 1; }
 
 delete() {
     echo "Removing $name..."
