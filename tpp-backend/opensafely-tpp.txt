@@ -1,0 +1,33 @@
+This file contains information about the OpenSAFELY Hyper-V Ubuntu VM image.
+
+ * Image is based on the published Ubuntu Server 20.04 cloud image.
+ * The sample VM resources are minimal: 1CPU, 1G RAM, 5G disk, we expect these
+   to be increased to match the current Docker VM resources when we switch
+   over.
+ * Configured to download and install security updates daily (will not reboot
+   automatically).
+ * Only service running is SSH on port 22
+    - No host ssh keys are included in the image
+    - On first boot, fresh random keys will be generated.
+ * It has various user accounts and groups set up for the OpenSAFELY team.
+    - Access to these is via SSH
+    - Per-user public SSH keys already configured
+    - Accounts have no passwords set, and password login is disabled
+    - Accounts in the developers group have passwordless sudo access
+    - Users will ssh in from git-bash on the Level 3 server, with local SSH keys.
+ * There are no secrets or passwords included in the image
+ * The OpenSAFELY job-runner service is installed
+   - it is not fully configured, as that needs secret information that must be
+     supplied post import.
+   - it does not listen on any ports, just polls jobs.opensafely.org for new
+     jobs.
+
+
+Network access:
+
+ - Port 22 exposed to VM Host, but not externally.
+ - egress to github.com, *.opensafely.org, as currently for host.
+ - New egress needed:
+    - archive.ubuntu.com: 91.189.88.142, 91.189.88.152
+    - security.ubuntu.com: 91.189.88.142, 91.189.88.152, 91.189.91.39, 91.189.91.38
+
