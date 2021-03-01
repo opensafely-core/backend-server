@@ -56,8 +56,9 @@ test -f "$local_env" || echo "# add local overrides here" > "$local_env"
 # load config
 set -a
 # shellcheck disable=SC1090
-for f in $DIR/environ/*.env; do
-    . $f
+for f in "$DIR"/environ/*.env; do
+    # shellcheck disable=1090
+    . "$f"
 done
 set +a;
 

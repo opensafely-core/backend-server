@@ -6,7 +6,8 @@ set -euo pipefail
 ./scripts/jobrunner.sh emis-backend
 
 for f in /srv/jobrunner/environ/*.env; do
-    . $f
+    # shellcheck disable=SC1090
+    . "$f"
 done
 
 
