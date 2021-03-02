@@ -18,6 +18,7 @@ test -d $DIR/lib || git clone https://github.com/opensafely-core/job-runner-depe
 
 
 # service configuration
+mkdir -p $DIR/secret
 mkdir -p $DIR/environ
 defaults_env="$DIR/environ/01_defaults.env"
 secrets_env="$DIR/environ/02_secrets.env"
@@ -48,8 +49,6 @@ copy_with_warning "$BACKEND/backend.env" "$backend_env"
 # TODO: test for new secrets in template not in env?
 test -f $secrets_env || cp jobrunner/secrets-template.env $secrets_env
 
-# ensure readonly permissions on the secrets
-chmod 600 $secrets_env
 
 # just make sure local env exists
 test -f "$local_env" || echo "# add local overrides here" > "$local_env"
@@ -57,7 +56,9 @@ test -f "$local_env" || echo "# add local overrides here" > "$local_env"
 # load config
 set -a
 # shellcheck disable=SC1090
-. $DIR/environ/*.env
+for f in $DIR/environ/*.env; do
+    . $f
+done
 set +a;
 
 # setup output directorys
@@ -69,6 +70,15 @@ done
 chown -R jobrunner:researchers "$HIGH_PRIVACY_STORAGE_BASE"
 chown -R jobrunner:reviewers "$MEDIUM_PRIVACY_STORAGE_BASE"
 
+# check for EMIS certificates existing
+if test -n "${PFX_PATH:-}"; then
+    test -e "$PFX_PATH" || echo "WARNING: $PFX_PATH does not exist";
+fi
+
+if test -n "${PFX_PASSWORD_PATH:-}"; then
+    test -e "$PFX_PASSWORD_PATH" || echo "WARNING: $PFX_PASSWORD_PATH does not exist";
+fi
+    
 # set up some nice helpers for when we su into the shared jobrunner user
 cp jobrunner/bashrc $DIR/bashrc
 chmod 644 $DIR/bashrc
@@ -80,6 +90,9 @@ test -f "$playbook" && ln -sf "$playbook" ~jobrunner/playbook.md
 
 # ensure file ownership and permissions
 chown -R jobrunner:jobrunner /srv/jobrunner
+chmod 0600 $secrets_env
+chmod 0700 $DIR/secret
+find $DIR/secret -type f -exec chmod 0600 {} \;
 
 # set up systemd service
 # Note: do this *after* permissions have been set on the /srv/jobrunner properly
