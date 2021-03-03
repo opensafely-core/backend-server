@@ -19,7 +19,7 @@ if test -f "$cache" -a -n "${TEST}"; then
     cat "$cache" >> "$tmp"
 else
     # add current gh keys into $tmp
-    ssh-import-id "gh:$user" --output "$tmp"
+    curl -s "https://github.com/$user.keys" >> "$tmp"
 fi
 
 # replace current authorized_keys

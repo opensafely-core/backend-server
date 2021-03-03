@@ -1,7 +1,10 @@
+#!/bin/bash
 # load config into this shell so we can just run stuff
 set -a
 # shellcheck disable=SC1090
-. /srv/jobrunner/environ/*.env
+for f in /srv/jobrunner/environ/*.env; do
+    . "$f"
+done
 set +a
 cat << EOF
 You have logged into the shared jobrunner account for managing the jobrunner service.
