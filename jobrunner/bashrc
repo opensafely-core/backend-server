@@ -1,8 +1,9 @@
+#!/bin/bash
 # load config into this shell so we can just run stuff
 set -a
 # shellcheck disable=SC1090
 for f in /srv/jobrunner/environ/*.env; do
-    . $f
+    . "$f"
 done
 set +a
 cat << EOF
