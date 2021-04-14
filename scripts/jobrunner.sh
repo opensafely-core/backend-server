@@ -77,8 +77,9 @@ chmod 644 $DIR/bashrc
 test -f ~jobrunner/.bashrc || touch ~jobrunner/.bashrc
 grep -q "jobrunner/bashrc" ~jobrunner/.bashrc || echo 'test -f /srv/jobrunner/bashrc && . /srv/jobrunner/bashrc' >> ~jobrunner/.bashrc
 
-playbook="$DIR/code/playbooks/${BACKEND}.md"
-test -f "$playbook" && ln -sf "$playbook" ~jobrunner/playbook.md
+# update playbook
+cp jobrunner/playbook.md /srv/playbook.md
+ln -sf "/srv/playbook.md" ~jobrunner/playbook.md
 
 # ensure file ownership and permissions
 chown -R jobrunner:jobrunner /srv/jobrunner
