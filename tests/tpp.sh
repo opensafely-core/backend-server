@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 ./tpp-backend/manage.sh
 # run again to check for idempotency
 ./tpp-backend/manage.sh

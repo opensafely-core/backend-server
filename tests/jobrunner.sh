@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 ./scripts/install.sh
 ./scripts/jobrunner.sh tpp-backend
 
