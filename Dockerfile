@@ -25,7 +25,7 @@ RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y ubuntu-server sudo
+    apt-get install -y ubuntu-server sudo python3 python3-pip python3-venv
 
 VOLUME [ "/sys/fs/cgroup" ]
 
