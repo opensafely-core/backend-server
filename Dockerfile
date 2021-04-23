@@ -25,8 +25,16 @@ RUN rm /etc/apt/apt.conf.d/docker-gzip-indexes
 
 # Make the docker image look like a regular ubuntu server. We could run
 # unminimize also, but it's just local documentation, so not worth it
-RUN apt-get update && apt install -y ubuntu-server ubuntu-standard ubuntu-minimal ubuntu-advantage-tools cloud-init openssh-server
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt install -y ubuntu-server ubuntu-standard ubuntu-minimal ubuntu-advantage-tools cloud-init openssh-server
+
+# Pre-purge the packages we want to purge for speed in tests
+COPY purge-packages.txt /tmp/purge-packages.txt
+RUN sed 's/^#.*//' /tmp/purge-packages.txt | xargs apt-get purge -y
 
 # Preinstall backend-server packages for speed when running tests
 COPY packages.txt /tmp/packages.txt
 RUN sed 's/^#.*//' /tmp/packages.txt | xargs apt-get install -y
+
+RUN apt-get autoremove -y

@@ -1,8 +1,8 @@
 # security
+gpg
 unattended-upgrades
 # core dependencies
 docker.io
-ssh-import-id
 python3-pip
 # debug tools
 vim
