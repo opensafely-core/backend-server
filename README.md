@@ -13,14 +13,17 @@ always having full administrative control of that environment, each
 backend is different in some way. We do try to minimise these
 differences, but they are unavoidable.
 
-## usage
+## Usage
 
-To manage a backend run the script BACKEND/manage.sh as root. e.g.:
+Check out the version of this repo you wish to use (typically main), and then run:
 
     sudo ./tpp-backend/manage.sh
 
-This will ensure the right packages, users, groups and configuration is set up
-on that backend. 
+This will ensure the right packages, users, groups is configured, and set up
+jobrunner and other services as needed.
+
+
+## Development
 
 Directory layout:
 
@@ -32,6 +35,12 @@ Directory layout:
   * scripts and config for tpp backend
 * ./emis-backend
   * scripts for config for emis backend
+* ./emis-access
+  * scripts for managing emis-access VM
+* ./jobrunner
+  * scripts and config templates for jobrunner
+* ./osrelease
+  * scripts and config templates for osrelease
 * ./keys/$USER
   * public keys to add to ssh for $USER
 * ./developers
