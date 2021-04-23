@@ -16,6 +16,12 @@ LOG=$SCRIPT.log
 TEST_IMAGE=backend-server-test
 DEBUG=${DEBUG:-}
 
+if test -n "$DEBUG"; then
+    LOG=/dev/stdout
+else
+    LOG=$SCRIPT.log
+fi
+
 # Launch a container running systemd
 CONTAINER="$(
     docker run -d --rm \
@@ -35,21 +41,22 @@ set -e
 if test $success -eq 0; then
     echo "SUCCESS"
 else
-    echo "FAILED - output logged to $LOG"
-    echo "### $1 ###"
-    if test -x "${CI:-}"; then
-        echo "..."
-        tail -20 "$LOG"
-    else
-        cat "$LOG"
+    echo "FAILED"
+    if test -f "$LOG"; then
+        echo "### $1 ###"
+        if test -x "${CI:-}"; then
+            echo "..."
+            tail -20 "$LOG"
+        else
+            cat "$LOG"
+        fi
+        echo "### $1 ###"
     fi
-    echo "### $1 ###"
 fi
 
 if test -n "$DEBUG"; then
-    cat "$LOG"
     echo "Running bash inside container (container will be deleted on exit)"
     docker exec -it -e TEST=true -w /tests "$CONTAINER" bash
-else
-    exit $success
 fi
+
+exit $success

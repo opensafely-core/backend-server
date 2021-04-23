@@ -2,37 +2,31 @@
 #
 # We are using docker as way to test scripts desinged to run inside a regular
 # ubuntu VM. We could user lxd or similar instead, but docker runs OOTB in GH
-# actions.So we install ubuntu-server on top of the ubuntu:20.04 image, and
-# this gets us much closer to a regular VM image.
+# actions and across all our developers laptops.
 #
-# Importantly, we run system as PID 1, like a regular VM. This allows our
-# scripts to install and run systemd services of their own.
+# So we use an ubuntu:20.04 docker image that has been modified to run systemd
+# as PID 1, like a regular VM. This allows our scripts to install and run
+# systemd services of their own. We also install a set of packages to convert
+# the minimal ubuntu docker image into a full ubuntu-server image.
 # 
-# Note: this means we need to run this image with some specific options:
+# Note: running systemd as PID 1 means we need to run this image with some
+# specific options:
 # 
 #   --cap-add SYS_ADMIN \
 #   --tmpfs /tmp --tmpfs /run --tmpfs /run/lock \
 #   -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 #
-# We also pre-install our packages, so that tests run faster.
-FROM ubuntu:20.04
+FROM jrei/systemd-ubuntu:20.04
 
-ENV container=docker
-ENV LC_ALL=C
-ENV DEBIAN_FRONTEND=noninteractive
+# This is docker image optimisation that breaks command-not-found, which breaks
+# apt-update when installed :headdesk:
+# https://bugs.launchpad.net/ubuntu/+source/command-not-found/+bug/1876034
+RUN rm /etc/apt/apt.conf.d/docker-gzip-indexes
 
-RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list
+# Make the docker image look like a regular ubuntu server. We could run
+# unminimize also, but it's just local documentation, so not worth it
+RUN apt-get update && apt install -y ubuntu-server ubuntu-standard ubuntu-minimal ubuntu-advantage-tools cloud-init openssh-server
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y ubuntu-server sudo python3 python3-pip python3-venv
-
-VOLUME [ "/sys/fs/cgroup" ]
-
-CMD ["/lib/systemd/systemd"]
-
-# preinstall our packages for speed when running tests
+# Preinstall backend-server packages for speed when running tests
 COPY packages.txt /tmp/packages.txt
-RUN sed 's/^#.*//' /tmp/packages.txt | xargs apt-get install -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN sed 's/^#.*//' /tmp/packages.txt | xargs apt-get install -y
