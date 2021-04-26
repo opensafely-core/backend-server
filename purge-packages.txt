@@ -1,0 +1,14 @@
+# List of packages to uninstall as just not needed and can reduce image size
+# a fair bit. We autoremove after removing these packages, which removes a lot
+# more packages.  
+# can not use apport
+apport
+# we don't need thunderbolt
+bolt
+# it is a VM - no firmware!
+fwupd-signed
+fwupd
+# can not use landscape
+landscape-common
+# can not access popcon
+popularity-contest
