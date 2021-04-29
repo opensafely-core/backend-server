@@ -1,0 +1,3 @@
+# 15min shell timeout, will close SSH connections.
+readonly TMOUT=900
+export TMOUT

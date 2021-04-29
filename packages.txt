@@ -1,6 +1,7 @@
 # security
 gpg
 unattended-upgrades
+libpam-pwquality
 # core dependencies
 docker.io
 python3-pip

@@ -22,4 +22,20 @@ for group in developers researchers reviewers; do
     fi
 done
 
-cp etc/developers-sudo-access /etc/sudoers.d
+
+# system configurations
+
+# disable broken-by-default rsync service
+systemctl disable rsync
+
+# copy our files
+cp -a --no-preserve ownership etc/opensafely /etc/
+chmod 0640 /etc/opensafely/*
+
+ln -sf /etc/opensafely/profile /etc/profile.d/opensafely.sh
+ln -sf /etc/opensafely/sudoers /etc/sudoers.d/opensafely
+ln -sf /etc/opensafely/ssh.conf /etc/ssh/sshd_config.d/99-opensafely.conf
+
+grep -q "^UMASK.*027" /etc/login.defs || sed -i 's/^UMASK.*$/UMASK 027/' /etc/login.defs
+
+systemctl reload ssh
