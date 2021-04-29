@@ -17,6 +17,10 @@ add_user() {
     else
         echo "Adding user $user"
         useradd "$user" --create-home --shell /bin/bash
+        # delete and expire their password, forcing reset on first ssh login
+        passwd -de "$user"
+        # ensure home not world readable
+        chmod -R o-rwx "/home/$user"
     fi
 
     for group in $groups; do

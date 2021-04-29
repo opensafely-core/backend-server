@@ -11,7 +11,7 @@ export TEST=true
 
 .PHONY: lint
 lint:
-	shellcheck */*.sh jobrunner/bashrc
+	shellcheck -x */*.sh jobrunner/bashrc
 
 
 # list of all github users mentioned in the repo

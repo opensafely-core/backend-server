@@ -15,6 +15,10 @@ SCRIPT=$1
 LOG=$SCRIPT.log
 TEST_IMAGE=backend-server-test
 DEBUG=${DEBUG:-}
+TRACE=${TRACE:-}
+DOCKER_SHELLOPTS=
+
+test -n "$TRACE" && DOCKER_SHELLOPTS=xtrace
 
 if test -n "$DEBUG"; then
     LOG=/dev/stdout
@@ -34,7 +38,7 @@ trap 'docker rm -f $CONTAINER >/dev/null' EXIT
 # run test script
 set +e # we handle the error manually
 echo -n "Running $1 in container..."
-docker exec -i -e SHELLOPTS=xtrace -e TEST=true -w /tests "$CONTAINER" "$SCRIPT" > "$LOG" 2>&1
+docker exec -i -e SHELLOPTS=${DOCKER_SHELLOPTS} -e TEST=true -w /tests "$CONTAINER" "$SCRIPT" > "$LOG" 2>&1
 success=$?
 
 set -e

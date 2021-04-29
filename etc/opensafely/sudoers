@@ -1,0 +1,10 @@
+# Limit forking long running processes
+Defaults use_pty
+
+# Log sudo acess
+Defaults logfile=/var/log/sudo.log
+
+# developers group has sudo access
+%developers  ALL=(ALL:ALL) ALL
+
+
