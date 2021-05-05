@@ -5,7 +5,7 @@ set -euo pipefail
 DIR=/srv/osrelease
 mkdir -p $DIR
 # ensure we have a checkout of output-publisher
-test -d $DIR/code || git clone https://github.com/opensafely-core/output-publisher $DIR/code
+test -d $DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/output-publisher $DIR/code
 mkdir -p $DIR/environ
 
 secrets_env="$DIR/environ/config.env"

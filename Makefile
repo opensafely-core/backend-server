@@ -29,6 +29,9 @@ $(CACHE_DIR)/updated: .gh-users
 .test-image: packages.txt Dockerfile
 	$(MAKE) test-image
 
+keys/testuser:
+	ssh-keygen -t ed25519 -N "" -C testuser -f keys/testuser.key
+	mv keys/testuser.key.pub keys/testuser
 
 .PHONY: test-image
 test-image:
@@ -42,11 +45,10 @@ test: $(TESTS)
 
 # run specific test
 .PHONY: $(TESTS)
-$(TESTS): .test-image $(CACHE_DIR)/updated
+$(TESTS): .test-image $(CACHE_DIR)/updated keys/testuser
 	./run-in-docker.sh $@
 
 
-# create a backend and drop you into a shell on it
 .PHONY: $(BACKENDS)
 $(BACKENDS): export VMNAME=$@
 $(BACKENDS): $(CACHE_DIR)/updated

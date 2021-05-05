@@ -9,11 +9,18 @@ set -euo pipefail
 
 . tests/utils
 
+# add test user that we know the key for
+./scripts/update-users.sh tests/testuser
+# set password so ssh does not bounce us
+echo 'testuser:10f9afsasva21d%' | chpasswd
+
 # test sshd config
 sshd -T > /tmp/ssh-config
 strip-comments etc/opensafely/ssh.conf | while read -r line; do
     assert "ssh: $line is set" grep -qi "$line" /tmp/ssh-config
 done
+# test can actually ssh
+assert "ssh: can log in" ssh "testuser@$(hostname -i)" -i keys/testuser.key -o StrictHostKeyChecking=no /bin/true
 
 # test /etc/profile
 (
