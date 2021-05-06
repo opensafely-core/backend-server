@@ -10,7 +10,7 @@ set -euo pipefail
 . tests/utils
 
 # add test user that we know the key for
-./scripts/update-users.sh tests/testuser
+./scripts/update-users.sh tests/developers
 # set password so ssh does not bounce us
 echo 'testuser:10f9afsasva21d%' | chpasswd
 
