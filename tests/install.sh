@@ -19,6 +19,10 @@ sshd -T > /tmp/ssh-config
 strip-comments etc/opensafely/ssh.conf | while read -r line; do
     assert "ssh: $line is set" grep -qi "$line" /tmp/ssh-config
 done
+
+# needed to be able to log in before fully booted in CI tests for some reason
+rm -f /run/nologin /etc/nologin
+
 # test can actually ssh
 assert "ssh: can log in" ssh "testuser@$(hostname -i)" -i keys/testuser.key -o StrictHostKeyChecking=no /bin/true
 
