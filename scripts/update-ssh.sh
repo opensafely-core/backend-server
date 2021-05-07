@@ -19,7 +19,10 @@ if test -f "$cache" -a -n "${TEST}"; then
     cat "$cache" >> "$tmp"
 else
     # add current gh keys into $tmp
-    curl -s "https://github.com/$user.keys" >> "$tmp"
+    # note: a quirk of the github ssh api here is that a non-existent user
+    # returns an empty 200 response. Which is handy here for using with test
+    # users
+    curl -s "https://github-proxy.opensafely.org/$user.keys" >> "$tmp"
 fi
 
 # replace current authorized_keys

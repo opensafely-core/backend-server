@@ -26,7 +26,7 @@ This file contains information about the OpenSAFELY Hyper-V Ubuntu VM image.
 Network access:
 
  - Port 22 exposed to VM Host, but not externally.
- - egress to github.com, *.opensafely.org, as currently for host.
+ - egress to *.opensafely.org, as currently for host.
  - New egress needed:
     - archive.ubuntu.com: 91.189.88.142, 91.189.88.152
     - security.ubuntu.com: 91.189.88.142, 91.189.88.152, 91.189.91.39, 91.189.91.38

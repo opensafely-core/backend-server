@@ -13,8 +13,8 @@ id -u jobrunner >/dev/null 2>&1 || useradd jobrunner --create-home --shell /bin/
 DIR=/srv/jobrunner
 mkdir -p $DIR
 # ensure we have a checkout of job-runner and dependencies
-test -d $DIR/code || git clone https://github.com/opensafely-core/job-runner $DIR/code
-test -d $DIR/lib || git clone https://github.com/opensafely-core/job-runner-dependencies $DIR/lib
+test -d $DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $DIR/code
+test -d $DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $DIR/lib
 
 
 # service configuration
