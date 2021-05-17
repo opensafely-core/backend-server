@@ -17,7 +17,7 @@ differences, but they are unavoidable.
 
 Check out the version of this repo you wish to use (typically main), and then run:
 
-    sudo ./tpp-backend/manage.sh
+    sudo ./YOUR_BACKEND/manage.sh
 
 This will ensure the right packages, users, groups is configured, and set up
 jobrunner and other services as needed.
