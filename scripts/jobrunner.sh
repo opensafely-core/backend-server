@@ -68,8 +68,8 @@ for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; d
     # only group read access, no world access
     find "$output_dir" -type f -exec chmod 640 {} +
 done
-chown -R jobrunner:researchers "$HIGH_PRIVACY_STORAGE_BASE"
-chown -R jobrunner:reviewers "$MEDIUM_PRIVACY_STORAGE_BASE"
+chown -R jobrunner:jobrunner "$HIGH_PRIVACY_STORAGE_BASE"
+chown -R jobrunner:jobrunner "$MEDIUM_PRIVACY_STORAGE_BASE"
 
 # set up some nice helpers for when we su into the shared jobrunner user
 cp jobrunner/bashrc $DIR/bashrc
