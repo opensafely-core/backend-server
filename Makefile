@@ -35,7 +35,7 @@ keys/testuser:
 
 .PHONY: test-image
 test-image:
-	docker build . -t $(TEST_IMAGE) && touch .test-image
+	docker build . $(ARGS) -t $(TEST_IMAGE) && touch .test-image
 
 
 # run all tests

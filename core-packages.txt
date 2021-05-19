@@ -1,0 +1,8 @@
+# these are the core dependencies need to run a backend
+docker.io
+python3
+python3-pip
+python3-distutils
+tzdata
+ca-certificates
+
