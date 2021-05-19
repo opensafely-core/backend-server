@@ -16,7 +16,6 @@ mkdir -p $DIR
 test -d $DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $DIR/code
 test -d $DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $DIR/lib
 
-
 # service configuration
 mkdir -p $DIR/secret
 mkdir -p $DIR/environ
@@ -62,7 +61,7 @@ for f in "$DIR"/environ/*.env; do
 done
 set +a;
 
-# setup output directorys
+# setup output directories
 for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; do
     mkdir -p "$output_dir"
     # only group read access, no world access
@@ -70,6 +69,14 @@ for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; d
 done
 chown -R jobrunner:jobrunner "$HIGH_PRIVACY_STORAGE_BASE"
 chown -R jobrunner:jobrunner "$MEDIUM_PRIVACY_STORAGE_BASE"
+
+# ensure docker images present
+# Note: does not update, as that is currently done manually
+
+for image in cohortextractor python jupyter r base-docker busybox; do
+    docker inspect "ghcr.io/opensafely-core/$image" > /dev/null 2>&1 || /srv/jobrunner/code/scripts/update-docker-image.sh "$image"
+done
+    
 
 # set up some nice helpers for when we su into the shared jobrunner user
 cp jobrunner/bashrc $DIR/bashrc
