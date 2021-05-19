@@ -1,6 +1,7 @@
 # NHSD Backend
 
-This is the configuration for the NSHD DAE hosted backend.
+This is the configuration for the NSHD Data Access Environment (DAE) hosted
+backend.
 
 This is different from other backends in that the system configuration, users
 and ssh keys are managed by NHSD. The mangage.sh script for this backend

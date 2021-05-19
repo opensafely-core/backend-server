@@ -21,8 +21,10 @@ The explicit list can be found in [core-packages.txt](core-packages.txt).
 The is currently a single service, `job-runner`, which is installed in /srv/jobrunner.
 A `jobrunner` user is created to run it, and appropriate systemd unit file is installed.
 
-This service does not listen on any port, but regularly polls out to the
-OpenSAFELY platform, for new jobs or publishing job status or results.
+This service does not listen on any port, but regularly initiates requests to the
+OpenSAFELY platform, to request new jobs and to publish job statuses.  It also
+downloads github repositories containing the jobs to execute and the Docker
+images used to run them, via the OpenSAFELY proxies (see below).
 
 
 ## Network Requirements
