@@ -34,6 +34,8 @@ COPY purge-packages.txt /tmp/purge-packages.txt
 RUN sed 's/^#.*//' /tmp/purge-packages.txt | xargs apt-get purge -y
 
 # Preinstall backend-server packages for speed when running tests
+COPY core-packages.txt /tmp/core-packages.txt
+RUN sed 's/^#.*//' /tmp/core-packages.txt | xargs apt-get install -y
 COPY packages.txt /tmp/packages.txt
 RUN sed 's/^#.*//' /tmp/packages.txt | xargs apt-get install -y
 

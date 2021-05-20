@@ -30,6 +30,7 @@ fi
 CONTAINER="$(
     docker run -d --rm \
                --cap-add SYS_ADMIN --tmpfs /tmp --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+               -v /var/run/docker.sock:/var/run/docker.sock \
                -v "$PWD:/tests" "$TEST_IMAGE"
 )"
 
