@@ -85,8 +85,11 @@ test -f ~jobrunner/.bashrc || touch ~jobrunner/.bashrc
 grep -q "jobrunner/bashrc" ~jobrunner/.bashrc || echo 'test -f /srv/jobrunner/bashrc && . /srv/jobrunner/bashrc' >> ~jobrunner/.bashrc
 
 # update playbook
-cp jobrunner/playbook.md /srv/playbook.md
-ln -sf "/srv/playbook.md" ~jobrunner/playbook.md
+cp jobrunner/playbook.md /srv/jobrunner/playbook.md
+ln -sf "/srv/jobrunner/playbook.md" ~jobrunner/playbook.md
+
+# clean up old playbook if present
+rm -rf /srv/playbook.md
 
 # ensure file ownership and permissions
 chown -R jobrunner:jobrunner /srv/jobrunner
