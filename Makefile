@@ -34,8 +34,9 @@ keys/testuser:
 	mv keys/testuser.key.pub keys/testuser
 
 .PHONY: test-image
+test-image: DOCKER_GID=$(shell awk -F: '/^docker/ {print $$3}' /etc/group)
 test-image:
-	docker build . $(ARGS) -t $(TEST_IMAGE) && touch .test-image
+	docker build . --no-cache -t $(TEST_IMAGE) --build-arg DOCKER_GID=$(DOCKER_GID) && touch .test-image
 
 
 # run all tests

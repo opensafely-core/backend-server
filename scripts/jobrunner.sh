@@ -9,6 +9,7 @@ umask 027
 
 # ensure shared user is set up properly
 id -u jobrunner >/dev/null 2>&1 || useradd jobrunner --create-home --shell /bin/bash -G docker
+usermod -a -G docker jobrunner
 
 DIR=/srv/jobrunner
 mkdir -p $DIR
