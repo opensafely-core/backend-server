@@ -41,7 +41,7 @@ RUN sed 's/^#.*//' /tmp/packages.txt | xargs apt-get install -y
 
 RUN apt-get autoremove -y
 
-# this allows use to avoid docker in docker
+# this allows us to avoid docker in docker
 # ensure docker gid inside container matches host docker gid
 ARG DOCKER_GID
 RUN groupmod -g $DOCKER_GID docker
