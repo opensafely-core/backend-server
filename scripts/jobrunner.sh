@@ -19,6 +19,7 @@ test -d $DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-cor
 # service configuration
 mkdir -p $DIR/secret
 mkdir -p $DIR/environ
+mkdir -p $DIR/bin
 defaults_env="$DIR/environ/01_defaults.env"
 secrets_env="$DIR/environ/02_secrets.env"
 backend_env="$DIR/environ/03_backend.env"
@@ -41,6 +42,7 @@ EOF
     cat "$src" >> "$dst"
 }
 
+cp jobrunner/bin/* /srv/jobrunner/bin/
 
 copy_with_warning jobrunner/defaults.env "$defaults_env"
 copy_with_warning "$BACKEND/backend.env" "$backend_env"
