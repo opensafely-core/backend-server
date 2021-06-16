@@ -89,7 +89,7 @@ cp jobrunner/playbook.md /srv/jobrunner/playbook.md
 ln -sf "/srv/jobrunner/playbook.md" ~jobrunner/playbook.md
 
 # clean up old playbook if present
-rm -rf /srv/playbook.md
+rm -f /srv/playbook.md
 
 # ensure file ownership and permissions
 chown -R jobrunner:jobrunner /srv/jobrunner
