@@ -1,7 +1,7 @@
 #!/bin/bash
 # Set up the job-runner service
 set -euo pipefail
-BACKEND=$1
+BACKEND_DIR=$1
 
 # set default file creation permission for this script be 640 for files and 750
 # for directories
@@ -46,7 +46,7 @@ EOF
 cp jobrunner/bin/* /srv/jobrunner/bin/
 
 copy_with_warning jobrunner/defaults.env "$defaults_env"
-copy_with_warning "$BACKEND/backend.env" "$backend_env"
+copy_with_warning "$BACKEND_DIR/backend.env" "$backend_env"
 
 # TODO: test for new secrets in template not in env?
 test -f $secrets_env || cp jobrunner/secrets-template.env $secrets_env
