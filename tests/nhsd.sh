@@ -5,3 +5,8 @@ set -euo pipefail
 ./nhsd-backend/manage.sh
 
 systemctl status jobrunner
+
+
+# check that jobrunner is running with jobrunner group
+test "$(systemctl show --property Group --value jobrunner)" = "jobrunner"
+

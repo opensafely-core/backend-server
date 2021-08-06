@@ -104,5 +104,8 @@ find $DIR/secret -type f -exec chmod 0600 {} \;
 # Note: do this *after* permissions have been set on the /srv/jobrunner properly
 cp jobrunner/jobrunner.service /etc/systemd/system/
 cp jobrunner/jobrunner.sudo /etc/sudoers.d/jobrunner
-systemctl enable --now jobrunner
 
+# backend specific unit overrides
+test -d "$BACKEND_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_DIR/jobrunner.service.d" /etc/systemd/system/
+
+systemctl enable --now jobrunner
