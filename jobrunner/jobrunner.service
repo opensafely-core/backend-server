@@ -13,7 +13,7 @@ WorkingDirectory=/srv/jobrunner/code
 ExecStart=/usr/bin/python3 -m jobrunner.service
 ExecStop=/bin/kill -INT ${MAINPID}
 User=jobrunner
-Group=jobrunner
+Group=reviewers
 
 
 [Install]
