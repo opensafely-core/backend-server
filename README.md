@@ -34,7 +34,9 @@ Directory layout:
 * ./tpp-backend
   * scripts and config for tpp backend
 * ./emis-backend
-  * scripts for config for emis backend
+  * scripts and config for emis backend
+* ./test-backend
+  * scripts and config for our test backend
 * ./emis-access
   * scripts for managing emis-access VM
 * ./jobrunner
@@ -48,12 +50,24 @@ Directory layout:
     job-server later, perhaps.
 * ./tests
   * test scripts, run in docker container by makefile
-* ./run-in-docker.sh
-  * runner for above tests. Uses docker to emulate a VM to run scripts on.
-* ./run-in-vm.sh
-  * helper for running the scripts inside an actual vm for manual debugging/testing
+* ./run-in-lxd.sh
+  * runner for above tests. Uses LXD to provide a VM-like environment to run scripts on.
 
 ## Testing
+
+To run tests, we use LXD to provide and isolate VM-like environment. You will
+need to have LXD installed and configured, and `shiftfs` enabled. Currently,
+this probably only works on Ubuntu.
+
+https://linuxcontainers.org/lxd/getting-started-cli/
+
+Quickstart for ubuntu:
+
+```
+snap install lxd --classic
+sudo snap set lxd shiftfs.enable=true
+sudo lxd init --auto
+```
 
 To run tests:
 
@@ -66,24 +80,12 @@ To run specific tests (tab completes)
 If you specify DEBUG=1, then you will be dropped into a shell inside the docker
 container after the tests has run.
 
-To to create and run a specific backend, you can do:
-
-    make tpp-backend
-
-or
-
-    make emis-backend
-
-These will setup a VM with that backend both drop you into a shell. The VM will
-be destroyed when you exit the shell.
-
 
 ## Base assumptions
 
  * Ubuntu server (20.04 baseline)
- * Internet access to {jobs,docker-proxy}.opensafely.org
+ * Internet access to {jobs,docker-proxy,github-proxy}.opensafely.org
  * Internet access to an official ubuntu archive
- * Internet access github.com
  * SSH access for developers to the backend host
  * sudo access on the host in some form
  * Just bash and git needed on the host to bootstrap backend.
