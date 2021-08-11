@@ -1,6 +1,4 @@
 tests/*.log
 .test-image
-.gh-users
-.ssh-key-cache
 keys/testuser*
 

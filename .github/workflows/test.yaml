@@ -2,8 +2,6 @@ name: Run tests
 
 on:
     push: 
-        branches: [main]
-    pull_request:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -12,13 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     name: Run lint and tests tests
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - name: Set up LXD
+      run: |
+        sudo snap set lxd shiftfs.enable=true
+        sudo lxd init --auto
+        sudo lxc info
     - name: Install test depenencies
       run: sudo apt-get install -y shellcheck
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Run lint
       run: make lint
     - name: Prepare test image
-      run: make test-image
+      # -E so that we get the github environment, e.g. GITHUB_ACTIONS, which we use to switch behaviour
+      run: sudo -E make test-image
     - name: Run tests
-      run: make test
+      run: sudo -E make test

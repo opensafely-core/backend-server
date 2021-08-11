@@ -24,7 +24,7 @@ done
 rm -f /run/nologin /etc/nologin
 
 # test can actually ssh
-assert "ssh: can log in" ssh "testuser@$(hostname -i)" -i keys/testuser.key -o StrictHostKeyChecking=no /bin/true
+assert "ssh: can log in" ssh "testuser@localhost" -i keys/testuser.key -o StrictHostKeyChecking=no /bin/true
 
 # test /etc/profile
 (
