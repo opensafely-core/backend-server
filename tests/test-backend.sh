@@ -18,6 +18,10 @@ tout() {
 # run again to check for idempotency
 ./test-backend/manage.sh
 
+# test user setup
+test "$(id -u jobrunner)" == "10000"
+test "$(id -g jobrunner)" == "10000"
+
 # test service is up
 tout 5s systemctl status jobrunner
 
