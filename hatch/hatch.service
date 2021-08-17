@@ -1,0 +1,12 @@
+[Unit]
+Description=Update release-hatch service
+Wants=hatch.timer
+
+[Service]
+WorkingDirectory=/home/jobrunner
+ExecStart=/home/jobrunner/hatch/deploy.sh
+User=jobrunner
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

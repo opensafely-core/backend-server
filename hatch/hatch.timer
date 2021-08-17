@@ -1,0 +1,10 @@
+[Unit]
+Description=Run release-hatch update regularly
+Requires=hatch.service
+
+[Timer]
+OnUnitActiveSec=3min
+Unit=hatch.service
+
+[Install]
+WantedBy=timers.target

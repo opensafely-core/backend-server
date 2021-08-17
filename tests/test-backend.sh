@@ -43,3 +43,6 @@ done
 EOF
 
 tout 30s bash "$script" || { journalctl -u jobrunner; exit 1; }
+
+# run hatch tests
+./tests/check-hatch
