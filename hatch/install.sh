@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DIR=~jobrunner/hatch
-cp -a ./hatch $DIR
+cp -a ./hatch "$DIR"
 chown -R jobrunner:jobrunner "$DIR"
 chmod -R go-rwx "$DIR"
 

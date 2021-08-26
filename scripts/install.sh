@@ -20,10 +20,10 @@ fi
 ensure_group() {
     local name=$1
     shift;
-    if ! getent group "$name" > /dev/null; then
-        groupadd "$@" "$name"
-    else
+    if getent group "$name" > /dev/null; then
         groupmod "$@" "$name"
+    else
+        groupadd "$@" "$name"
     fi
 }
 
