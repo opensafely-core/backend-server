@@ -17,16 +17,25 @@ if test "$INSTALL_PACKAGES" = "true"; then
     set -u
 fi
 
-# ensure groups
-for group in developers researchers reviewers; do
-    if ! getent group $group > /dev/null; then
-        echo "Adding group $group"
-        groupadd $group
+ensure_group() {
+    local name=$1
+    shift;
+    if getent group "$name" > /dev/null; then
+        groupmod "$@" "$name"
+    else
+        groupadd "$@" "$name"
     fi
-done
+}
 
-# system configurations
+# group that can manage services
+ensure_group developers
+ensure_group researchers
+# group that can view output files in /srv/{high,medium}_privacy/
+# we use hardcoded gid to match docker image gids
+ensure_group reviewers --gid 10010
 
+# system config
+#
 # disable broken-by-default rsync service
 systemctl disable rsync
 

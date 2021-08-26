@@ -8,8 +8,16 @@ BACKEND_DIR=$1
 umask 027
 
 # ensure shared user is set up properly
-id -u jobrunner >/dev/null 2>&1 || useradd jobrunner --create-home --shell /bin/bash -G docker
-usermod -a -G docker jobrunner
+if id -u jobrunner 2>/dev/null; then
+    # ensure jobrunner is in docker group
+    usermod -a -G docker jobrunner
+    # ensure jobrunner group ids
+    usermod -u 10000 jobrunner
+    groupmod -g 10000 jobrunner
+else
+    useradd jobrunner --create-home --shell /bin/bash --uid 10000 -G docker
+fi
+
 
 DIR=/srv/jobrunner
 mkdir -p $DIR
@@ -54,6 +62,12 @@ test -f $secrets_env || cp jobrunner/secrets-template.env $secrets_env
 
 # just make sure local env exists
 test -f "$local_env" || echo "# add local overrides here" > "$local_env"
+
+# utility for injecting test config
+if test -f "${TEST_CONFIG:-}"; then
+    cat "$TEST_CONFIG" >>"$local_env"
+fi
+
 
 # load config
 set -a

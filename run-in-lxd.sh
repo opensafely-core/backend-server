@@ -47,7 +47,9 @@ fi
 # run test script
 set +e # we handle the error manually
 echo -n "Running $SCRIPT in $CONTAINER LXD container..."
-lxc exec "$CONTAINER" --env SHELLOPTS=${DOCKER_SHELLOPTS} --env TEST=true --cwd /tests -- "$SCRIPT" > "$LOG" 2>&1
+lxc exec "$CONTAINER" \
+    --env SHELLOPTS=${DOCKER_SHELLOPTS} --env TEST=true --env TEST_CONFIG=/tests/tests/config.env \
+    --cwd /tests -- "$SCRIPT" > "$LOG" 2>&1
 success=$?
 
 set -e
