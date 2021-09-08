@@ -31,7 +31,7 @@ tout 5s systemctl status jobrunner
 # run a job
 echo "
 export PYTHONPATH=/srv/jobrunner/code:/srv/jobrunner/lib
-python3 -m jobrunner.add_job https://github.com/opensafely/research-template generate_study_population
+python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template generate_study_population
 " | su - jobrunner -c bash
 
 script=$(mktemp)
