@@ -1,7 +1,9 @@
 # EMIS Backend
 
 EMIS is an ubuntu VM on AWS, and we have root access. So is simpler in
-many ways to TPP. But we need to add a basic level 4 redaction process:
+many ways to TPP.
 
- - Give level 4 users local accounts with passwords.
- - allow RDP login to those accounts.
+However, we currently have no access to a package archive, so we cannot install
+anything. We can ask them to install packages on our behalf.
+
+

@@ -5,8 +5,8 @@ environments. These servers are provisioned and managed by the provider,
 with limited network access. They are designed to run the
 [job-runner](https://github.com/opensafely-core/job-runner) process,
 which polls jobs.opensafely.org for work, and then runs the requested
-actions securely inside docker containers. It generally also handles the
-process for redaction, review and publication of outputs.
+actions securely inside docker containers. It also handles the process for
+redaction, review and publication of outputs.
 
 Due to being deployed in different partner's environments, and us not
 always having full administrative control of that environment, each
@@ -22,65 +22,6 @@ Check out the version of this repo you wish to use (typically main), and then ru
 This will ensure the right packages, users, groups is configured, and set up
 jobrunner and other services as needed.
 
-
-## Development
-
-Directory layout:
-
-* ./scripts
-  * various bash scripts to perform specific actions, designed to be idempotent
-* ./etc
-  * system configuration files/templates
-* ./tpp-backend
-  * scripts and config for tpp backend
-* ./emis-backend
-  * scripts and config for emis backend
-* ./test-backend
-  * scripts and config for our test backend
-* ./emis-access
-  * scripts for managing emis-access VM
-* ./jobrunner
-  * scripts and config templates for jobrunner
-* ./osrelease
-  * scripts and config templates for osrelease
-* ./keys/$USER
-  * public keys to add to ssh for $USER
-* ./developers
-  * developers gh account list. To be replaced by authenticated API call to
-    job-server later, perhaps.
-* ./tests
-  * test scripts, run in docker container by makefile
-* ./run-in-lxd.sh
-  * runner for above tests. Uses LXD to provide a VM-like environment to run scripts on.
-
-## Testing
-
-To run tests, we use LXD to provide and isolate VM-like environment. You will
-need to have LXD installed and configured, and `shiftfs` enabled. Currently,
-this probably only works on Ubuntu.
-
-https://linuxcontainers.org/lxd/getting-started-cli/
-
-Quickstart for ubuntu:
-
-```
-snap install lxd --classic
-sudo snap set lxd shiftfs.enable=true
-sudo lxd init --auto
-```
-
-To run tests:
-
-    make test
-
-To run specific tests (tab completes)
-
-    make tests/$TEST
-
-If you specify DEBUG=1, then you will be dropped into a shell inside the docker
-container after the tests has run.
-
-
 ## Base assumptions
 
  * Ubuntu server (20.04 baseline)
@@ -90,6 +31,35 @@ container after the tests has run.
  * sudo access on the host in some form
  * Just bash and git needed on the host to bootstrap backend.
 
+## Components
+
+### Workspace state
+
+Currently in `/srv/high_privacy` and `/srv/medium_privacy`. Files owned by
+`jobrunner` user. Medium privacy files can be read by `reviewers` group.
+
+### job-runner
+ 
+Repo: https://github.com/opensafely-core/job-runner
+
+Manages the jobs and their state. Currently deployed in `/srv/jobrunner` as a git
+checkout and managed by a systemd unit.  Plan is to move this to docker
+soonish.
+
+### osrelease
+
+Repo: https://github.com/opensafely-core/output-publisher
+
+Command line tool to release files. Currently deployed via `sudo pip install`,
+which is problematic, so will be switching something else soonish.
+
+### release-hatch
+
+Repo: https://github.com/opensafely-core/release-hatch
+
+New tool to manage the review and release process. Will hopefully replace osrelease soonish.
+Deployed as a docker service via `docker-compose`.
+
 
 ## Common goals for all backends
 
@@ -98,8 +68,7 @@ container after the tests has run.
  * maintain level2/3/4 groups and membership of those groups
  * shared account for running each services, which developers can su to.
  * directories for high and medium privacy outputs, with access
- * controlled by groups
-
+ * access controlled by groups
 
 ## Users and permissions
 
