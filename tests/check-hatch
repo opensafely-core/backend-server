@@ -1,3 +1,0 @@
-#!/bin/bash
-# run hatch tests
-docker-compose -f ~jobrunner/hatch/docker-compose.yaml exec -T release-hatch python hatch/client.py test
