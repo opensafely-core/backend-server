@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Set up LXD
       run: |
-        sudo snap set lxd shiftfs.enable=true
+        sudo snap set lxd shiftfs.enable=true | { sleep 20 && sudo snap set lxd shiftfs.enable=true; }
         sudo lxd init --auto
         sudo lxc info
     - name: Install test depenencies
