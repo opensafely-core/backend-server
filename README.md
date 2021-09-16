@@ -78,9 +78,9 @@ added to keys/$USER in this repo if needed.
 
 There are 3 groups to manage permissions:
 
-developers: sudo access. Level 2 in opensafely terms.
-researchers: read access to high privacy files. Level 3.
-reviewers: read/write access to medium privacy files. level 4.
+* developers: sudo access. Level 2 in opensafely terms.
+* researchers: read access to high privacy files. Level 3.
+* reviewers: read/write access to medium privacy files. level 4.
 
 Note: Long-term, reviewers will not have local accounts, but instead review via a webapp.
 
