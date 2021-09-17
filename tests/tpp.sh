@@ -6,5 +6,5 @@ set -euo pipefail
 
 grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
 
-# run hatch tests
-./tests/check-hatch
+# run release-hatch tests
+./tests/check-release-hatch

@@ -12,7 +12,8 @@ jobs:
     steps:
     - name: Set up LXD
       run: |
-        sudo snap set lxd shiftfs.enable=true
+        # sometimes autorefresh blocks this, so let it finish updating and try again, once.
+        sudo snap set lxd shiftfs.enable=true || { sleep 10 && sudo snap set lxd shiftfs.enable=true; }
         sudo lxd init --auto
         sudo lxc info
     - name: Install test depenencies

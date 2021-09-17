@@ -6,7 +6,7 @@ export INSTALL_PACKAGES=false  # don't install stuff as per above
 
 ./scripts/update-users.sh developers emis-backend/researchers emis-backend/reviewers
 ./scripts/jobrunner.sh emis-backend
-./hatch/install.sh
+./release-hatch/install.sh
 ./osrelease/setup.sh
 
 for f in /srv/jobrunner/environ/*.env; do

@@ -14,7 +14,7 @@ release-hatch shares the same configuration as jobrunner, which lives in
 
 # Useful commands
 
-All these commands assume you are runing from `~jobrunner/hatch` directory.
+All these commands assume you are runing from `~jobrunner/release-hatch` directory.
 
  - *restart*: docker-compose restart 
  - *logs*: docker-compose logs
