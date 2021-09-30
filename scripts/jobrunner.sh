@@ -11,6 +11,8 @@ DIR=/srv/jobrunner
 
 ./scripts/jobrunner-config.sh
 
+secrets_env="$DIR/environ/02_secrets.env"
+
 # ensure we have a checkout of job-runner and dependencies
 test -d $DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $DIR/code
 test -d $DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $DIR/lib
