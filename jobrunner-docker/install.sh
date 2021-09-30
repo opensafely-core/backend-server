@@ -3,7 +3,7 @@ set -euo pipefail
 BACKEND_DIR=$1
 
 DIR=~jobrunner/job-runner
-cp -a ./job-runner "$DIR"
+cp -a ./jobrunner-docker "$DIR"
 chown -R jobrunner:jobrunner "$DIR"
 chmod -R go-rwx "$DIR"
 
