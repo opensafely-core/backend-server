@@ -1,0 +1,23 @@
+# docker-compose version on 20.04 (v1.25) does not support the version-less
+# compose specfication, so we explicitly set the highest version
+# it supports.
+version: "3.7"
+services:
+  release-hatch:
+    # image: ghcr.io/opensafely-core/job-runner:${BACKEND}
+    image: ghcr.io/opensafely-core/job-runner:latest
+    container_name: job-runner
+    init: true
+    restart: unless-stopped
+    network_mode: bridge
+    user: 10000:10000
+    env_file:
+      - /srv/jobrunner/environ/01_defaults.env
+      - /srv/jobrunner/environ/02_secrets.env
+      - /srv/jobrunner/environ/03_backend.env
+      - /srv/jobrunner/environ/04_local.env
+    # TODO: how does this interact with the design of job-runner's Dockerfile?
+    # 
+    volumes:
+      - /srv/medium_privacy/workspaces:/workspaces
+      - /srv/high_privacy/workspaces:/workspaces

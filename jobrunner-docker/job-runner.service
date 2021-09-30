@@ -1,0 +1,13 @@
+[Unit]
+Description=OpenSAFELY Jobrunner
+Documentation=https://github.com/opensafely-core/job-runner
+Wants=job-runner.timer
+
+[Service]
+WorkingDirectory=/home/jobrunner
+ExecStart=/home/jobrunner/job-runner/deploy.sh
+User=jobrunner
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
