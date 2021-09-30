@@ -1,9 +1,10 @@
 #!/bin/bash
 set -euo pipefail
+BACKEND_DIR=$1
 
 DIR=~jobrunner/job-runner
 
-./scripts/jobrunner-config.sh
+./scripts/jobrunner-config.sh "$BACKEND_DIR"
 
 # TODO: backend specific unit overrides
 
