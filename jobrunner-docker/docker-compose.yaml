@@ -16,8 +16,6 @@ services:
       - /srv/jobrunner/environ/02_secrets.env
       - /srv/jobrunner/environ/03_backend.env
       - /srv/jobrunner/environ/04_local.env
-    # TODO: how does this interact with the design of job-runner's Dockerfile?
-    # 
     volumes:
-      - /srv/medium_privacy/workspaces:/workspaces
-      - /srv/high_privacy/workspaces:/workspaces
+      - /srv/medium_privacy/workspaces:/workdir/medium_privacy/workspaces
+      - /srv/high_privacy/workspaces:/workdir/high_privacy/workspaces
