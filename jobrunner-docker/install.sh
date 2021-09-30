@@ -2,12 +2,12 @@
 set -euo pipefail
 BACKEND_DIR=$1
 
+./scripts/jobrunner-config.sh "$BACKEND_DIR"
+
 DIR=~jobrunner/job-runner
 cp -a ./jobrunner-docker "$DIR"
 chown -R jobrunner:jobrunner "$DIR"
 chmod -R go-rwx "$DIR"
-
-./scripts/jobrunner-config.sh "$BACKEND_DIR"
 
 # TODO: backend specific unit overrides
 
