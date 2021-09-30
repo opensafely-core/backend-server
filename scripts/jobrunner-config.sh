@@ -63,6 +63,15 @@ if test -f "${TEST_CONFIG:-}"; then
     cat "$TEST_CONFIG" >>"$local_env"
 fi
 
+# load config
+set -a
+# shellcheck disable=SC1090
+for f in "$DIR"/environ/*.env; do
+    # shellcheck disable=1090
+    . "$f"
+done
+set +a;
+
 
 # setup output directories
 for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; do
