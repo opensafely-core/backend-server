@@ -9,7 +9,7 @@ umask 027
 
 DIR=/srv/jobrunner
 
-./scripts/jobrunner-config.sh
+./scripts/jobrunner-config.sh "$BACKEND_DIR"
 
 secrets_env="$DIR/environ/02_secrets.env"
 
