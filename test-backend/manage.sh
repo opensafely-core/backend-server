@@ -3,5 +3,5 @@ set -euo pipefail
 
 ./scripts/install.sh
 ./scripts/update-users.sh developers
-./scripts/jobrunner.sh test-backend
+./jobrunner-docker/install.sh test-backend
 ./release-hatch/install.sh
