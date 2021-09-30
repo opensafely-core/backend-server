@@ -76,9 +76,7 @@ set +a;
 # setup output directories
 for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; do
     mkdir -p "$output_dir/workspaces"
+    chown -R jobrunner:jobrunner "$output_dir"
     # only group read access, no world access
     find "$output_dir" -type f -exec chmod 640 {} +
 done
-chown -R jobrunner:jobrunner "$MEDIUM_PRIVACY_STORAGE_BASE"
-chown -R jobrunner:jobrunner "$MEDIUM_PRIVACY_STORAGE_BASE"
-
