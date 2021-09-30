@@ -1,0 +1,10 @@
+[Unit]
+Description=Run job-runner update regularly
+Requires=job-runner.service
+
+[Timer]
+OnUnitActiveSec=3min
+Unit=job-runner.service
+
+[Install]
+WantedBy=timers.target
