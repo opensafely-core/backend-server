@@ -3,7 +3,7 @@
 # it supports.
 version: "3.7"
 services:
-  release-hatch:
+  job-runner:
     # image: ghcr.io/opensafely-core/job-runner:${BACKEND}
     image: ghcr.io/opensafely-core/job-runner:latest
     container_name: job-runner
