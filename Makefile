@@ -1,4 +1,5 @@
-TESTS ?= $(shell ls tests/*.sh)
+# TESTS ?= $(shell ls tests/*.sh)
+TESTS="tests/test-backend.sh"
 BACKENDS=tpp-backend emis-backend
 TEST_IMAGE=backend-server-test
 CACHE_DIR=.ssh-key-cache
