@@ -80,3 +80,6 @@ for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; d
     # only group read access, no world access
     find "$output_dir" -type f -exec chmod 640 {} +
 done
+
+# ensure ownership
+chown -R jobrunner:jobrunner /srv/jobrunner
