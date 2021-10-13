@@ -31,4 +31,4 @@ do
 done
 EOF
 
-tout 30s bash "$script" || { journalctl -u appuser; exit 1; }
+# tout 30s bash "$script" || { journalctl -u appuser; exit 1; }
