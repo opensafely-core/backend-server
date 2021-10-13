@@ -42,7 +42,7 @@ docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner l
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner ls -lh /app/workdir/jobrunner-docker.sh
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner /app/workdir/jobrunner-docker.sh
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml logs job-runner
-# exit 1
+exit 1
 
 
 # run release-hatch tests
