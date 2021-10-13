@@ -17,6 +17,6 @@ services:
       - /srv/jobrunner/environ/03_backend.env
       - /srv/jobrunner/environ/04_local.env
     volumes:
-      - /srv/medium_privacy/workspaces:/workdir/medium_privacy/workspaces
-      - /srv/high_privacy/workspaces:/workdir/high_privacy/workspaces
-      - /srv/jobrunner/:/workdir/deployment
+      - /srv/medium_privacy/workspaces:/app/workdir/medium_privacy/workspaces
+      - /srv/high_privacy/workspaces:/app/workdir/high_privacy/workspaces
+      - /srv/jobrunner/:/app/workdir/deployment
