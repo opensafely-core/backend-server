@@ -14,8 +14,9 @@ tout() {
 	return $code
 }
 
+# TODO: does this already contain cohortextractor?
 # hack to pull in the cohortextactor for this job
-/app/scripts/update-docker-image.sh cohortextractor
+# /app/scripts/update-docker-image.sh cohortextractor
 
 # run a job
 echo "
