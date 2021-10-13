@@ -19,10 +19,9 @@ tout() {
 # /app/scripts/update-docker-image.sh cohortextractor
 
 # run a job
-echo "
+# TODO: /app/lib may be wrong
 export PYTHONPATH=/app:/app/lib
 python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template generate_study_population
-" | su - appuser -c bash
 
 script=$(mktemp)
 cat << EOF > "$script"
