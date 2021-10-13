@@ -22,14 +22,14 @@ tout() {
 echo "
 export PYTHONPATH=/app:/app/lib
 python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template generate_study_population
-" | su - jobrunner -c bash
+" | su - appuser -c bash
 
 script=$(mktemp)
 cat << EOF > "$script"
-until journalctl -u jobrunner | grep -q 'Completed successfully project=research-template action=generate_study_population'
+until journalctl -u appuser | grep -q 'Completed successfully project=research-template action=generate_study_population'
 do
     sleep 2
 done
 EOF
 
-tout 30s bash "$script" || { journalctl -u jobrunner; exit 1; }
+tout 30s bash "$script" || { journalctl -u appuser; exit 1; }
