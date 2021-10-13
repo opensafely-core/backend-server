@@ -23,7 +23,7 @@ test "$(id -u jobrunner)" == "10000"
 test "$(id -g jobrunner)" == "10000"
 
 # test service is up
-tout 5s systemctl status jobrunner
+tout 5s systemctl status job-runner
 
 # hack to pull in the cohortextactor for this job
 /srv/jobrunner/code/scripts/update-docker-image.sh cohortextractor
