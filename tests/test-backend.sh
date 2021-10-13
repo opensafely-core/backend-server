@@ -34,6 +34,8 @@ test "$(id -g jobrunner)" == "10000"
 # TODO: run tests/jobrunner-docker.sh inside the jobrunner docker container
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml logs job-runner
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner pwd
+exit 1
+
 # /app/workdir/tests/jobrunner-docker.sh
 
 
