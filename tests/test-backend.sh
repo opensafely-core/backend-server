@@ -22,27 +22,17 @@ tout() {
 test "$(id -u jobrunner)" == "10000"
 test "$(id -g jobrunner)" == "10000"
 
-# test service is up
-tout 5s systemctl status job-runner
+# test that the updater runs successfully
+# TODO: what is the return code from this, for a successful timer run?
+# TODO: do this for release-hatch too
+# tout 5s systemctl status job-runner || job_runner_timer_code=$?
+#
+# if test "$job_runner_timer_code" != "3"; then
+#     echo "job-runner auto-update failed"
+# fi
 
-# hack to pull in the cohortextactor for this job
-/srv/jobrunner/code/scripts/update-docker-image.sh cohortextractor
+# TODO: run tests/jobrunner-docker.sh inside the jobrunner docker container
 
-# run a job
-echo "
-export PYTHONPATH=/srv/jobrunner/code:/srv/jobrunner/lib
-python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template generate_study_population
-" | su - jobrunner -c bash
-
-script=$(mktemp)
-cat << EOF > "$script"
-until journalctl -u jobrunner | grep -q 'Completed successfully project=research-template action=generate_study_population'
-do
-    sleep 2
-done
-EOF
-
-tout 30s bash "$script" || { journalctl -u jobrunner; exit 1; }
 
 # run release-hatch tests
 ./tests/check-release-hatch
