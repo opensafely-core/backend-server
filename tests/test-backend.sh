@@ -32,7 +32,7 @@ test "$(id -g jobrunner)" == "10000"
 # fi
 
 # TODO: run tests/jobrunner-docker.sh inside the jobrunner docker container
-docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml exec -T job-runner /workdir/deployment/tests/jobrunner-docker.sh
+docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner /workdir/deployment/tests/jobrunner-docker.sh
 
 
 # run release-hatch tests
