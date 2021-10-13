@@ -19,3 +19,4 @@ services:
     volumes:
       - /srv/medium_privacy/workspaces:/workdir/medium_privacy/workspaces
       - /srv/high_privacy/workspaces:/workdir/high_privacy/workspaces
+      - /srv/jobrunner/:/workdir/deployment
