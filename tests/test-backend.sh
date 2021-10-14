@@ -23,13 +23,15 @@ test "$(id -u jobrunner)" == "10000"
 test "$(id -g jobrunner)" == "10000"
 
 # test that the updater runs successfully
-# TODO: what is the return code from this, for a successful timer run?
-# TODO: do this for release-hatch too
-# tout 5s systemctl status job-runner || job_runner_timer_code=$?
-#
-# if test "$job_runner_timer_code" != "3"; then
-#     echo "job-runner auto-update failed"
-# fi
+script=$(mktemp)
+cat << EOF > "$script"
+until journalctl | grep -q "job-runner is up-to-date"
+do
+    sleep 2
+done
+EOF
+
+tout 30s bash "$script" || { journalctl; exit 1; }
 
 # run tests/jobrunner-docker.sh inside the jobrunner docker container
 # /srv/jobrunner/ is mounted into the docker container
