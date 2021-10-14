@@ -35,9 +35,7 @@ test "$(id -g jobrunner)" == "10000"
 # /srv/jobrunner/ is mounted into the docker container
 cp tests/jobrunner-docker.sh /srv/jobrunner/
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner /app/workdir/jobrunner-docker.sh
-# machinectl -l
 journalctl
-docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner journalctl
 
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml logs job-runner
 
