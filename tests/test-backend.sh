@@ -34,13 +34,8 @@ test "$(id -g jobrunner)" == "10000"
 # run tests/jobrunner-docker.sh inside the jobrunner docker container
 # /srv/jobrunner/ is mounted into the docker container
 cp tests/jobrunner-docker.sh /srv/jobrunner/
-
-docker-compose -f ~jobrunner/job-runner/docker-compose.yaml logs job-runner
-docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner pwd
-docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner ls -lh 
-docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner ls -lh /app/workdir/
-docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner ls -lh /app/workdir/jobrunner-docker.sh
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml exec -T job-runner /app/workdir/jobrunner-docker.sh
+
 docker-compose -f ~jobrunner/job-runner/docker-compose.yaml logs job-runner
 exit 1
 
