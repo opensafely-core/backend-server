@@ -1,5 +1,7 @@
 # TPP Opensafely Backend
 
+NOTE: THIS BACKEND IS NOT YET LIVE
+
 ## Accessing the backend
 
 Note: you will need to have completed [Setting up ssh
