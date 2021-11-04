@@ -20,3 +20,4 @@ services:
       - /srv/medium_privacy/workspaces:/app/workdir/medium_privacy/workspaces
       - /srv/high_privacy/workspaces:/app/workdir/high_privacy/workspaces
       - /srv/jobrunner/:/app/workdir
+      - ./ssh:/home/appuser/.ssh

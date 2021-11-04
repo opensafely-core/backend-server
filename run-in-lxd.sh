@@ -32,7 +32,7 @@ cleanup() {
 
 trap cleanup EXIT INT
 
-lxc launch "$TEST_IMAGE" "$CONTAINER" --quiet --ephemeral -c security.nesting=True
+lxc launch "$TEST_IMAGE" "$CONTAINER" --quiet --ephemeral -c security.privileged=True -c security.nesting=True
 
 if test -z "${DEBUG:-}"; then
     # if we're not in debug mode, just copy files. This does not require shiftfs,
