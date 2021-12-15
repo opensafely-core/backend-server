@@ -9,8 +9,6 @@
 #
 set -euo pipefail
 name=opensafely-tpp
-# user to ssh in with. Assumes your local ssh key will be added by the backend tooling.
-sshuser=${1:-bloodearnest}
 # path to export image to
 path=${2:-D:\\}
 
@@ -53,7 +51,6 @@ multipass transfer "$tarball" "$name://tmp/current.tar"
 multipass exec $name -- sudo mkdir -p //tmp/config
 multipass exec $name -- sudo tar xvf //tmp/current.tar -C //tmp/config
 
-# grab the address for ssh later on
 vmaddress="$(multipass exec $name -- hostname -I)"
 echo "IP: $vmaddress"
 
@@ -65,16 +62,10 @@ multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./tpp-bac
 # our custom cloud init config from ./cloud-init
 multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./tpp-backend/clean-image.sh
 
-
-# We do not want the default ubuntu user. But as multipass relies on it, we can
-# not delete it via multipass exec.  Instead we ssh in with a different known
-# good user
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$sshuser@$vmaddress" -- sudo pkill -u ubuntu
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$sshuser@$vmaddress" -- sudo userdel --remove ubuntu
-
-# remove ssh host keys, cloud init will regenerate them on next boot
-# Note: this must be the the last thing we do!
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$sshuser@$vmaddress" -- sudo rm //etc/ssh/ssh_host_*_key*
+# disable the default ubuntu user
+# unfortunatlely, its very awkward for us to delete it here, due to requiring it to ssh in.
+# so we simply disable it
+multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./tpp-backend/remove-ubuntu-user.sh
 
 # ready to export
 multipass stop $name
