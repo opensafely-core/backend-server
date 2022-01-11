@@ -5,7 +5,7 @@ version: "3.7"
 services:
   release-hatch:
     # image: ghcr.io/opensafely-core/release-hatch:${BACKEND}
-    image: ghcr.io/opensafely-core/release-hatch:latest
+    image: docker-proxy.opensafely.org/opensafely-core/release-hatch:latest
     container_name: release-hatch
     init: true
     restart: unless-stopped
