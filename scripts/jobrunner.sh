@@ -2,6 +2,7 @@
 # Set up the job-runner service
 set -euo pipefail
 BACKEND_DIR=$1
+REVIEWERS_GROUP="${REVIEWERS_GROUP:-reviewers}"
 
 # set default file creation permission for this script be 640 for files and 750
 # for directories
@@ -85,7 +86,7 @@ for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; d
     find "$output_dir" -type f -exec chmod 640 {} +
 done
 chown -R jobrunner:jobrunner "$HIGH_PRIVACY_STORAGE_BASE"
-chown -R jobrunner:jobrunner "$MEDIUM_PRIVACY_STORAGE_BASE"
+chown -R "jobrunner:$REVIEWERS_GROUP" "$MEDIUM_PRIVACY_STORAGE_BASE"
 
 # set up some nice helpers for when we su into the shared jobrunner user
 cp jobrunner/bashrc $DIR/bashrc

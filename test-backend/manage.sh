@@ -5,3 +5,4 @@ set -euo pipefail
 ./scripts/update-users.sh developers
 ./scripts/jobrunner.sh test-backend
 ./release-hatch/install.sh
+./osrelease/install.sh
