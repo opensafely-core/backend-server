@@ -9,11 +9,11 @@ access](#setting-up-ssh-access) below before you can log in via ssh.
 
 Once logged into the TPP Level 3 server via RDP, open git-bash and run:
 
-TODO: update the hostname/IP once we have it.
 
 ```bash
-ssh <github username>@opensafely-ttp
+ssh <github username>@opensafely-outputs.tpp
 ```
+
 
 
 ## Setting up ssh access
@@ -25,7 +25,7 @@ Second, you will need to generate a local ssh key on that server.
 
  - *IMPORTANT*: this ssh key **MUST** have a good passphrase.
  - *IMPORTANT*: this ssh key **SHOULD NOT** be registered with your Github
-   account
+   account, we cannot push to git from TPP level 3 anyway.
 
 To generate a new key, open a git-bash terminal
 
@@ -49,26 +49,29 @@ repository. Once this is merged, you should be able to log in to the backend VM.
  - The backend runs in a Hyper-V VM on the host.
  - login to host is via authenticated firewall and RDP, accounts managed by
    TPP.
- - outgoing internet is restricted to https to our our cloudflare IPs,
-   and https and ssh to github.com
+ - Outgoing internet is restricted to https to our our cloudflare IPs
  - TPP maintain a one-way push of medium privacy output files to the
    Level 4 server.
- - as TPP was early adopter, many users have RDP access to this machine.
- - goal is to reduce that to just the OpenSAFELY platform team.
+ - As TPP was early adopter, many users have RDP access to this machine.
+ - Goal is to reduce that to just the OpenSAFELY platform team. As such, we are
+   only granting core OpenSAFELY team access to the VM.
+
 
 ### Level 4 Server
 
- - TPP provide a windows VM.
+ - TPP provide a windows VM on the same host.
  - Login is via same firewall, but separate RDP account.
  - Redaction and publishing happens here.
  - Files pushed here from level 3.
 
 ### Implications
 
- - developers need a local SSH key on the Level 2/3 server to log in to
+ - Developers need a local SSH key on the Level 2/3 server to log in to
    the backend ubuntu server (RDP doesn't do agent forwarding!)
- - backend needs to write files to host filesystem for sync to level 4
-   server, which requires an SMB mount in the backend.
+ - The VM publishes an SMB share with level 4 outputs in, which initially will
+   be synced to the level 4 VM. At somepoint, releases will got via the UI and
+   release-hatch, and this will not be necessary.
+
 
 ### Hyper-V Image
 
@@ -81,4 +84,5 @@ in git-bash on Windows.
 
 Once the VM is deployed, we will maintain it directly, and do not
 anticipate generating VM images regularly.
+
 

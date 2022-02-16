@@ -1,10 +1,9 @@
 #!/bin/bash
 # run release-hatch tests
-docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml exec -T release-hatch python hatch/client.py test
-
+docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml run --rm release-hatch-test
 
 # check CORS preflight
-curl -s --fail localhost:8001 -X OPTIONS \
+curl -s --fail https://localhost -X OPTIONS \
   -H 'Access-Control-Request-Method: GET' \
   -H 'Access-Control-Request-Headers: authorization' \
   -H 'Origin: https://jobs.opensafely.org' \
