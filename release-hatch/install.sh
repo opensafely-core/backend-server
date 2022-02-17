@@ -20,7 +20,7 @@ if ! test -e $SSL_KEY -a -e $SSL_CERT; then
 
     # generate a self signed certificate
     openssl req -x509 -newkey ed25519 -keyout $SSL_KEY -out $SSL_CERT -sha256 -days 365 -nodes \
-	    -subj "/C=GB/L=Lehi/O=OpenSAFELY/CN=$HOSTNAME/emailAddress=tech@opensafely.org" \
+	    -subj "/C=GB/O=OpenSAFELY/CN=$HOSTNAME/emailAddress=tech@opensafely.org" \
 	    -addext "subjectAltName = DNS:$HOSTNAME"
 
     # ensure self signed is trusted by this machine
