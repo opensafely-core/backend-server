@@ -3,7 +3,7 @@
 # it supports.
 version: "3.7"
 services:
-  release-hatch:
+  release-hatch: &service
     # image: ghcr.io/opensafely-core/release-hatch:${BACKEND}
     image: docker-proxy.opensafely.org/opensafely-core/release-hatch:latest
     container_name: release-hatch
@@ -11,12 +11,34 @@ services:
     restart: unless-stopped
     network_mode: bridge
     ports:
-      - "8001:8001"
+      - "443:8001"
     user: 10000:10000
     env_file:
       - /srv/jobrunner/environ/01_defaults.env
       - /srv/jobrunner/environ/02_secrets.env
       - /srv/jobrunner/environ/03_backend.env
       - /srv/jobrunner/environ/04_local.env
+    environment:
+      UVICORN_SSL_CERTFILE: /certs/release-hatch.crt
+      UVICORN_SSL_KEYFILE: /certs/release-hatch.key
     volumes:
       - /srv/medium_privacy/workspaces:/workspaces
+      - ./certs:/certs
+
+  # Run a function test against the running release-hatch service
+  # This runs a functional test shipped with release-hatch.
+  release-hatch-test:
+
+    # The version of docker-compose in Ubuntu 20.04 (1.25) does not support
+    # `extends`, so we use YAML anchor tricks to create a test service that
+    # extends the base service. This statement copies all the keys from the
+    # anchor &service above
+    <<: *service
+    # We need to run from the host's network, so we can access release-hatch
+    # via the proper DNS/port settings, because the validation for
+    # release-hatch requires the configured DNS/ports to match.
+    network_mode: host
+    # assume self-signed cert
+    environment:
+      REQUESTS_CA_BUNDLE: /certs/release-hatch.crt
+    command: python hatch/client.py test

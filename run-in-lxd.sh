@@ -33,6 +33,7 @@ cleanup() {
 trap cleanup EXIT INT
 
 lxc launch "$TEST_IMAGE" "$CONTAINER" --quiet --ephemeral -c security.nesting=True
+lxc exec "$CONTAINER" -- cloud-init status --wait
 
 if test -z "${DEBUG:-}"; then
     # if we're not in debug mode, just copy files. This does not require shiftfs,
@@ -44,6 +45,8 @@ else
     lxc config device add "$CONTAINER" backend-server disk source="$PWD" path=/tests shift=true
 fi
 
+
+lxc exec "$CONTAINER" -- cloud-init status --wait
 # run test script
 set +e # we handle the error manually
 echo -n "Running $SCRIPT in $CONTAINER LXD container..."
