@@ -25,7 +25,7 @@ Second, you will need to generate a local ssh key on that server.
 
  - *IMPORTANT*: this ssh key **MUST** have a good passphrase.
  - *IMPORTANT*: this ssh key **SHOULD NOT** be registered with your Github
-   account, we cannot push to git from TPP level 3 anyway.
+   account, we cannot push to Github from TPP level 3 anyway.
 
 To generate a new key, open a git-bash terminal
 
@@ -49,7 +49,7 @@ repository. Once this is merged, you should be able to log in to the backend VM.
  - The backend runs in a Hyper-V VM on the host.
  - login to host is via authenticated firewall and RDP, accounts managed by
    TPP.
- - Outgoing internet is restricted to https to our our cloudflare IPs
+ - Outgoing internet is restricted to https to our cloudflare IPs
  - TPP maintain a one-way push of medium privacy output files to the
    Level 4 server.
  - As TPP was early adopter, many users have RDP access to this machine.
