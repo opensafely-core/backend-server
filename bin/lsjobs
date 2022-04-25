@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+docker ps --format '{{ .Names }}' | grep os-job | xargs -L1 docker inspect --format '{{ .Name }} : {{ index .Config.Labels "workspace" }} : {{ index .Config.Labels "action" }}'
+
