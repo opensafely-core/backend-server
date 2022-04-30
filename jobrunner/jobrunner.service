@@ -14,6 +14,8 @@ ExecStart=/usr/bin/python3 -m jobrunner.service
 ExecStop=/bin/kill -INT ${MAINPID}
 User=jobrunner
 Group=reviewers
+Restart=on-failure
+RestartSec=60s
 
 
 [Install]

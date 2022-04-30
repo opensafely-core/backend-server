@@ -11,7 +11,7 @@ Once logged into the TPP Level 3 server via RDP, open git-bash and run:
 
 
 ```bash
-ssh <github username>@opensafely-outputs.tpp
+ssh <github username>@192.168.201.4
 ```
 
 
