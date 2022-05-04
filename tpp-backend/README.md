@@ -1,7 +1,5 @@
 # TPP Opensafely Backend
 
-NOTE: THIS BACKEND IS NOT YET LIVE
-
 ## Accessing the backend
 
 Note: you will need to have completed [Setting up ssh
@@ -13,7 +11,6 @@ Once logged into the TPP Level 3 server via RDP, open git-bash and run:
 ```bash
 ssh <github username>@192.168.201.4
 ```
-
 
 
 ## Setting up ssh access
