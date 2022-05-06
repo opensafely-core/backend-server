@@ -76,6 +76,10 @@ Run:
 
     update-docker-image.sh image[:tag]
 
+Note that the script provides the repository name, so you must provide
+only the last component of the image name. For example to update the R
+image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
+
 ## Debugging jobs
 
 ### View specific job logs
