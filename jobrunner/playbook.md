@@ -13,9 +13,9 @@ backend server configuration, including users, groups, and jobrunner
 configuration.
 
 
-## jobrunner
+## jobrunner user
 
-**IMPORTANT**: All job-runner operations begin by switching from your user to
+**IMPORTANT**: All operations begin by switching from your user to
 the jobrunner user with:
 
     sudo su - jobrunner
@@ -131,7 +131,7 @@ When this happens the job's container and volume are not
 automatically cleaned up and so it's possible to retry the job without
 having to start from scratch. You can run this with:
 
-    python3 -m jobrunner.retry_job <job_id>
+    python3 -m jobrunner.cli.retry_job <job_id>
 
 The `job_id` actually only has to be a sub-string of the job ID (full
 ones are a bit awkward to type) and you will be able to select the
@@ -143,7 +143,7 @@ correct job if there are multiple matches.
 To kill a running job (or prevent it starting if it hasn't yet) use the
 `kill_job` command:
 
-    python3 -m jobrunner.kill_job --cleanup <job_id> [... <job_id>]
+    python3 -m jobrunner.cli.kill_job --cleanup <job_id> [... <job_id>]
 
 The `job_id` actually only has to be a sub-string of the job ID (full
 ones are a bit awkward to type) and you wil be able to select the
