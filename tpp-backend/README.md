@@ -3,7 +3,7 @@
 ## Accessing the backend
 
 Note: you will need to have completed [Setting up ssh
-access](#setting-up-ssh-access) below before you can log in via ssh.  
+access](#setting-up-ssh-access) below before you can log in via ssh.
 
 Once logged into the TPP Level 3 server via RDP, open git-bash and run:
 
@@ -35,7 +35,17 @@ Accept the default file location, and enter your passphrase.
 You will need copy the contents of `~/.ssh/id_ed25519.pub`, and submit a PR to
 https://github.com/opensafely-core/backend-server/ which adds the contents of
 the above public key file to a file `./keys/<your github username>` in that
-repository. Once this is merged, you should be able to log in to the backend VM.
+repository.
+
+Once this is merged, ask someone who already has access to update the
+backend as
+described
+[here](https://github.com/opensafely-core/backend-server/blob/main/README.md#usage).
+
+Then SSH into the VM as in the section above. You will be asked to set
+a password; having done so you will be disconnected from the VM and
+must SSH in again to actually access it.
+
 
 
 ## Overview
@@ -81,5 +91,3 @@ in git-bash on Windows.
 
 Once the VM is deployed, we will maintain it directly, and do not
 anticipate generating VM images regularly.
-
-
