@@ -47,6 +47,12 @@ You can view logs via journtalctl:
 
     journalctl -xe -u jobrunner
 
+Note: `-e` engages the pager, so you can scroll up.  It is implicitly limited to 1000, so may not show relevant logs if you're looking for more distant events.  Use e.g. `-n2000` to increase the limit, or `-nall` to disable it.
+
+To look for all logs for a specific job id:
+
+    journalctl -u jobrunner | grep <job id>
+
 ### Configuring the job-runner
 
 All env files are in /srv/jobrunner/environ/\*.env
