@@ -62,7 +62,7 @@ test -f $secrets_env || cp jobrunner/secrets-template.env $secrets_env
 
 
 # just make sure local env exists
-test -f "$local_env" || echo "# add local overrides here" > "$local_env"
+test -f "$local_env" || echo "# add local overrides here (this file is safe to edit by hand)" > "$local_env"
 
 # utility for injecting test config
 if test -f "${TEST_CONFIG:-}"; then
