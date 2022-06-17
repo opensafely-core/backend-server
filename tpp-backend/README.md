@@ -37,6 +37,8 @@ https://github.com/opensafely-core/backend-server/ which adds the contents of
 the above public key file to a file `./keys/<your github username>` in that
 repository.
 
+Third, you need to ensure your github username is listed in the [developers file](https://github.com/opensafely-core/backend-server/blob/main/developers), as this is the master user account list.
+
 Once this is merged, ask someone who already has access to update the
 backend as
 described
