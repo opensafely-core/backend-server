@@ -88,6 +88,25 @@ image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 
 ## Debugging jobs
 
+### View the logs of completed jobs
+
+Every completed job (whether failed or succeeded) has a log directory at:
+
+    /srv/high_privacy/logs/<YYYY-MM>/os-job-<job_id>
+
+This contains two files:
+
+ * `logs.txt`:
+   *  this contains all stdout/stderr output from the job;
+   *  it's identical to the file found in `metadata/<action_name>.log`
+      but it's available for all historical jobs, not just the most
+      recently run.
+ * `metadata.json`:
+   * this is a big JSON blob containing everything we know about the job
+     and the job request which initiated it;
+   * it also contains all the Docker metadata about the container used
+     to run it.
+
 ### View the logs of running jobs
 
     watch-job-logs.sh
