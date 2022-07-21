@@ -88,11 +88,12 @@ image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 
 ## Debugging jobs
 
-### View specific job logs
+### View the logs of running jobs
 
     watch-job-logs.sh
 
-This will let you choose a job's output to tail.
+This will let you choose a job's output to tail from all currently
+running jobs.
 
 Supply a string argument to filter to just job names matching that
 string. If there is only one match it will automatically select that
