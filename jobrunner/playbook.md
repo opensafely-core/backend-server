@@ -95,7 +95,7 @@ image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 This will let you choose a job's output to tail from all currently
 running jobs.
 
-Supply a string argument to filter to just job names matching that
+Supply a string argument to filter to just job IDs matching that
 string. If there is only one match it will automatically select that
 job.
 
@@ -107,7 +107,7 @@ job.
 Starts a container with the volume associated with a given job mounted
 at `/workspace`.
 
-Supply a string argument to filter to just job names matching that
+Supply a string argument to filter to just job IDs matching that
 string. If there is only one match it will automatically select that
 job.
 
