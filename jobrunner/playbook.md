@@ -13,7 +13,9 @@ backend server configuration, including users, groups, and jobrunner
 configuration.
 
 
-## jobrunner user
+## jobrunner service
+
+### jobrunner user
 
 **IMPORTANT**: All operations begin by switching from your user to
 the jobrunner user with:
@@ -88,6 +90,14 @@ image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 
 ## Debugging jobs
 
+### Show currently running jobs
+
+See the list of currently running jobs, with job identifier, job name and associated workspace in job-server:
+
+```
+lsjobs
+```
+
 ### View the logs of completed jobs
 
 Every completed job (whether failed or succeeded) has a log directory at:
@@ -133,6 +143,28 @@ job.
 Note that the container will be a privileged "tools" container suitable
 for stracing (see below).
 
+
+### Viewing resource usage of jobs
+
+View the CPU and memory usage of jobs using:
+
+```
+docker stats --no-stream
+```
+
+To see overall system CPU and memory usage, use
+
+```
+free -m
+```
+
+to show available memory.
+
+To show system load, memory and CPU usage, run:
+
+```
+top
+```
 
 ### stracing a running job
 
@@ -190,6 +222,8 @@ for debugging then omit this flag.
 The command is idempotent so you can always run it again later with the
 `--cleanup` flag.
 
+## Start up and Shutdown
+
 ### Preparing for reboot
 
 Sometimes we need to restart Docker, or reboot the VM in which we're
@@ -197,11 +231,17 @@ running, or reboot the entire host machine. When the happens, it's nicer
 if we can automatically restart any running jobs rather than have them
 fail and force the user to manually restart them.
 
-To do this, first stop the job-runner service (see above).
+To do this, first stop the [job-runner service](#startingstopping-the-service):
+
+```sh
+systemctl stop jobrunner
+```
 
 After the service is stopped you can run the `prepare_for_reboot` command:
 
-    python3 -m jobrunner.cli.prepare_for_reboot
+```sh
+python3 -m jobrunner.cli.prepare_for_reboot
+```
 
 This is quite a destructive command as it will destroy the containers
 and volumes for any running jobs. It will also reset any currently
@@ -211,3 +251,26 @@ The next time job-runner restarts (which should be after the reboot) it
 will pick up these jobs again as if it had not run them before and the
 user should not have to do anything.
 
+### Planned maintenance
+
+Sometimes we are informed that a reboot will take place out of hours. In this case, in order to ensure a graceful shutdown and to avoid someone having to work late, the [preparing for reboot](#preparing-for-reboot) section can be run as a single command with a sleep statement.
+
+For example, this will start shutting things down in four hours:
+
+```sh
+sleep $((4*3600)); systemctl stop job-runner && python -m jobrunner.cli.prepare_for_reboot
+```
+
+### After a restart
+
+#### Level 3 file sync
+
+This command ensures files manually generated on the Windows host are copied to the Ubuntu VM (both Level 3). It's only used by a small number of researchers, as normally researchers would access their outputs via Level 4.
+
+From a Tmux session run:
+
+```sh
+while true; do rsync -auP /e/FILESFORL4/workspaces/ /srv/medium_privacy/workspaces/ ; sleep 120; done
+```
+
+*Tip: Search the bash history to find the command rather than typing it out*
