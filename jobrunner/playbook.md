@@ -90,6 +90,14 @@ image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 
 ## Debugging jobs
 
+### Show currently running jobs
+
+See the list of currently running jobs, with job identifier, job name and associated workspace in job-server:
+
+```
+lsjobs
+```
+
 ### View the logs of completed jobs
 
 Every completed job (whether failed or succeeded) has a log directory at:
@@ -135,6 +143,28 @@ job.
 Note that the container will be a privileged "tools" container suitable
 for stracing (see below).
 
+
+### Viewing resource usage of jobs
+
+View the CPU and memory usage of jobs using:
+
+```
+docker stats --no-stream
+```
+
+To see overall system CPU and memory usage, use
+
+```
+free -m
+```
+
+to show available memory.
+
+To show system load, memory and CPU usage, run:
+
+```
+top
+```
 
 ### stracing a running job
 
