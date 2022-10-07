@@ -1,6 +1,6 @@
 exporters:
   #otlp:
-    #endpoint: collector.opensafely.org:443
+    #endpoint: https://collector.opensafely.org:443
     #headers:
       #Authorization: "${COLLECTOR_AUTH}"
       #x-honeycomb-dataset: jobrunner-metrics
