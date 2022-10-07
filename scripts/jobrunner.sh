@@ -101,6 +101,9 @@ ln -sf "/srv/jobrunner/playbook.md" ~jobrunner/playbook.md
 # clean up old playbook if present
 rm -f /srv/playbook.md
 
+# create initial db if not present
+test -f /srv/jobrunner/code/workdir/db.sqlite || PYTHONPATH=/srv/jobrunner/lib:/srv/jobrunner/code python3 -m jobrunner.cli.migrate
+
 # ensure file ownership and permissions
 chown -R jobrunner:jobrunner /srv/jobrunner
 chmod 0600 $secrets_env
