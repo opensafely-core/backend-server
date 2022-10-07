@@ -36,13 +36,15 @@ python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template
 
 script=$(mktemp)
 cat << EOF > "$script"
-until journalctl -u jobrunner | grep -q 'Completed successfully project=research-template action=generate_study_population'
+until journalctl -u jobrunner | grep -q 'Completed successfully status=StatusCode.SUCCEEDED workspace=test action=generate_study_population'
 do
     sleep 2
 done
 EOF
 
 tout 60s bash "$script" || { journalctl -u jobrunner; exit 1; }
+
+systemctl status collector || { journalctl -u collector; exit 1; }
 
 # run release-hatch tests
 ./tests/check-release-hatch

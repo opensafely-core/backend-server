@@ -6,3 +6,4 @@ set -euo pipefail
 ./scripts/jobrunner.sh test-backend
 ./release-hatch/install.sh
 ./osrelease/install.sh
+./services/collector/install.sh
