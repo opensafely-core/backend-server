@@ -5,3 +5,4 @@ set -euo pipefail
 ./scripts/update-users.sh developers tpp-backend/researchers
 ./scripts/jobrunner.sh tpp-backend
 ./release-hatch/install.sh
+./services/collector/install.sh
