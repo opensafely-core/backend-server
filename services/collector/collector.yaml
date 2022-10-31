@@ -1,14 +1,17 @@
 exporters:
-  #otlp:
-    #endpoint: https://collector.opensafely.org:443
-    #headers:
-      #Authorization: "${COLLECTOR_AUTH}"
-      #x-honeycomb-dataset: jobrunner-metrics
+  otlphttp:
+    endpoint: https://collector.opensafely.org:443
+    headers:
+      Authorization: "Basic ${COLLECTOR_BASIC_AUTH}"
+      # THIS DOESNT WORK - the gateway collector does not forward it properly
+      # But we set it anyway, incase in future the gateway collector suddenly
+      # starts forwarding it properly
+      x-honeycomb-dataset: jobrunner-metrics
   logging:
-    logLevel: debug
+    logLevel: info
 receivers:
   hostmetrics:
-    collection_interval: 15s
+    collection_interval: 30s
     scrapers:
       memory: {}
       cpu: {}
@@ -30,12 +33,6 @@ processors:
     timeout: 200ms
   metricstransform:
     transforms:
-      - include: ".*"
-        action: update
-        operations:
-          - action: add_label
-            new_label: backend
-            new_value: "${BACKEND}"
       - include: system.disk.io_time
         action: update
         operations:
@@ -709,4 +706,4 @@ service:
         - batch
       exporters:
         - logging
-        #- otlp
+        - otlphttp
