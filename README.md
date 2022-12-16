@@ -22,6 +22,9 @@ Check out the version of this repo you wish to use (typically main), and then ru
 This will ensure the right packages, users, groups is configured, and set up
 jobrunner and other services as needed.
 
+Note: the checkout is ephemeral so it doesn't matter where you check the repo out
+(your home dir is fine) or whether there are other checkouts already on the server.
+
 ## Base assumptions
 
  * Ubuntu server (20.04 baseline)
