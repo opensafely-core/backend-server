@@ -24,7 +24,7 @@ the jobrunner user with:
 
 This will set up your shell with the correct environment variables.
 
-The jobrunner intalled in `/srv/jobrunner`
+The jobrunner is installed in `/srv/jobrunner`
 
     /srv/jobrunner/code     # the checkout of jobrunner currently running
     /srv/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
