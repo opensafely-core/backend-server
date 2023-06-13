@@ -9,7 +9,26 @@ EnvironmentFile=/srv/jobrunner/environ/02_secrets.env
 EnvironmentFile=/srv/jobrunner/environ/03_backend.env
 EnvironmentFile=/srv/jobrunner/environ/04_local.env
 WorkingDirectory=/srv/jobrunner/code
-#ExecStartPre=TODO
+
+# Creates and configures a slice which allows network access to only the IPs
+# listed in DATABASE_IP_LIST. Any Docker container run with:
+#
+#     --cgroup-parent=$DATABASE_ACCESS_SLICE
+#
+# will be subject to this restriction.
+#
+# Set a default empty list so we fail closed. This will be overridden by any
+# value set in the EnvironmentFiles listed above:
+Environment="DATABASE_IP_LIST="
+Environment="DATABASE_ACCESS_SLICE=jobrunner_database_access.slice"
+# Use the `+` prefix to run command as root. The `--runtime` flag prevents this
+# slice config being needlessly persisted to disk
+ExecStartPre=+/usr/bin/systemctl \
+  set-property --runtime \
+  ${DATABASE_ACCESS_SLICE} \
+  IPAddressDeny=any \
+  IPAddressAllow='${DATABASE_IP_LIST}'
+
 ExecStart=/usr/bin/python3 -m jobrunner.service
 ExecStop=/bin/kill -INT ${MAINPID}
 User=jobrunner
