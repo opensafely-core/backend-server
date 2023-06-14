@@ -16,7 +16,7 @@ jobs:
         sudo snap set lxd shiftfs.enable=true || { sleep 10 && sudo snap set lxd shiftfs.enable=true; }
         sudo lxd init --auto
         sudo lxc info
-    - name: Install test depenencies
+    - name: Install test dependencies
       run: sudo apt-get install -y shellcheck
     - name: Checkout
       uses: actions/checkout@v2
