@@ -53,6 +53,7 @@ EOF
 }
 
 cp jobrunner/bin/* /srv/jobrunner/bin/
+cp jobrunner/sbin/* /usr/local/sbin
 
 copy_with_warning jobrunner/defaults.env "$defaults_env"
 copy_with_warning "$BACKEND_DIR/backend.env" "$backend_env"
