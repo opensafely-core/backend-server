@@ -25,11 +25,14 @@ insert_iptables_rule DOCKER-USER -i "$network_name" -j REJECT
 
 # Add ACCEPT rules for each of the supplied arguments
 while [[ "$#" != "0" ]]; do
-  ip_addr_spec="$1"
+  ip_addr_specs="$1"
   shift 1
-  # If no IPs are supplied we can end up with empty arguments which we need to skip
-  if [[ -z "$ip_addr_spec" ]]; then continue; fi
-  insert_iptables_rule DOCKER-USER -i "$network_name" -d "$ip_addr_spec" -j ACCEPT
+  # Given the way that systemd handles arguments we can end up with multiple
+  # addresses in a single space-separated argument; so we iterate over them
+  # here
+  for ip_addr_spec in $ip_addr_specs; do
+    insert_iptables_rule DOCKER-USER -i "$network_name" -d "$ip_addr_spec" -j ACCEPT
+  done
 done
 
 # Check if the Docker network already exists and has the expected interface name
