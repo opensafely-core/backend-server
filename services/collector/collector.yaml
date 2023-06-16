@@ -17,7 +17,12 @@ receivers:
       cpu: {}
       load: {}
       disk: {}
-      filesystem: {}
+      filesystem:
+        include_devices:
+          devices:
+            - /dev/sda1
+            - /dev/sdb1
+          match_type: strict
       network: {}
       paging: {}
       processes: {}
@@ -299,33 +304,6 @@ processors:
           direction: write
         action: insert
         new_name: system.disk.merged.write
-        operations:
-          - action: aggregate_labels
-            aggregation_type: sum
-            label_set: []
-      - include: system.filesystem.usage
-        experimental_match_labels:
-          state: free
-        action: insert
-        new_name: system.filesystem.usage.free
-        operations:
-          - action: aggregate_labels
-            aggregation_type: sum
-            label_set: []
-      - include: system.filesystem.usage
-        experimental_match_labels:
-          state: reserved
-        action: insert
-        new_name: system.filesystem.usage.reserved
-        operations:
-          - action: aggregate_labels
-            aggregation_type: sum
-            label_set: []
-      - include: system.filesystem.usage
-        experimental_match_labels:
-          state: used
-        action: insert
-        new_name: system.filesystem.usage.used
         operations:
           - action: aggregate_labels
             aggregation_type: sum
@@ -679,7 +657,6 @@ processors:
           - system.disk.operation_time
           - system.disk.operations
           - system.filesystem.inodes.usage
-          - system.filesystem.usage
           - system.memory.usage
           - system.network.connections
           - system.network.connections.tcp
