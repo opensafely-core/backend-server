@@ -274,3 +274,25 @@ while true; do rsync -auP /e/FILESFORL4/workspaces/ /srv/medium_privacy/workspac
 ```
 
 *Tip: Search the bash history to find the command rather than typing it out*
+
+### Pausing new jobs
+
+When we know ahead of time that there will be a period when the system is going to be unavailable, such as planned maintenance, we may decide to stop accepting new jobs. This may be because they're unlikely to complete in time or to give current jobs a better chance of finishing.
+
+
+Stop accepting new jobs:
+
+```sh
+python3 -m jobrunner.cli.flags set paused=true
+```
+
+Start accepting new jobs again:
+
+```sh
+python3 -m jobrunner.cli.flags set paused=
+```
+
+> **Note**
+This is not a typo, the paused flag needs to be set to `None`
+
+Setting and unsetting flags takes effect immediately, so it's not necessary to restart jobrunner.
