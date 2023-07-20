@@ -40,6 +40,7 @@ useradd testpwuser --create-home --shell /bin/bash
 
 # helper function because chpasswd does not error correctly
 test-password() {
+    # shellcheck disable=SC2317
     ! echo "testpwuser:$1" | chpasswd 2>&1 | grep -q "BAD PASSWORD" 
 }
 
