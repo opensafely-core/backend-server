@@ -18,10 +18,11 @@ jobs:
         sudo lxc info
     - name: Install test dependencies
       run: sudo apt-get install -y shellcheck
+    - uses: extractions/setup-just@69d82fb0233557aec017ef13706851d0694e0f1d
     - name: Checkout
       uses: actions/checkout@v2
     - name: Run lint
-      run: make lint
+      run: just lint
     - name: Prepare test image
       # -E so that we get the github environment, e.g. GITHUB_ACTIONS, which we use to switch behaviour
       run: sudo -E make test-image

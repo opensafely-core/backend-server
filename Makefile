@@ -9,11 +9,6 @@ export TEST=true
 .SUFFIXES:
 
 
-.PHONY: lint
-lint:
-	shellcheck -x */*.sh jobrunner/bashrc
-
-
 keys/testuser:
 	ssh-keygen -t ed25519 -N "" -C testuser -f keys/testuser.key
 	mv keys/testuser.key.pub keys/testuser
