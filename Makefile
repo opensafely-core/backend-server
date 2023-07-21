@@ -37,9 +37,9 @@ test: $(TESTS)
 # run specific test
 .PHONY: $(TESTS)
 $(TESTS): .test-image keys/testuser
-	@test "$$GITHUB_ACTIONS" = "true" && echo "::group::$@" || true
+	echo "::group::$@"
 	./run-in-lxd.sh $@
-	@test "$$GITHUB_ACTIONS" = "true" && echo "::endgroup::" || true
+	echo "::endgroup::"
 
 clean:
 	rm -rf .gh-users .ssh-key-cache .test-image
