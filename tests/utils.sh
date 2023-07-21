@@ -30,6 +30,7 @@ assert-fails() {
   if "$@" >"$log" 2>&1; then
     echo "FAIL: $desc"
     cat "$log"
+    # shellcheck disable=SC2034
     success=1
   else
     echo "PASS: $desc"
