@@ -2,6 +2,7 @@
 
 
 # set DNS for RELEASE_HOST to 127.0.0.1
+# shellcheck source=/dev/null
 source <(cat /srv/jobrunner/environ/*.env)
 HOSTNAME="$(echo "$RELEASE_HOST" | cut -d'/' -f3 | cut -d':' -f1)"
 grep -q "$HOSTNAME" /etc/hosts || echo "127.0.0.1 $HOSTNAME" >> /etc/hosts
@@ -11,7 +12,7 @@ docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml run --rm release-
 
 # check CORS preflight
 cors_check=0
-curl -s --fail $RELEASE_HOST -X OPTIONS \
+curl -s --fail "$RELEASE_HOST" -X OPTIONS \
   -H 'Access-Control-Request-Method: GET' \
   -H 'Access-Control-Request-Headers: authorization' \
   -H 'Origin: https://jobs.opensafely.org' \
