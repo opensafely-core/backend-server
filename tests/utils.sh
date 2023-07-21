@@ -5,12 +5,13 @@ success=0
 
 # strip comments and blank lines from a file
 strip-comments() {
-    sed -e '/^\s*$/d' -e '/^\s*#.*$/d' $1
+    sed -e '/^\s*$/d' -e '/^\s*#.*$/d' "$1"
 }
 
 assert() {
   local desc=$1
-  local log=$(mktemp)
+  local log
+  log=$(mktemp)
   shift;
   if "$@" >"$log" 2>&1; then
     echo "PASS: $desc"
@@ -23,11 +24,13 @@ assert() {
 
 assert-fails() {
   local desc=$1
-  local log=$(mktemp)
+  local log
+  log=$(mktemp)
   shift;
   if "$@" >"$log" 2>&1; then
     echo "FAIL: $desc"
     cat "$log"
+    # shellcheck disable=SC2034
     success=1
   else
     echo "PASS: $desc"

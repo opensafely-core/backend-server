@@ -27,4 +27,4 @@ docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml stop release-hatc
 docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml run -d -p 8001:8001 release-hatch
 
 # tests
-./tests/check-release-hatch
+./tests/check-release-hatch.sh
