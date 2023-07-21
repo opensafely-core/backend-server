@@ -7,7 +7,7 @@ set -euo pipefail
 # run again to test idempotency
 ./scripts/install.sh
 
-. tests/utils
+. tests/utils.sh
 
 # add test user that we know the key for
 ./scripts/update-users.sh tests/developers
