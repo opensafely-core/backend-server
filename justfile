@@ -9,13 +9,17 @@ build:
   make test-image keys/testuser
 
 test:
-  for i in $TESTS; do just run_test $i; done
+  #!/usr/bin/env bash
+  for i in $TESTS;
+  do
+    # group output by target when displaying in Github Actions
+    {{ if github_actions == "true" { "echo \"::group::\"$i"  } else { "" } }}
+    just run_test "$i"
+    {{ if github_actions == "true" { "echo \"::endgroup::\"" } else { "" } }}
+  done
 
 run_test target: build
-  # group output by target when displaying in Github Actions
-  {{ if github_actions == "true" { "echo -n \"::group::\"" + target  } else { "" } }}
   {{ if github_actions == "true" { "sudo" } else { "" } }} ./run-in-lxd.sh {{target}}
-  {{ if github_actions == "true" { "echo \"::endgroup::\"" } else { "" } }}
 
 clean:
   make clean
