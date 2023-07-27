@@ -53,4 +53,6 @@ To run specific tests (tab completes)
     just run_test tests/$TEST
 
 If you specify DEBUG=1, then you will be dropped into a shell inside the docker
-container after the tests has run.
+container after the tests has run, e.g. 
+
+    DEBUG=1 just run_test tests/$TEST 

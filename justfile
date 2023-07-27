@@ -1,6 +1,8 @@
 export TESTS := `ls tests/install.sh tests/*-backend.sh`
 export TEST := "true"
 github_actions := env_var_or_default('GITHUB_ACTIONS', "false")
+# run-in-lxd.sh uses this env_var
+export DEBUG := env_var_or_default('DEBUG', "")
 
 lint:
   shellcheck -x */*.sh jobrunner/bashrc
