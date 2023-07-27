@@ -24,4 +24,4 @@ run_test target: build
   {{ if github_actions == "true" { "sudo" } else { "" } }} ./run-in-lxd.sh {{target}}
 
 clean:
-  make clean
+	rm -rf .gh-users .ssh-key-cache .test-image

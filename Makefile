@@ -21,7 +21,3 @@ test-image: .test-image
 	time ./build-lxd-image.sh
 	touch $@
 
-
-clean:
-	rm -rf .gh-users .ssh-key-cache .test-image
-
