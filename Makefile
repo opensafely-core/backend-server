@@ -1,5 +1,4 @@
 BACKENDS=tpp-backend emis-backend
-TEST_IMAGE=backend-server-test
 CACHE_DIR=.ssh-key-cache
 export TEST=true
 
