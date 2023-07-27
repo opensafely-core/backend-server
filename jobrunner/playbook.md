@@ -222,6 +222,24 @@ for debugging then omit this flag.
 The command is idempotent so you can always run it again later with the
 `--cleanup` flag.
 
+### Debugging slow queries
+
+The only way to gauge whether a DB job is stuck is to look at the docker logs
+for the running job. You can look at the log timestamps to see when it issued
+the current query.
+
+
+There is a helpful script to view this at a glance: `current-queries.sh`. It
+will show the last SQL timestamp of all running *cohortextractor* jobs, giving
+you an idea of how long the job has been waiting on the db for.
+
+`current-queries.sh v` will *also* print the actual SQL, which can be very large.
+
+
+
+
+
+
 ## Start up and Shutdown
 
 ### Preparing for reboot
