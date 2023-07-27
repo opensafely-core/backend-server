@@ -14,7 +14,7 @@ test:
   do
     # group output by target when displaying in Github Actions
     {{ if github_actions == "true" { "echo \"::group::\"$i"  } else { "" } }}
-    {{ just_executable }} run_test "$i"
+    {{ just_executable() }} run_test "$i"
     {{ if github_actions == "true" { "echo \"::endgroup::\"" } else { "" } }}
   done
 
