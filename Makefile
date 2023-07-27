@@ -1,15 +1,9 @@
 BACKENDS=tpp-backend emis-backend
-CACHE_DIR=.ssh-key-cache
 export TEST=true
 
 
 # disable default rules
 .SUFFIXES:
-
-
-keys/testuser:
-	ssh-keygen -t ed25519 -N "" -C testuser -f keys/testuser.key
-	mv keys/testuser.key.pub keys/testuser
 
 
 .PHONY: test-image
