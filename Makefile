@@ -1,4 +1,3 @@
-BACKENDS=tpp-backend emis-backend
 export TEST=true
 
 
