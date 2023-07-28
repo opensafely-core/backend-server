@@ -7,8 +7,13 @@ export DEBUG := env_var_or_default('DEBUG', "")
 lint:
   shellcheck -x */*.sh jobrunner/bashrc
 
-build: testuser-key
-  make test-image 
+build: testuser-key build-test-image
+
+build-test-image:
+  #!/usr/bin/env bash
+  test packages.txt -ot .test-image -a core-packages.txt -ot .test-image -a purge-packages.txt -ot .test-image -a build-lxd-image.sh -ot .test-image && exit 0
+  time sudo ./build-lxd-image.sh
+  touch .test-image
 
 testuser-key:
   #!/usr/bin/env bash
@@ -16,7 +21,7 @@ testuser-key:
   ssh-keygen -t ed25519 -N "" -C testuser -f keys/testuser.key
   mv keys/testuser.key.pub keys/testuser
 
-test:
+test: build
   #!/usr/bin/env bash
   for i in $TESTS;
   do
