@@ -11,7 +11,7 @@ build: testuser-key build-test-image
 
 build-test-image:
   #!/usr/bin/env bash
-  test packages.txt -ot .test-image -a core-packages.txt -ot .test-image -a purge-packages.txt -ot .test-image -a build-lxd-image.sh -ot .test-image && exit 0
+  test packages.txt -nt .test-image -o core-packages.txt -nt .test-image -o purge-packages.txt -nt .test-image -o build-lxd-image.sh -nt .test-image || exit 0
   time {{ if github_actions == "true" { "sudo" } else { "" } }} ./build-lxd-image.sh
   touch .test-image
 
