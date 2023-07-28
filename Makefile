@@ -1,6 +1,4 @@
-TESTS ?= $(shell ls tests/install.sh tests/*-backend.sh)
 BACKENDS=tpp-backend emis-backend
-TEST_IMAGE=backend-server-test
 CACHE_DIR=.ssh-key-cache
 export TEST=true
 
@@ -23,18 +21,6 @@ test-image: .test-image
 	time ./build-lxd-image.sh
 	touch $@
 
-
-# run all tests
-.PHONY: test
-test: $(TESTS)
-
-
-# run specific test
-.PHONY: $(TESTS)
-$(TESTS): .test-image keys/testuser
-	@test "$$GITHUB_ACTIONS" = "true" && echo "::group::$@" || true
-	./run-in-lxd.sh $@
-	@test "$$GITHUB_ACTIONS" = "true" && echo "::endgroup::" || true
 
 clean:
 	rm -rf .gh-users .ssh-key-cache .test-image

@@ -46,11 +46,13 @@ sudo lxd init --auto
 
 To run tests:
 
-    make test
+    just test
 
 To run specific tests (tab completes)
 
-    make tests/$TEST
+    just run_test tests/$TEST
 
 If you specify DEBUG=1, then you will be dropped into a shell inside the docker
-container after the tests has run.
+container after the tests has run, e.g. 
+
+    DEBUG=1 just run_test tests/$TEST 

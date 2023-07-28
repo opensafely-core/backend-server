@@ -27,4 +27,4 @@ jobs:
       # -E so that we get the github environment, e.g. GITHUB_ACTIONS, which we use to switch behaviour
       run: sudo -E make test-image
     - name: Run tests
-      run: sudo -E make test
+      run: just test
