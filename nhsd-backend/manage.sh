@@ -8,5 +8,5 @@ sed 's/^#.*//' core-packages.txt | xargs apt-get install -y
 # setup job runner, but do not use the default reviewers group, as it doesn't
 # exist in NSHD land.
 export REVIEWERS_GROUP=jobrunner
-./scripts/jobrunner.sh nhsd-backend
+./services/jobrunner/install.sh nhsd-backend
 

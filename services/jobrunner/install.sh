@@ -2,6 +2,7 @@
 # Set up the job-runner service
 set -euo pipefail
 BACKEND_DIR=$1
+SRC_DIR=services/jobrunner
 REVIEWERS_GROUP="${REVIEWERS_GROUP:-reviewers}"
 
 # set default file creation permission for this script be 640 for files and 750
@@ -52,14 +53,14 @@ EOF
     cat "$src" >> "$dst"
 }
 
-cp jobrunner/bin/* /srv/jobrunner/bin/
-cp jobrunner/sbin/* /usr/local/sbin
+cp $SRC_DIR/bin/* /srv/jobrunner/bin/
+cp $SRC_DIR/sbin/* /usr/local/sbin
 
-copy_with_warning jobrunner/defaults.env "$defaults_env"
+copy_with_warning $SRC_DIR/defaults.env "$defaults_env"
 copy_with_warning "$BACKEND_DIR/backend.env" "$backend_env"
 
 # TODO: test for new secrets in template not in env?
-test -f $secrets_env || cp jobrunner/secrets-template.env $secrets_env
+test -f $secrets_env || cp $SRC_DIR/secrets-template.env $secrets_env
 
 
 # just make sure local env exists
@@ -90,13 +91,13 @@ chown -R jobrunner:jobrunner "$HIGH_PRIVACY_STORAGE_BASE"
 chown -R "jobrunner:$REVIEWERS_GROUP" "$MEDIUM_PRIVACY_STORAGE_BASE"
 
 # set up some nice helpers for when we su into the shared jobrunner user
-cp jobrunner/bashrc $DIR/bashrc
+cp $SRC_DIR/bashrc $DIR/bashrc
 chmod 644 $DIR/bashrc
 test -f ~jobrunner/.bashrc || touch ~jobrunner/.bashrc
 grep -q "jobrunner/bashrc" ~jobrunner/.bashrc || echo 'test -f /srv/jobrunner/bashrc && . /srv/jobrunner/bashrc' >> ~jobrunner/.bashrc
 
 # update playbook
-cp jobrunner/playbook.md /srv/jobrunner/playbook.md
+cp $SRC_DIR/playbook.md /srv/jobrunner/playbook.md
 ln -sf "/srv/jobrunner/playbook.md" ~jobrunner/playbook.md
 
 # clean up old playbook if present
@@ -113,8 +114,8 @@ find $DIR/secret -type f -exec chmod 0600 {} \;
 
 # set up systemd service
 # Note: do this *after* permissions have been set on the /srv/jobrunner properly
-cp jobrunner/jobrunner.service /etc/systemd/system/
-cp jobrunner/jobrunner.sudo /etc/sudoers.d/jobrunner
+cp $SRC_DIR/jobrunner.service /etc/systemd/system/
+cp $SRC_DIR/jobrunner.sudo /etc/sudoers.d/jobrunner
 
 # backend specific unit overrides
 test -d "$BACKEND_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_DIR/jobrunner.service.d" /etc/systemd/system/
