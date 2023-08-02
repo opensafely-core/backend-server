@@ -16,7 +16,7 @@ Directory layout:
   * scripts for managing emis-access VM
 * ./services/jobrunner
   * scripts and config templates for jobrunner
-* ./osrelease
+* ./services/osrelease
   * scripts and config templates for osrelease
 * ./keys/$USER
   * public keys to add to ssh for $USER
