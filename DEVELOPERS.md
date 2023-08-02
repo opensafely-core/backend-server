@@ -14,7 +14,7 @@ Directory layout:
   * scripts and config for our test backend
 * ./emis-access
   * scripts for managing emis-access VM
-* ./jobrunner
+* ./services/jobrunner
   * scripts and config templates for jobrunner
 * ./osrelease
   * scripts and config templates for osrelease

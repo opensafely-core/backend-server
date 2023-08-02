@@ -9,7 +9,7 @@ default:
 
 # lint some shellscripts
 lint:
-  shellcheck -x */*.sh services/*/*.sh jobrunner/bashrc bin/lsjobs
+  shellcheck -x */*.sh services/*/*.sh services/jobrunner/bashrc bin/lsjobs
 
 # build resources required to run tests
 build: testuser-key build-test-image
