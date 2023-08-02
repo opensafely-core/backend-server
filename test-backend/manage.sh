@@ -5,5 +5,5 @@ set -euo pipefail
 ./scripts/update-users.sh developers
 ./services/jobrunner/install.sh test-backend
 ./release-hatch/install.sh
-./osrelease/install.sh
+./services/osrelease/install.sh
 ./services/collector/install.sh

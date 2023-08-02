@@ -7,7 +7,7 @@ export INSTALL_PACKAGES=false  # don't install stuff as per above
 ./scripts/update-users.sh developers emis-backend/researchers emis-backend/reviewers
 ./services/jobrunner/install.sh emis-backend
 ./release-hatch/install.sh
-./osrelease/install.sh
+./services/osrelease/install.sh
 
 for f in /srv/jobrunner/environ/*.env; do
     # shellcheck disable=SC1090

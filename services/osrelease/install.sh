@@ -2,6 +2,7 @@
 set -euo pipefail
 
 DIR=~jobrunner/osrelease
+SRC_DIR=services/osrelease
 CODE=$DIR/code
 VENV=$DIR/venv
 WHEELS=$DIR/wheels
@@ -10,7 +11,7 @@ CONFIG=$DIR/config.py
 mkdir -p $DIR
 test -d $CODE || git clone https://github-proxy.opensafely.org/opensafely-core/output-publisher $CODE
 test -d $WHEELS || git clone https://github-proxy.opensafely.org/opensafely-core/output-publisher-wheels $WHEELS
-test -f $CONFIG || cp osrelease/config-template.py $CONFIG
+test -f $CONFIG || cp $SRC_DIR/config-template.py $CONFIG
 
 if ! test -d $VENV; then
     python3 -m venv $VENV
@@ -26,9 +27,9 @@ chown -R jobrunner:reviewers $DIR
 chmod a+rx ~jobrunner
 
 # update the deploy script
-cp osrelease/deploy.sh $DIR/deploy.sh
+cp $SRC_DIR/deploy.sh $DIR/deploy.sh
 
 # update the entrypoint executable
-cp osrelease/osrelease.sh /usr/local/bin/osrelease
+cp $SRC_DIR/osrelease.sh /usr/local/bin/osrelease
 # ensure correct owndership
 chown jobrunner:reviewers /usr/local/bin/osrelease
