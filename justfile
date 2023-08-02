@@ -12,6 +12,28 @@ default:
 lint:
   shellcheck -x */*.sh services/*/*.sh services/jobrunner/bashrc bin/lsjobs run-in-lxd.sh build-lxd-image.sh
 
+install:
+  ./scripts/install.sh
+
+manage-test-backend: install
+  #!/bin/bash
+  set -euo pipefail
+
+  ./scripts/update-users.sh developers
+  ./services/jobrunner/install.sh test-backend
+  ./release-hatch/install.sh
+  ./services/osrelease/install.sh
+  ./services/collector/install.sh
+
+manage-tpp-backend: install
+  #!/bin/bash
+  set -euo pipefail
+
+  ./scripts/update-users.sh developers tpp-backend/researchers
+  ./services/jobrunner/install.sh tpp-backend
+  ./release-hatch/install.sh
+  ./services/collector/install.sh
+
 # build resources required to run tests
 build: testuser-key build-test-image
 
