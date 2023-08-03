@@ -1,11 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-./scripts/bootstrap.sh
+BACKEND_JUST=tpp-backend ./scripts/bootstrap.sh
 
-just manage-tpp-backend
+just manage
 # run again to check for idempotency
-just manage-tpp-backend
+just manage
 
 # test for ssh keys
 grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys

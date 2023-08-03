@@ -4,6 +4,7 @@ github_actions := env_var_or_default('GITHUB_ACTIONS', "false")
 # run-in-lxd.sh uses these env_vars
 export DEBUG := env_var_or_default('DEBUG', "")
 export GITHUB_ACTIONS := env_var_or_default('GITHUB_ACTIONS', "false")
+set dotenv-load := true
 
 default:
   @just --list
@@ -12,25 +13,61 @@ default:
 lint:
   shellcheck -x */*.sh services/*/*.sh services/jobrunner/bashrc bin/lsjobs run-in-lxd.sh build-lxd-image.sh
 
+# basic initial install for backends - this should be renamed to something after bootstrap? or split into 3?
 install:
   ./scripts/install.sh
 
-manage-test-backend: install
+[private]
+check_backend_set:
   #!/bin/bash
   set -euo pipefail
 
+  if test -z $BACKEND_JUST
+  then
+    echo "BACKEND_JUST is not set in .env";
+    exit 1
+  fi
+  if test ! -e $BACKEND_JUST
+  then
+    echo "Backend $BACKEND_JUST does not exist in this repo"
+    exit 1
+  fi
+
+# report which backend configuration this justfile is using
+whereami: check_backend_set
+  @echo "Your current backend is: $BACKEND_JUST"
+
+update-users: check_backend_set
+  @{{ just_executable() }} update-users-$BACKEND_JUST
+
+[private]
+update-users-test-backend:
   ./scripts/update-users.sh developers
-  ./services/jobrunner/install.sh test-backend
+
+[private]
+update-users-tpp-backend:
+  ./scripts/update-users.sh developers tpp-backend/researchers
+
+install-jobrunner: check_backend_set
+  ./services/jobrunner/install.sh $BACKEND_JUST
+
+manage: check_backend_set
+  @{{ just_executable() }} manage-$BACKEND_JUST
+
+[private]
+manage-test-backend: install update-users install-jobrunner
+  #!/bin/bash
+  set -euo pipefail
+
   ./release-hatch/install.sh
   ./services/osrelease/install.sh
   ./services/collector/install.sh
 
-manage-tpp-backend: install
+[private]
+manage-tpp-backend: install update-users install-jobrunner
   #!/bin/bash
   set -euo pipefail
 
-  ./scripts/update-users.sh developers tpp-backend/researchers
-  ./services/jobrunner/install.sh tpp-backend
   ./release-hatch/install.sh
   ./services/collector/install.sh
 

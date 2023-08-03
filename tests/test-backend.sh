@@ -14,11 +14,11 @@ tout() {
 	return $code
 }
 
-./scripts/bootstrap.sh
+BACKEND_JUST=test-backend ./scripts/bootstrap.sh
 
-just manage-test-backend
+just manage
 # run again to check for idempotency
-just manage-test-backend
+just manage
 
 # test user setup
 test "$(id -u jobrunner)" == "10000"
