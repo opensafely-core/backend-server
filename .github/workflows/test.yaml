@@ -19,6 +19,7 @@ jobs:
       run: just lint
   tests:
     strategy:
+      fail-fast: false
       matrix:
         backend_name: ['emis', 'nhsd', 'test', 'tpp']
     runs-on: ubuntu-20.04
