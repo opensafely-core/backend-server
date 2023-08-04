@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+./scripts/install_packages.sh
 ./scripts/install.sh
 ./scripts/update-users.sh developers tpp-backend/researchers
 ./services/jobrunner/install.sh tpp-backend

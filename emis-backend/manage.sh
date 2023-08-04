@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-export INSTALL_PACKAGES=false  # don't install stuff as per above
+# Do not run ./scripts/install_packages.sh
 ./scripts/install.sh
 
 ./scripts/update-users.sh developers emis-backend/researchers emis-backend/reviewers
