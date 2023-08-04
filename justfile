@@ -49,6 +49,10 @@ update-users-emis-backend:
   ./scripts/update-users.sh developers emis-backend/researchers emis-backend/reviewers
 
 [private]
+update-users-nhsd-backend:
+  echo "Not required"
+
+[private]
 update-users-test-backend:
   ./scripts/update-users.sh developers
 
@@ -97,6 +101,20 @@ manage-emis-backend: install update-users install-jobrunner install-release-hatc
       test -e "${PRESTO_TLS_CERT_PATH:-}" ||  echo "WARNING: PRESTO_TLS_CERT_PATH=$PRESTO_TLS_CERT_PATH does not exist"
   fi
 
+[private]
+manage-nhsd-backend: 
+  #!/bin/bash
+  set -euo pipefail
+
+  # install/update the core requirements
+  apt-get update
+  sed 's/^#.*//' core-packages.txt | xargs apt-get install -y
+
+  # setup job runner, but do not use the default reviewers group, as it doesn't
+  # exist in NSHD land.
+  export REVIEWERS_GROUP=jobrunner
+  # TODO: re-use the install-jobrunner action
+  ./services/jobrunner/install.sh nhsd-backend
 
 [private]
 manage-test-backend: install-packages install update-users install-jobrunner install-release-hatch install-osrelease install-collector

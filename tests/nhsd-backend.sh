@@ -1,8 +1,11 @@
 #!/bin/bash
 set -euo pipefail
-./nhsd-backend/manage.sh
+
+BACKEND_JUST=nhsd-backend ./scripts/bootstrap.sh
+
+just manage
 #run again to check for idempotency
-./nhsd-backend/manage.sh
+just manage
 
 systemctl status jobrunner
 
