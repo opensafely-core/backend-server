@@ -1,21 +1,6 @@
 #!/bin/bash
-# Install/update all the base packages and groups and system level configuration.
+# Install/update all the groups and system level configuration.
 set -euo pipefail
-
-# packages
-INSTALL_PACKAGES=${INSTALL_PACKAGES:-true}
-# we can't install packages in EMIS atm, so allow skipping that
-if test "$INSTALL_PACKAGES" = "true"; then
-    # running this set -u sometimes causes issues with packaging scripts, it seems
-    set +u
-    sed 's/^#.*//' purge-packages.txt | xargs apt-get purge -y
-    apt-get update
-    apt-get upgrade -y
-    sed 's/^#.*//' core-packages.txt | xargs apt-get install -y
-    sed 's/^#.*//' packages.txt | xargs apt-get install -y
-    apt-get autoremove -y
-    set -u
-fi
 
 ensure_group() {
     local name=$1
