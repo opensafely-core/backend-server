@@ -13,7 +13,11 @@ default:
 lint:
   shellcheck -x */*.sh services/*/*.sh services/jobrunner/bashrc bin/lsjobs run-in-lxd.sh build-lxd-image.sh
 
-# basic initial install for backends - this should be renamed to something after bootstrap? or split into 3?
+# install required system packages
+install-packages:
+  ./scripts/install_packages.sh
+
+# install/update groups & system level configuration 
 install:
   ./scripts/install.sh
 
@@ -41,6 +45,10 @@ update-users: check_backend_set
   @{{ just_executable() }} update-users-$BACKEND_JUST
 
 [private]
+update-users-emis-backend:
+  ./scripts/update-users.sh developers emis-backend/researchers emis-backend/reviewers
+
+[private]
 update-users-test-backend:
   ./scripts/update-users.sh developers
 
@@ -51,25 +59,50 @@ update-users-tpp-backend:
 install-jobrunner: check_backend_set
   ./services/jobrunner/install.sh $BACKEND_JUST
 
+install-release-hatch:
+  ./release-hatch/install.sh
+
+install-osrelease:
+  ./services/osrelease/install.sh
+
+install-collector:
+  ./services/collector/install.sh
+
+# Update jobrunner to the specified commit_id & restart
+update-jobrunner commit_id="HEAD":
+  ./services/jobrunner/bin/update-jobrunner.sh {{ commit_id }}
+
+# install everything for a backend
 manage: check_backend_set
   @{{ just_executable() }} manage-$BACKEND_JUST
 
 [private]
-manage-test-backend: install update-users install-jobrunner
+manage-emis-backend: install update-users install-jobrunner install-release-hatch install-osrelease
   #!/bin/bash
   set -euo pipefail
 
-  ./release-hatch/install.sh
-  ./services/osrelease/install.sh
-  ./services/collector/install.sh
+  for f in /srv/jobrunner/environ/*.env; do
+      # shellcheck disable=SC1090
+      . "$f"
+  done
+
+  if test -z "${PRESTO_TLS_KEY_PATH:-}"; then
+      echo "WARNING: PRESTO_TLS_KEY_PATH env var not defined"
+  else
+      test -e "${PRESTO_TLS_KEY_PATH:-}" ||  echo "WARNING: PRESTO_TLS_KEY_PATH=$PRESTO_TLS_KEY_PATH does not exist"
+  fi
+  if test -z "${PRESTO_TLS_CERT_PATH:-}"; then
+      echo "WARNING: PRESTO_TLS_CERT_PATH env var not defined"
+  else
+      test -e "${PRESTO_TLS_CERT_PATH:-}" ||  echo "WARNING: PRESTO_TLS_CERT_PATH=$PRESTO_TLS_CERT_PATH does not exist"
+  fi
+
 
 [private]
-manage-tpp-backend: install update-users install-jobrunner
-  #!/bin/bash
-  set -euo pipefail
+manage-test-backend: install-packages install update-users install-jobrunner install-release-hatch install-osrelease install-collector
 
-  ./release-hatch/install.sh
-  ./services/collector/install.sh
+[private]
+manage-tpp-backend: install-packages install update-users install-jobrunner install-release-hatch install-collector
 
 # build resources required to run tests
 build: testuser-key build-test-image
