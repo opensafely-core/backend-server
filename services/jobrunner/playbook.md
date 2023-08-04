@@ -235,9 +235,26 @@ you an idea of how long the job has been waiting on the db for.
 
 `current-queries.sh v` will *also* print the actual SQL, which can be very large.
 
+#### Assessing query progress in mssql
 
+To estimate the rowcount of a table which is being `INSERT`ed to,
+the following queries may be run within SSMS or other SQL command
+interpreter connected to the TPP SQL Server.
 
+For session-scoped, `#`-prefixed temporary tables:
 
+    SELECT t.name, p.rows 
+    FROM tempdb.sys.tables t
+    JOIN tempdb.sys.partitions p
+      ON t.object_id = p.object_id
+    WHERE t.name like '<temp table name>%'
+
+_N.B. this will return an estimate of the row count as we lack
+the permissions to obtain an accurate row count for these tables_
+
+For tables within the `OpenCORONATempTables` database:
+
+    SELECT COUNT(*) FROM <name of table> (NOLOCK).
 
 
 ## Start up and Shutdown
