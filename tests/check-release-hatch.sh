@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -euxo pipefail
 
 # set DNS for RELEASE_HOST to 127.0.0.1
 # shellcheck source=/dev/null

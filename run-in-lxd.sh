@@ -11,6 +11,7 @@ TEST_IMAGE=backend-server-test
 DEBUG=${DEBUG:-}
 TRACE=${TRACE:-}
 DOCKER_SHELLOPTS=
+# GITHUB_ACTIONS=${GITHUB_ACTIONS:-"false"}
 
 test -n "$TRACE" && DOCKER_SHELLOPTS=xtrace
 test -v GITHUB_ACTIONS && DOCKER_SHELLOPTS=xtrace
@@ -25,6 +26,8 @@ fi
 clean_name="$(basename "$SCRIPT")"
 CONTAINER="backend-server-${clean_name%.*}"
 
+# this function is used in a trap, so ignore SC2317
+# shellcheck disable=SC2317
 cleanup() {
     # ephemeral container deleted when stopped
     lxc stop "$CONTAINER"
@@ -58,6 +61,11 @@ success=$?
 set -e
 if test $success -eq 0; then
     echo "SUCCESS"
+    if [ "$GITHUB_ACTIONS" = "true" ]; then
+      echo "### $1 ###"
+      cat "$LOG"
+      echo "### $1 ###"
+    fi
 else
     echo "FAILED"
     if test -f "$LOG"; then
