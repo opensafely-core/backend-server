@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        backend_name: ['emis']
+        backend_name: ['emis', 'nhsd', 'test', 'tpp']
     runs-on: ubuntu-20.04
     name: Tests tests
     steps:
