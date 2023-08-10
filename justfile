@@ -64,7 +64,7 @@ install-jobrunner: check_backend_set
   ./services/jobrunner/install.sh $BACKEND_JUST
 
 install-release-hatch:
-  ./release-hatch/install.sh
+  ./services/release-hatch/install.sh
 
 install-osrelease:
   ./services/osrelease/install.sh

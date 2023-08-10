@@ -7,7 +7,7 @@ SSL_KEY=$DIR/certs/release-hatch.key
 SYSTEM_CERTS=/usr/local/share/ca-certificates/release-hatch
 
 mkdir -p $DIR
-cp -a ./release-hatch/* "$DIR"
+cp -a ./services/release-hatch/* "$DIR"
 
 if ! test -e $SSL_KEY -a -e $SSL_CERT; then
     # shellcheck disable=SC1090
