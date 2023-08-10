@@ -6,12 +6,16 @@ Directory layout:
   * various bash scripts to perform specific actions, designed to be idempotent
 * ./etc
   * system configuration files/templates
-* ./tpp-backend
-  * scripts and config for tpp backend
-* ./emis-backend
-  * scripts and config for emis backend
-* ./test-backend
+* ./backends/
+  * scripts and config for supported backends
+* ./backends/emis
+  * scripts and config for EMIS backend
+* ./backends/nhsd
+  * scripts and config for NHSD backend
+* ./backends/test
   * scripts and config for our test backend
+* ./backends/tpp
+  * scripts and config for TPP backends
 * ./emis-access
   * scripts for managing emis-access VM
 * ./services/jobrunner
