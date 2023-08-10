@@ -6,11 +6,10 @@ To update to the latest version of the backend-server, make sure you have local
 checkout of `opensafely-core/backend-server` at the version you want to apply,
 then run:
 
-    sudo ./BACKEND/manage.sh
+    sudo just manage
 
-Where BACKEND is the backend you are currently on. This will apply all current
-backend server configuration, including users, groups, and jobrunner
-configuration.
+This will apply all current backend server configuration, including users, groups,
+and jobrunner configuration.
 
 
 ## jobrunner service

@@ -57,7 +57,8 @@ vmaddress="$(multipass exec $name -- hostname -I)"
 echo "IP: $vmaddress"
 
 # configure TPP backend
-multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./tpp-backend/manage.sh
+multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./scripts/bootstrap.sh tpp-backend
+multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace just manage
 
 # clean up any unwanted thing in the image, prepare it to be booted again
 multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./tpp-backend/clean-image.sh

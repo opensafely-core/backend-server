@@ -13,9 +13,11 @@ set -u
 
 # ok, lets go!
 
-./emis-backend/manage.sh
+./scripts/bootstrap.sh emis-backend
+
+just manage
 # run again to check for idempotency
-./emis-backend/manage.sh
+just manage
 
 # Some assertions
 grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
