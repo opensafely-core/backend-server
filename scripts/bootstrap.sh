@@ -10,13 +10,15 @@ fi
 
 echo "BACKEND_JUST=$1" > .env
 
-# TODO: will this work on EMIS?
-# Heavily based on https://just.systems/install.sh
-archive="https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz"
-mkdir tmp
-curl --proto =https --tlsv1.2 -sSfL $archive | tar -C tmp -xz
-mv tmp/just /usr/local/bin
-chmod 0755 /usr/local/bin/just
+if [[ "$OSTYPE" == "linux-gnu"* ]]
+then
+  mv bin/just-1.14.0-x86_64-unknown-linux-musl /usr/local/bin/just
+  chmod 0755 /usr/local/bin/just
+else
+  echo "Only linux-gnu is currently supported for installing 'just'."
+  echo "Please install 'just' manually."
+  exit 1
+fi
 
 # TODO: this is confusingly similar to 'just install'
 echo "Now run 'just manage'"
