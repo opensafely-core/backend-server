@@ -1,4 +1,4 @@
-export TESTS := `ls tests/install.sh tests/*-backend.sh`
+export TESTS := `ls tests/install.sh tests/backends/*.sh`
 export TEST := "true"
 github_actions := env_var_or_default('GITHUB_ACTIONS', "false")
 # run-in-lxd.sh uses these env_vars
@@ -31,9 +31,13 @@ check_backend_set:
     echo "BACKEND_JUST is not set in .env";
     exit 1
   fi
-  if test ! -e $BACKEND_JUST
+  if [[ $BACKEND_JUST == *"-backend"* ]]; then
+    echo "Please shorten BACKEND_JUST (i.e. 'test' instead of 'test-backend')"
+    exit 1
+  fi
+  if test ! -e backends/$BACKEND_JUST
   then
-    echo "Backend $BACKEND_JUST does not exist in this repo"
+    echo "Backend 'backends/$BACKEND_JUST' does not exist in this repo"
     exit 1
   fi
 
@@ -45,20 +49,20 @@ update-users: check_backend_set
   @{{ just_executable() }} update-users-$BACKEND_JUST
 
 [private]
-update-users-emis-backend:
-  ./scripts/update-users.sh developers emis-backend/researchers emis-backend/reviewers
+update-users-emis:
+  ./scripts/update-users.sh developers backends/emis/researchers backends/emis/reviewers
 
 [private]
-update-users-nhsd-backend:
+update-users-nhsd:
   echo "Not required"
 
 [private]
-update-users-test-backend:
+update-users-test:
   ./scripts/update-users.sh developers
 
 [private]
-update-users-tpp-backend:
-  ./scripts/update-users.sh developers tpp-backend/researchers
+update-users-tpp:
+  ./scripts/update-users.sh developers backends/tpp/researchers
 
 install-jobrunner: check_backend_set
   ./services/jobrunner/install.sh $BACKEND_JUST
@@ -81,7 +85,7 @@ manage: check_backend_set
   @{{ just_executable() }} manage-$BACKEND_JUST
 
 [private]
-manage-emis-backend: install update-users install-jobrunner install-release-hatch install-osrelease
+manage-emis: install update-users install-jobrunner install-release-hatch install-osrelease
   #!/bin/bash
   set -euo pipefail
 
@@ -102,7 +106,7 @@ manage-emis-backend: install update-users install-jobrunner install-release-hatc
   fi
 
 [private]
-manage-nhsd-backend: 
+manage-nhsd: 
   #!/bin/bash
   set -euo pipefail
 
@@ -114,13 +118,13 @@ manage-nhsd-backend:
   # exist in NSHD land.
   export REVIEWERS_GROUP=jobrunner
   # TODO: re-use the install-jobrunner action
-  ./services/jobrunner/install.sh nhsd-backend
+  ./services/jobrunner/install.sh nhsd
 
 [private]
-manage-test-backend: install-packages install update-users install-jobrunner install-release-hatch install-osrelease install-collector
+manage-test: install-packages install update-users install-jobrunner install-release-hatch install-osrelease install-collector
 
 [private]
-manage-tpp-backend: install-packages install update-users install-jobrunner install-release-hatch install-collector
+manage-tpp: install-packages install update-users install-jobrunner install-release-hatch install-collector
 
 # build resources required to run tests
 build: testuser-key build-test-image
