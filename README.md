@@ -17,8 +17,8 @@ differences, but they are unavoidable.
 
 Check out the version of this repo you wish to use (typically main), and then run:
 
-    sudo BACKEND_JUST=YOUR_BACKEND ./scripts/bootstrap.sh
-    # e.g. sudo BACKEND_JUST=tpp-backend ./scripts/bootstrap.sh
+    sudo ./scripts/bootstrap.sh YOUR_BACKEND
+    # e.g. sudo ./scripts/bootstrap.sh tpp-backend
     sudo just manage
 
 This will ensure the right packages, users, groups is configured, and set up

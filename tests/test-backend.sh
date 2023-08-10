@@ -14,7 +14,7 @@ tout() {
 	return $code
 }
 
-BACKEND_JUST=test-backend ./scripts/bootstrap.sh
+./scripts/bootstrap.sh test-backend
 
 just manage
 # run again to check for idempotency

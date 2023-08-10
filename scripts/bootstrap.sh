@@ -1,14 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
-if test -z "$BACKEND_JUST"
+if test -z "$1"
 then
   echo "Please specify your backend when running this file. For example:"
-  echo "BACKEND_JUST=test-backend ./bootstrap.sh";
+  echo "./bootstrap.sh test-backend";
   exit 1
 fi
 
-echo "BACKEND_JUST=$BACKEND_JUST" > .env
+echo "BACKEND_JUST=$1" > .env
 
 # TODO: will this work on EMIS?
 # Heavily based on https://just.systems/install.sh

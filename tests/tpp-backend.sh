@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-BACKEND_JUST=tpp-backend ./scripts/bootstrap.sh
+./scripts/bootstrap.sh tpp-backend
 
 just manage
 # run again to check for idempotency

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-BACKEND_JUST=nhsd-backend ./scripts/bootstrap.sh
+./scripts/bootstrap.sh nhsd-backend
 
 just manage
 #run again to check for idempotency

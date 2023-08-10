@@ -13,7 +13,7 @@ set -u
 
 # ok, lets go!
 
-BACKEND_JUST=emis-backend ./scripts/bootstrap.sh
+./scripts/bootstrap.sh emis-backend
 
 just manage
 # run again to check for idempotency
