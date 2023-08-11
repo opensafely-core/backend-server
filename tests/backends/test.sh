@@ -28,11 +28,11 @@ test "$(id -g jobrunner)" == "10000"
 tout 5s systemctl status jobrunner
 
 # hack to pull in the cohortextactor for this job
-/srv/jobrunner/code/scripts/update-docker-image.sh cohortextractor
+/home/jobrunner/code/scripts/update-docker-image.sh cohortextractor
 
 # run a job
 echo "
-export PYTHONPATH=/srv/jobrunner/code:/srv/jobrunner/lib
+export PYTHONPATH=/home/jobrunner/code:/home/jobrunner/lib
 python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template generate_study_population
 " | su - jobrunner -c bash
 

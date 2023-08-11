@@ -1,8 +1,10 @@
 #!/bin/bash
-# Set up the job-runner service
 set -euo pipefail
+
+# Set up the job-runner service
 BACKEND_DIR=backends/$1
 SRC_DIR=services/jobrunner
+TARGET_DIR=/home/jobrunner
 REVIEWERS_GROUP="${REVIEWERS_GROUP:-reviewers}"
 
 # set default file creation permission for this script be 640 for files and 750
@@ -21,20 +23,19 @@ else
 fi
 
 
-DIR=/srv/jobrunner
-mkdir -p $DIR
+mkdir -p $TARGET_DIR
 # ensure we have a checkout of job-runner and dependencies
-test -d $DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $DIR/code
-test -d $DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $DIR/lib
+test -d $TARGET_DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $TARGET_DIR/code
+test -d $TARGET_DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $TARGET_DIR/lib
 
 # service configuration
-mkdir -p $DIR/secret
-mkdir -p $DIR/environ
-mkdir -p $DIR/bin
-defaults_env="$DIR/environ/01_defaults.env"
-secrets_env="$DIR/environ/02_secrets.env"
-backend_env="$DIR/environ/03_backend.env"
-local_env="$DIR/environ/04_local.env"
+mkdir -p $TARGET_DIR/secret
+mkdir -p $TARGET_DIR/environ
+mkdir -p $TARGET_DIR/bin
+defaults_env="$TARGET_DIR/environ/01_defaults.env"
+secrets_env="$TARGET_DIR/environ/02_secrets.env"
+backend_env="$TARGET_DIR/environ/03_backend.env"
+local_env="$TARGET_DIR/environ/04_local.env"
 
 copy_with_warning() {
     local src=$1
@@ -53,7 +54,7 @@ EOF
     cat "$src" >> "$dst"
 }
 
-cp $SRC_DIR/bin/* /srv/jobrunner/bin/
+cp $SRC_DIR/bin/* $TARGET_DIR/bin/
 cp $SRC_DIR/sbin/* /usr/local/sbin
 
 copy_with_warning $SRC_DIR/defaults.env "$defaults_env"
@@ -75,7 +76,7 @@ fi
 # load config
 set -a
 # shellcheck disable=SC1090
-for f in "$DIR"/environ/*.env; do
+for f in "$TARGET_DIR"/environ/*.env; do
     # shellcheck disable=1090
     . "$f"
 done
@@ -91,29 +92,28 @@ chown -R jobrunner:jobrunner "$HIGH_PRIVACY_STORAGE_BASE"
 chown -R "jobrunner:$REVIEWERS_GROUP" "$MEDIUM_PRIVACY_STORAGE_BASE"
 
 # set up some nice helpers for when we su into the shared jobrunner user
-cp $SRC_DIR/bashrc $DIR/bashrc
-chmod 644 $DIR/bashrc
+cp $SRC_DIR/bashrc $TARGET_DIR/bashrc
+chmod 644 $TARGET_DIR/bashrc
 test -f ~jobrunner/.bashrc || touch ~jobrunner/.bashrc
-grep -q "jobrunner/bashrc" ~jobrunner/.bashrc || echo 'test -f /srv/jobrunner/bashrc && . /srv/jobrunner/bashrc' >> ~jobrunner/.bashrc
+grep -q "jobrunner/bashrc" ~jobrunner/.bashrc || echo "test -f $TARGET_DIR/bashrc && . $TARGET_DIR/bashrc" >> ~jobrunner/.bashrc
 
 # update playbook
-cp $SRC_DIR/playbook.md /srv/jobrunner/playbook.md
-ln -sf "/srv/jobrunner/playbook.md" ~jobrunner/playbook.md
+cp $SRC_DIR/playbook.md $TARGET_DIR/playbook.md
 
 # clean up old playbook if present
 rm -f /srv/playbook.md
 
 # create initial db if not present
-test -f /srv/jobrunner/code/workdir/db.sqlite || PYTHONPATH=/srv/jobrunner/lib:/srv/jobrunner/code python3 -m jobrunner.cli.migrate
+test -f $TARGET_DIR/code/workdir/db.sqlite || PYTHONPATH=$TARGET_DIR/lib:$TARGET_DIR/code python3 -m jobrunner.cli.migrate
 
 # ensure file ownership and permissions
-chown -R jobrunner:jobrunner /srv/jobrunner
+chown -R jobrunner:jobrunner $TARGET_DIR
 chmod 0600 $secrets_env
-chmod 0700 $DIR/secret
-find $DIR/secret -type f -exec chmod 0600 {} \;
+chmod 0700 $TARGET_DIR/secret
+find $TARGET_DIR/secret -type f -exec chmod 0600 {} \;
 
 # set up systemd service
-# Note: do this *after* permissions have been set on the /srv/jobrunner properly
+# Note: do this *after* permissions have been set on the $TARGET_DIR properly
 cp $SRC_DIR/jobrunner.service /etc/systemd/system/
 cp $SRC_DIR/jobrunner.sudo /etc/sudoers.d/jobrunner
 
