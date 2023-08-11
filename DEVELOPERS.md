@@ -31,7 +31,7 @@ Directory layout:
   * reviewers GitHub account list.
 * ./tests
   * test scripts, run in docker container by makefile
-* ./run-in-lxd.sh
+* ./tests/run-in-lxd.sh
   * runner for above tests. Uses LXD to provide a VM-like environment to run scripts on.
 
 ## Testing

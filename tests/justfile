@@ -50,7 +50,7 @@ test: build
 
 # run a specific test
 run_test target: build
-  (cd .. && {{ if github_actions == "true" { "sudo -E" } else { "" } }} ./run-in-lxd.sh {{target}})
+  (cd .. && {{ if github_actions == "true" { "sudo -E" } else { "" } }} ./tests/run-in-lxd.sh {{target}})
 
 # remove temporary files relating to tests
 clean:
