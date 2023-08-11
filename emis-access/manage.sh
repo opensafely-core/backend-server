@@ -2,4 +2,4 @@
 set -euo pipefail
 
 ./scripts/install.sh
-./scripts/update-users.sh developers emis-backend/researchers emis-backend/reviewers
+./scripts/update-users.sh developers backends/emis/researchers backends/emis/reviewers

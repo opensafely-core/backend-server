@@ -57,16 +57,16 @@ vmaddress="$(multipass exec $name -- hostname -I)"
 echo "IP: $vmaddress"
 
 # configure TPP backend
-multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./scripts/bootstrap.sh tpp-backend
+multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./scripts/bootstrap.sh backends/tpp
 multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace just manage
 
 # clean up any unwanted thing in the image, prepare it to be booted again
-multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./tpp-backend/clean-image.sh
+multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./backends/tpp/clean-image.sh
 
 # disable the default ubuntu user
 # unfortunately, its very awkward for us to delete it here, due to requiring it to ssh in.
 # so we simply disable it
-multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./tpp-backend/remove-ubuntu-user.sh
+multipass exec $name -- sudo env --chdir //tmp/config SHELLOPTS=xtrace ./backends/tpp/remove-ubuntu-user.sh
 
 # ready to export
 multipass stop $name

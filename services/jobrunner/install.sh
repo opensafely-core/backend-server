@@ -1,7 +1,7 @@
 #!/bin/bash
 # Set up the job-runner service
 set -euo pipefail
-BACKEND_DIR=$1
+BACKEND_DIR=backends/$1
 SRC_DIR=services/jobrunner
 REVIEWERS_GROUP="${REVIEWERS_GROUP:-reviewers}"
 

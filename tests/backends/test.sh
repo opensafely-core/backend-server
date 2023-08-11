@@ -14,7 +14,7 @@ tout() {
 	return $code
 }
 
-./scripts/bootstrap.sh test-backend
+./scripts/bootstrap.sh test
 
 just manage
 # run again to check for idempotency

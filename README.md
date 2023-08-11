@@ -18,7 +18,7 @@ differences, but they are unavoidable.
 Check out the version of this repo you wish to use (typically main), and then run:
 
     sudo ./scripts/bootstrap.sh YOUR_BACKEND
-    # e.g. sudo ./scripts/bootstrap.sh tpp-backend
+    # e.g. sudo ./scripts/bootstrap.sh tpp
     sudo just manage
 
 This will ensure the right packages, users, groups is configured, and set up
@@ -92,5 +92,5 @@ Note: Long-term, reviewers will not have local accounts, but instead review via 
 
 ## Specific Backend Details
 
- - [TPP](tpp-backend/README.md)
- - [EMIS](emis-backend/README.md)
+ - [TPP](backends/tpp/README.md)
+ - [EMIS](backends/emis/README.md)

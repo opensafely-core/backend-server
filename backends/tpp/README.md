@@ -88,7 +88,7 @@ TPP have no experience with operating Ubuntu machines. So, initially, we
 provided them with a Hyper-V image, which they could pen test and
 deploy.
 
-To build this image, we used the tpp-backend/build-image.sh script, run
+To build this image, we used the backends/tpp/build-image.sh script, run
 in git-bash on Windows.
 
 Once the VM is deployed, we will maintain it directly, and do not

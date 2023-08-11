@@ -4,7 +4,7 @@ set -euo pipefail
 if test -z "$1"
 then
   echo "Please specify your backend when running this file. For example:"
-  echo "./bootstrap.sh test-backend";
+  echo "./bootstrap.sh my_backend";
   exit 1
 fi
 

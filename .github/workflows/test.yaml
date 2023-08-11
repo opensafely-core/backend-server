@@ -37,4 +37,4 @@ jobs:
     - name: Prepare test image & testuser key
       run: just build
     - name: Run tests
-      run: just run_test tests/${{ matrix.backend_name }}-backend.sh
+      run: just run_test tests/backends/${{ matrix.backend_name }}.sh
