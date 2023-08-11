@@ -2,18 +2,20 @@
 set -euo pipefail
 name=${1-backend-server-test}
 
+BACKEND_SERVER_PATH=$(dirname "${BASH_SOURCE[0]}")/../
+
 lxc image delete "$name" || true
 lxc delete -f "$name" || true
 lxc launch ubuntu:20.04 "$name" --quiet -c security.nesting=true
 lxc exec "$name" -- cloud-init status --wait
 
 # install stuff
-sed 's/^#.*//' purge-packages.txt | lxc exec "$name" -- xargs apt-get purge -y
+sed 's/^#.*//' "$BACKEND_SERVER_PATH"/purge-packages.txt | lxc exec "$name" -- xargs apt-get purge -y
 lxc exec "$name" -- apt-get autoremove --yes
 lxc exec "$name" -- apt-get update
 lxc exec "$name" -- apt-get upgrade --yes
-sed 's/^#.*//' core-packages.txt | lxc exec "$name" -- xargs apt-get install -y
-sed 's/^#.*//' packages.txt | lxc exec "$name" -- xargs apt-get install -y
+sed 's/^#.*//' "$BACKEND_SERVER_PATH"/core-packages.txt | lxc exec "$name" -- xargs apt-get install -y
+sed 's/^#.*//' "$BACKEND_SERVER_PATH"/packages.txt | lxc exec "$name" -- xargs apt-get install -y
 
 lxc stop "$name"
 time lxc publish --quiet "$name" --alias "$name"

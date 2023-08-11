@@ -22,8 +22,8 @@ build-test-image:
   #!/usr/bin/env bash
   set -euo pipefail
 
-  test packages.txt -nt .test-image -o ../core-packages.txt -nt .test-image -o ../purge-packages.txt -nt .test-image -o ../build-lxd-image.sh -nt .test-image || exit 0
-  (cd .. && time {{ if github_actions == "true" { "sudo" } else { "" } }} ./build-lxd-image.sh)
+  test packages.txt -nt .test-image -o ../core-packages.txt -nt .test-image -o ../purge-packages.txt -nt .test-image -o ./build-lxd-image.sh -nt .test-image || exit 0
+  time {{ if github_actions == "true" { "sudo" } else { "" } }} ./build-lxd-image.sh
   touch .test-image
 
 # create ssh key for tests
