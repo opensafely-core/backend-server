@@ -3,9 +3,9 @@ set -euo pipefail
 
 # files containing lists of gh user names for the different roles
 # note: probably will be API calls to job-server in future
-developers=$1
-researchers=${2:-}
-reviewers=${3:-}
+developers="developers"
+researchers="backends/$1/researchers"
+reviewers="backends/$1/reviewers"
 
 # add a user, add to groups, and
 add_user() {
@@ -47,8 +47,15 @@ add_group() {
     done < "$file"
 }
 
-# developers is mandatory. They get docker and sudo access
-add_group "$developers" developers researchers reviewers docker sudo
+# developers group. They get docker and sudo access.
+# Required for most backends, although not NHSD.
+if test -f "$developers"; then
+    add_group "$developers" developers researchers reviewers docker sudo
+else
+    # We do not expect to run this command on NHSD, so this message should be an error.
+    echo "Missing developers file! This is expected for NHSD, but everywhere else should have one."
+    exit 1
+fi
 
 # Note: the following groups are optional, depends on how the users will
 # authenticate with the specific backend
