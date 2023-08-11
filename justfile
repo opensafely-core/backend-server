@@ -85,7 +85,7 @@ manage: check_backend_set
   @{{ just_executable() }} manage-$BACKEND_JUST
 
 [private]
-manage-emis: install update-users install-jobrunner install-release-hatch install-osrelease
+manage-emis: install update-users install-jobrunner install-release-hatch
   #!/bin/bash
   set -euo pipefail
 
