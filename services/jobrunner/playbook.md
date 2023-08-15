@@ -23,10 +23,10 @@ the jobrunner user with:
 
 This will set up your shell with the correct environment variables.
 
-The jobrunner is installed in `/home/jobrunner`
+The jobrunner is installed in `/home/jobrunner/jobrunner`
 
-    /home/jobrunner/code     # the checkout of jobrunner currently running
-    /home/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
+    /home/jobrunner/jobrunner/code     # the checkout of jobrunner currently running
+    /home/jobrunner/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
     /home/jobrunner/environ  # environment configuration
     /home/jobrunner/secret   # any secret files (e.g. x509 client certificates for emis)
 
@@ -79,7 +79,7 @@ just update-jobrunner
 
 #### Manual
 
-In `/home/jobrunner/code` run:
+In `/home/jobrunner/jobrunner/code` run:
 
     git pull
 

@@ -8,8 +8,8 @@ done
 set +a
 
 # let jobrunner user use the jobrunner commands and scripts easily
-export PYTHONPATH=/home/jobrunner/code:/home/jobrunner/lib
-export PATH=$PATH:/home/jobrunner/bin:/home/jobrunner/code/scripts
+export PYTHONPATH=/home/jobrunner/jobrunner/code:/home/jobrunner/jobrunner/lib
+export PATH=$PATH:/home/jobrunner/bin:/home/jobrunner/jobrunner/code/scripts
 
 cat << EOF
 You have logged into the shared jobrunner account for managing the jobrunner service.
@@ -21,8 +21,8 @@ $(systemctl status -n0 jobrunner)
 
 Environment variables have been set from /home/jobrunner/environ/*.env"
 
-Code: /home/jobrunner/code
-Deps: /home/jobrunner/lib
+Code: /home/jobrunner/jobrunner/code
+Deps: /home/jobrunner/jobrunner/lib
 Config: /home/jobrunner/environ
 
 Medium privacy files are at $MEDIUM_PRIVACY_STORAGE_BASE
