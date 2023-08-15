@@ -132,4 +132,5 @@ cp $SRC_DIR/jobrunner.sudo /etc/sudoers.d/jobrunner
 # backend specific unit overrides
 test -d "$BACKEND_SRC_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_SRC_DIR/jobrunner.service.d" /etc/systemd/system/
 
-systemctl enable --now jobrunner
+# Dump all the logs if this fails to start
+systemctl enable --now jobrunner || (journalctl -xe && exit 1)
