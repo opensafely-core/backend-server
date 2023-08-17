@@ -46,23 +46,7 @@ whereami: check_backend_set
   @echo "Your current backend is: $BACKEND_JUST"
 
 update-users: check_backend_set
-  @{{ just_executable() }} update-users-$BACKEND_JUST
-
-[private]
-update-users-emis:
-  ./scripts/update-users.sh developers backends/emis/researchers backends/emis/reviewers
-
-[private]
-update-users-nhsd:
-  echo "Not required"
-
-[private]
-update-users-test:
-  ./scripts/update-users.sh developers
-
-[private]
-update-users-tpp:
-  ./scripts/update-users.sh developers backends/tpp/researchers
+  ./scripts/update-users.sh $BACKEND_JUST
 
 install-jobrunner: check_backend_set
   ./services/jobrunner/install.sh $BACKEND_JUST
