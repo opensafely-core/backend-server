@@ -11,7 +11,7 @@ cp -a ./services/release-hatch/* "$DIR"
 
 if ! test -e $SSL_KEY -a -e $SSL_CERT; then
     # shellcheck disable=SC1090
-    source <(cat /home/jobrunner/environ/*.env)
+    source <(cat /home/jobrunner/config/*.env)
 
     # clean http:// and ports
     HOSTNAME="$(echo "$RELEASE_HOST" | cut -d'/' -f3 | cut -d':' -f1)"

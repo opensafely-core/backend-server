@@ -14,10 +14,10 @@ services:
       - "443:8001"
     user: 10000:10000
     env_file:
-      - /home/jobrunner/environ/01_defaults.env
-      - /home/jobrunner/environ/02_secrets.env
-      - /home/jobrunner/environ/03_backend.env
-      - /home/jobrunner/environ/04_local.env
+      - /home/jobrunner/config/01_defaults.env
+      - /home/jobrunner/config/02_secrets.env
+      - /home/jobrunner/config/03_backend.env
+      - /home/jobrunner/config/04_local.env
     environment:
       UVICORN_SSL_CERTFILE: /certs/release-hatch.crt
       UVICORN_SSL_KEYFILE: /certs/release-hatch.key

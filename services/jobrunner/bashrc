@@ -2,7 +2,7 @@
 # load config into this shell so we can just run stuff
 set -a
 # shellcheck disable=SC1090
-for f in /home/jobrunner/environ/*.env; do
+for f in /home/jobrunner/config/*.env; do
     . "$f"
 done
 set +a
@@ -19,11 +19,11 @@ Current status:
 systemctl status -n0 jobrunner
 $(systemctl status -n0 jobrunner)
 
-Environment variables have been set from ./environ/*.env"
+Environment variables have been set from ./config/*.env"
 
 Code: ./jobrunner/code
 Deps: ./jobrunner/lib
-Config: ./environ
+Config: ./config
 
 Medium privacy files are at $MEDIUM_PRIVACY_STORAGE_BASE
 High privacy files are at $HIGH_PRIVACY_STORAGE_BASE
