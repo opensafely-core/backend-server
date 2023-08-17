@@ -10,7 +10,7 @@ normal docker tools or via docker-compose.
 # Configuration
 
 release-hatch shares the same configuration as jobrunner, which currently lives
-in `/home/jobrunner/environ/*.env`. In particular, it uses `JOB_SERVER_TOKEN` to
+in `/home/jobrunner/config/*.env`. In particular, it uses `JOB_SERVER_TOKEN` to
 sign and validate requests, and it uses `RELEASE_HOST` to know what domain it
 should be serving files from.
 

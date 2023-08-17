@@ -73,7 +73,7 @@ manage-emis: install update-users install-jobrunner install-release-hatch
   #!/bin/bash
   set -euo pipefail
 
-  for f in /home/jobrunner/environ/*.env; do
+  for f in /home/jobrunner/config/*.env; do
       # shellcheck disable=SC1090
       . "$f"
   done

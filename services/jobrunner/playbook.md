@@ -27,7 +27,7 @@ The jobrunner is installed in `/home/jobrunner/jobrunner`
 
     /home/jobrunner/jobrunner/code     # the checkout of jobrunner currently running
     /home/jobrunner/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
-    /home/jobrunner/environ  # environment configuration
+    /home/jobrunner/config  # environment configuration
     /home/jobrunner/secret   # any secret files (e.g. x509 client certificates for emis)
 
 
@@ -56,7 +56,7 @@ To look for all logs for a specific job id:
 
 ### Configuring the job-runner
 
-All env files are in /home/jobrunner/environ/\*.env
+All env files are in /home/jobrunner/config/\*.env
 
     01_defaults.env   # job runner default production values. DO NOT EDIT
     02_secrets.env    # secrets for this backend (e.g. github tokens)

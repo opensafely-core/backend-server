@@ -4,10 +4,10 @@ Documentation=https://github.com/opensafely-core/job-runner
 
 [Service]
 Environment=PYTHONPATH=/home/jobrunner/jobrunner/lib
-EnvironmentFile=/home/jobrunner/environ/01_defaults.env
-EnvironmentFile=/home/jobrunner/environ/02_secrets.env
-EnvironmentFile=/home/jobrunner/environ/03_backend.env
-EnvironmentFile=/home/jobrunner/environ/04_local.env
+EnvironmentFile=/home/jobrunner/config/01_defaults.env
+EnvironmentFile=/home/jobrunner/config/02_secrets.env
+EnvironmentFile=/home/jobrunner/config/03_backend.env
+EnvironmentFile=/home/jobrunner/config/04_local.env
 WorkingDirectory=/home/jobrunner/jobrunner/code
 
 # Creates and configures a Docker network which allows network access to only

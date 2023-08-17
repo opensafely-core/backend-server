@@ -42,11 +42,11 @@ EOF
 
 # set up config
 
-mkdir -p $HOME_DIR/environ
-defaults_env="$HOME_DIR/environ/01_defaults.env"
-secrets_env="$HOME_DIR/environ/02_secrets.env"
-backend_env="$HOME_DIR/environ/03_backend.env"
-local_env="$HOME_DIR/environ/04_local.env"
+mkdir -p $HOME_DIR/config
+defaults_env="$HOME_DIR/config/01_defaults.env"
+secrets_env="$HOME_DIR/config/02_secrets.env"
+backend_env="$HOME_DIR/config/03_backend.env"
+local_env="$HOME_DIR/config/04_local.env"
 
 copy_with_warning $SRC_DIR/defaults.env "$defaults_env"
 copy_with_warning "$BACKEND_SRC_DIR/backend.env" "$backend_env"
@@ -66,7 +66,7 @@ fi
 # load config
 set -a
 # shellcheck disable=SC1090
-for f in "$HOME_DIR"/environ/*.env; do
+for f in "$HOME_DIR"/config/*.env; do
     # shellcheck disable=1090
     . "$f"
 done
