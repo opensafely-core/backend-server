@@ -1,8 +1,11 @@
 #!/bin/bash
-# Set up the job-runner service
 set -euo pipefail
-BACKEND_DIR=backends/$1
+
+# Set up the job-runner service
 SRC_DIR=services/jobrunner
+BACKEND_SRC_DIR=backends/$1
+HOME_DIR=/home/jobrunner
+TARGET_DIR=$HOME_DIR/jobrunner
 REVIEWERS_GROUP="${REVIEWERS_GROUP:-reviewers}"
 
 # set default file creation permission for this script be 640 for files and 750
@@ -19,22 +22,6 @@ if id -u jobrunner 2>/dev/null; then
 else
     useradd jobrunner --create-home --shell /bin/bash --uid 10000 -G docker
 fi
-
-
-DIR=/srv/jobrunner
-mkdir -p $DIR
-# ensure we have a checkout of job-runner and dependencies
-test -d $DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $DIR/code
-test -d $DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $DIR/lib
-
-# service configuration
-mkdir -p $DIR/secret
-mkdir -p $DIR/environ
-mkdir -p $DIR/bin
-defaults_env="$DIR/environ/01_defaults.env"
-secrets_env="$DIR/environ/02_secrets.env"
-backend_env="$DIR/environ/03_backend.env"
-local_env="$DIR/environ/04_local.env"
 
 copy_with_warning() {
     local src=$1
@@ -53,17 +40,22 @@ EOF
     cat "$src" >> "$dst"
 }
 
-cp $SRC_DIR/bin/* /srv/jobrunner/bin/
-cp $SRC_DIR/sbin/* /usr/local/sbin
+# set up config
+
+mkdir -p $HOME_DIR/environ
+defaults_env="$HOME_DIR/environ/01_defaults.env"
+secrets_env="$HOME_DIR/environ/02_secrets.env"
+backend_env="$HOME_DIR/environ/03_backend.env"
+local_env="$HOME_DIR/environ/04_local.env"
 
 copy_with_warning $SRC_DIR/defaults.env "$defaults_env"
-copy_with_warning "$BACKEND_DIR/backend.env" "$backend_env"
+copy_with_warning "$BACKEND_SRC_DIR/backend.env" "$backend_env"
 
 # TODO: test for new secrets in template not in env?
 test -f $secrets_env || cp $SRC_DIR/secrets-template.env $secrets_env
+chmod 0600 $secrets_env
 
-
-# just make sure local env exists
+# make sure local env exists
 test -f "$local_env" || echo "# add local overrides here (this file is safe to edit by hand)" > "$local_env"
 
 # utility for injecting test config
@@ -71,15 +63,41 @@ if test -f "${TEST_CONFIG:-}"; then
     cat "$TEST_CONFIG" >>"$local_env"
 fi
 
-
 # load config
 set -a
 # shellcheck disable=SC1090
-for f in "$DIR"/environ/*.env; do
+for f in "$HOME_DIR"/environ/*.env; do
     # shellcheck disable=1090
     . "$f"
 done
 set +a;
+
+# update playbook
+cp $SRC_DIR/playbook.md $HOME_DIR/playbook.md
+# clean up old playbook if present
+rm -f /srv/playbook.md
+
+
+
+
+# set up jobrunner
+
+mkdir -p $TARGET_DIR
+# ensure we have a checkout of job-runner and dependencies
+test -d $TARGET_DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $TARGET_DIR/code
+test -d $TARGET_DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $TARGET_DIR/lib
+
+# service configuration
+SECRET_DIR=$HOME_DIR/secret
+mkdir -p $SECRET_DIR
+chmod 0700 $SECRET_DIR
+find $SECRET_DIR -type f -exec chmod 0600 {} \;
+
+BIN_DIR=$HOME_DIR/bin
+mkdir -p $BIN_DIR
+
+cp $SRC_DIR/bin/* $BIN_DIR/
+cp $SRC_DIR/sbin/* /usr/local/sbin
 
 # setup output directories
 for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; do
@@ -90,34 +108,29 @@ done
 chown -R jobrunner:jobrunner "$HIGH_PRIVACY_STORAGE_BASE"
 chown -R "jobrunner:$REVIEWERS_GROUP" "$MEDIUM_PRIVACY_STORAGE_BASE"
 
-# set up some nice helpers for when we su into the shared jobrunner user
-cp $SRC_DIR/bashrc $DIR/bashrc
-chmod 644 $DIR/bashrc
-test -f ~jobrunner/.bashrc || touch ~jobrunner/.bashrc
-grep -q "jobrunner/bashrc" ~jobrunner/.bashrc || echo 'test -f /srv/jobrunner/bashrc && . /srv/jobrunner/bashrc' >> ~jobrunner/.bashrc
-
-# update playbook
-cp $SRC_DIR/playbook.md /srv/jobrunner/playbook.md
-ln -sf "/srv/jobrunner/playbook.md" ~jobrunner/playbook.md
-
-# clean up old playbook if present
-rm -f /srv/playbook.md
 
 # create initial db if not present
-test -f /srv/jobrunner/code/workdir/db.sqlite || PYTHONPATH=/srv/jobrunner/lib:/srv/jobrunner/code python3 -m jobrunner.cli.migrate
+test -f $TARGET_DIR/code/workdir/db.sqlite || PYTHONPATH=$TARGET_DIR/lib:$TARGET_DIR/code python3 -m jobrunner.cli.migrate
 
 # ensure file ownership and permissions
-chown -R jobrunner:jobrunner /srv/jobrunner
-chmod 0600 $secrets_env
-chmod 0700 $DIR/secret
-find $DIR/secret -type f -exec chmod 0600 {} \;
+chown -R jobrunner:jobrunner $TARGET_DIR
+chown -R jobrunner:jobrunner $HOME_DIR
+
+# set up some nice helpers for jobrunner when we su into the shared user
+jobrunner_bashrc=$TARGET_DIR/bashrc
+user_bashrc=$HOME_DIR/.bashrc
+cp $SRC_DIR/bashrc $jobrunner_bashrc
+chmod 644 $jobrunner_bashrc
+test -f $user_bashrc || touch $user_bashrc
+grep -q "jobrunner/bashrc" $user_bashrc || echo "test -f $jobrunner_bashrc && . $jobrunner_bashrc" >> $user_bashrc
 
 # set up systemd service
-# Note: do this *after* permissions have been set on the /srv/jobrunner properly
+# Note: do this *after* permissions have been set on the $TARGET_DIR properly
 cp $SRC_DIR/jobrunner.service /etc/systemd/system/
 cp $SRC_DIR/jobrunner.sudo /etc/sudoers.d/jobrunner
 
 # backend specific unit overrides
-test -d "$BACKEND_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_DIR/jobrunner.service.d" /etc/systemd/system/
+test -d "$BACKEND_SRC_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_SRC_DIR/jobrunner.service.d" /etc/systemd/system/
 
-systemctl enable --now jobrunner
+# Dump all the logs if this fails to start
+systemctl enable --now jobrunner || (journalctl -xe && exit 1)

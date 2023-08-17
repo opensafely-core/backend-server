@@ -2,14 +2,14 @@
 # load config into this shell so we can just run stuff
 set -a
 # shellcheck disable=SC1090
-for f in /srv/jobrunner/environ/*.env; do
+for f in /home/jobrunner/environ/*.env; do
     . "$f"
 done
 set +a
 
 # let jobrunner user use the jobrunner commands and scripts easily
-export PYTHONPATH=/srv/jobrunner/code:/srv/jobrunner/lib
-export PATH=$PATH:/srv/jobrunner/bin:/srv/jobrunner/code/scripts
+export PYTHONPATH=/home/jobrunner/jobrunner/code:/home/jobrunner/jobrunner/lib
+export PATH=$PATH:/home/jobrunner/bin:/home/jobrunner/jobrunner/code/scripts
 
 cat << EOF
 You have logged into the shared jobrunner account for managing the jobrunner service.
@@ -19,11 +19,11 @@ Current status:
 systemctl status -n0 jobrunner
 $(systemctl status -n0 jobrunner)
 
-Environment variables have been set from /srv/jobrunner/environ/*.env"
+Environment variables have been set from ./environ/*.env"
 
-Code: /srv/jobrunner/code
-Deps: /srv/jobrunner/lib
-Config: /srv/jobrunner/environ
+Code: ./jobrunner/code
+Deps: ./jobrunner/lib
+Config: ./environ
 
 Medium privacy files are at $MEDIUM_PRIVACY_STORAGE_BASE
 High privacy files are at $HIGH_PRIVACY_STORAGE_BASE

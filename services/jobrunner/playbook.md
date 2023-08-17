@@ -3,8 +3,8 @@
 ## Updating the infrastructure
 
 To update to the latest version of the backend-server, make sure you have local
-checkout of `opensafely-core/backend-server` at the version you want to apply,
-then run:
+checkout of [opensafely-core/backend-server](https://github.com/opensafely-core/backend-server) at
+the version you want to apply, then run:
 
     sudo just manage
 
@@ -23,12 +23,12 @@ the jobrunner user with:
 
 This will set up your shell with the correct environment variables.
 
-The jobrunner is installed in `/srv/jobrunner`
+The jobrunner is installed in `/home/jobrunner/jobrunner`
 
-    /srv/jobrunner/code     # the checkout of jobrunner currently running
-    /srv/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
-    /srv/jobrunner/environ  # environment configuration
-    /srv/jobrunner/secret   # any secret files (e.g. x509 client certificates for emis)
+    /home/jobrunner/jobrunner/code     # the checkout of jobrunner currently running
+    /home/jobrunner/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
+    /home/jobrunner/environ  # environment configuration
+    /home/jobrunner/secret   # any secret files (e.g. x509 client certificates for emis)
 
 
 ### Starting/stopping the service
@@ -56,7 +56,7 @@ To look for all logs for a specific job id:
 
 ### Configuring the job-runner
 
-All env files are in /srv/jobrunner/environ/\*.env
+All env files are in /home/jobrunner/environ/\*.env
 
     01_defaults.env   # job runner default production values. DO NOT EDIT
     02_secrets.env    # secrets for this backend (e.g. github tokens)
@@ -69,13 +69,21 @@ need to merge a change to the `services/jobrunner/defaults.env` or
 
 ### Update job-runner
 
-In `/srv/jobrunner/code` run:
+#### Backend-server / just
+
+In a clone of the [backend-server](https://github.com/opensafely-core/backend-server) repository, run:
+
+```bash
+just update-jobrunner
+```
+
+#### Manual
+
+In `/home/jobrunner/jobrunner/code` run:
 
     git pull
 
 Then restart the service
-
-
 
 ### Update docker image
 
