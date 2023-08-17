@@ -3,7 +3,7 @@ set -euo pipefail
 
 # files containing lists of gh user names for the different roles
 # note: probably will be API calls to job-server in future
-developers="developers"
+developers="${developers:-developers}"
 researchers="backends/$1/researchers"
 reviewers="backends/$1/reviewers"
 
