@@ -67,9 +67,7 @@ If you wish to change the config in `01_defaults.env` or `03_backend.env`, you
 need to merge a change to the `services/jobrunner/defaults.env` or
 `BACKEND/backend.env`, and update the infrastructure code as above.
 
-### Update job-runner
-
-#### Backend-server / just
+### Deploy job-runner
 
 In a clone of the [backend-server](https://github.com/opensafely-core/backend-server) repository, run:
 
@@ -77,13 +75,16 @@ In a clone of the [backend-server](https://github.com/opensafely-core/backend-se
 just update-jobrunner
 ```
 
-#### Manual
-
-In `/home/jobrunner/jobrunner/code` run:
+If there are dependency updates cd into `/home/jobrunner/jobrunner/lib` and run:
 
     git pull
 
-Then restart the service
+
+If there are config updates, cd into `/home/jobrunner/jobrunner/config` and [edit the appropriate file(s)](#configuring-the-job-runner).
+
+
+Make sure you [restart the service](#startingstopping-the-service) after either of these tasks.
+
 
 ### Update docker image
 
