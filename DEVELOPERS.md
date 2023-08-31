@@ -10,8 +10,6 @@ Directory layout:
   * scripts and config for supported backends
 * ./backends/emis
   * scripts and config for EMIS backend
-* ./backends/nhsd
-  * scripts and config for NHSD backend
 * ./backends/test
   * scripts and config for our test backend
 * ./backends/tpp
