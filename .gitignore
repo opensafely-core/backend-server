@@ -1,3 +1,4 @@
+tests/backends/*.log
 tests/*.log
 .test-image
 keys/testuser*

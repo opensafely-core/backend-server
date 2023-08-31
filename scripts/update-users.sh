@@ -48,12 +48,11 @@ add_group() {
 }
 
 # developers group. They get docker and sudo access.
-# Required for most backends, although not NHSD.
+# Required for all backends
 if test -f "$developers"; then
     add_group "$developers" developers researchers reviewers docker sudo
 else
-    # We do not expect to run this command on NHSD, so this message should be an error.
-    echo "Missing developers file! This is expected for NHSD, but everywhere else should have one."
+    echo "Missing developers file!"
     exit 1
 fi
 

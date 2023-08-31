@@ -95,21 +95,6 @@ manage-emis: install update-users install-jobrunner install-release-hatch
   fi
 
 [private]
-manage-nhsd: 
-  #!/bin/bash
-  set -euo pipefail
-
-  # install/update the core requirements
-  apt-get update
-  sed 's/^#.*//' core-packages.txt | xargs apt-get install -y
-
-  # setup job runner, but do not use the default reviewers group, as it doesn't
-  # exist in NSHD land.
-  export REVIEWERS_GROUP=jobrunner
-  # TODO: re-use the install-jobrunner action
-  ./services/jobrunner/install.sh nhsd
-
-[private]
 manage-test: install-packages install update-users install-jobrunner install-release-hatch install-osrelease install-collector
 
 [private]
