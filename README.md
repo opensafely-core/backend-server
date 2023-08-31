@@ -15,10 +15,10 @@ differences, but they are unavoidable.
 
 ## Initial Setup
 
-First time on a new backend machine, you need to do and initial checkout and bootsrap.
+First time on a new backend machine, you need to do an initial checkout and bootstrap.
 
 ```
-sudo mkdir -p /srv
+sudo mkdir -m 755 -p /srv
 sudo git checkout github-proxy.opensafely.org/opensafely-core/backend-server /srv/backend-server
 cd /srv/backend-server
 sudo ./scripts/bootstrap.sh $BACKEND_ID
