@@ -19,11 +19,16 @@ Current status:
 systemctl status -n0 jobrunner
 $(systemctl status -n0 jobrunner)
 
-Environment variables have been set from /srv/jobrunner/environ/*.env"
 
-Code: /srv/jobrunner/code
-Deps: /srv/jobrunner/lib
-Config: /srv/jobrunner/environ
+********************************************
+** Nb. these paths changed September 2023 **
+********************************************
+
+Environment variables have been set from /home/jobrunner/config/*.env"
+
+Code: /home/jobrunner/jobrunner/code
+Deps: /home/jobrunner/jobrunner/lib
+Config: /home/jobrunner/config
 
 Medium privacy files are at $MEDIUM_PRIVACY_STORAGE_BASE
 High privacy files are at $HIGH_PRIVACY_STORAGE_BASE
