@@ -328,7 +328,7 @@ When we know ahead of time that there will be a period when the system is going 
 Stop accepting new jobs:
 
 ```sh
-just jobrunner-pause
+just jobrunner-pause-enable
 ```
 
 Start accepting new jobs again:
