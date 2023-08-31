@@ -12,6 +12,14 @@ REVIEWERS_GROUP="${REVIEWERS_GROUP:-reviewers}"
 # for directories
 umask 027
 
+# load config
+set -a
+# shellcheck disable=SC1090
+for f in "$HOME_DIR"/config/*.env; do
+    # shellcheck disable=1090
+    . "$f"
+done
+set +a;
 
 # set up jobrunner
 

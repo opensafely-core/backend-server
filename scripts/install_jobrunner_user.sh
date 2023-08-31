@@ -62,15 +62,6 @@ if test -f "${TEST_CONFIG:-}"; then
     cat "$TEST_CONFIG" >>"$local_env"
 fi
 
-# load config
-set -a
-# shellcheck disable=SC1090
-for f in "$HOME_DIR"/config/*.env; do
-    # shellcheck disable=1090
-    . "$f"
-done
-set +a;
-
 # update playbook
 cp playbook.md $HOME_DIR/playbook.md
 # clean up old playbook if present
