@@ -43,11 +43,15 @@ if test -z "${DEBUG:-}"; then
     # if we're not in debug mode, just copy files. This does not require shiftfs,
     # so works in GHA and on more systems.
     tar c . | lxc exec "$CONTAINER" -- tar x --one-top-level=$BACKEND_SERVER_DIR
+    DEBIAN_FRONTEND=noninteractive
 else
     # in debug mode, it is useful to have the project mounted in the the
     # container, and we use the awesome shiftfs to make the uids match up.
     lxc config device add "$CONTAINER" backend-server disk source="$PWD" path=$BACKEND_SERVER_DIR shift=true
+    DEBIAN_FRONTEND=dialog
 fi
+
+
 
 
 lxc exec "$CONTAINER" -- cloud-init status --wait
@@ -56,6 +60,7 @@ set +e # we handle the error manually
 echo -n "Running $SCRIPT in $CONTAINER LXD container..."
 lxc exec "$CONTAINER" \
     --env SHELLOPTS=${DOCKER_SHELLOPTS} --env TEST=true --env TEST_CONFIG=$BACKEND_SERVER_DIR/tests/config.env \
+    --env DEBIAN_FRONTEND=$DEBIAN_FRONTEND \
     --cwd $BACKEND_SERVER_DIR -- "$SCRIPT" > "$LOG" 2>&1
 success=$?
 
