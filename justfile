@@ -45,6 +45,9 @@ install-packages: check
 install: check
   ./scripts/install.sh
 
+# create jobrunner user & env
+install-jobrunner-user: check
+  ./scripts/install_jobrunner_user.sh
 
 # report which backend configuration this justfile is using
 whereami: check
@@ -53,7 +56,7 @@ whereami: check
 update-users: check
   ./scripts/update-users.sh $BACKEND_JUST
 
-install-jobrunner: check
+install-jobrunner: check install-jobrunner-user
   ./services/jobrunner/install.sh $BACKEND_JUST
 
 install-release-hatch: check
