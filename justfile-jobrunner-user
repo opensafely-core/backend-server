@@ -1,0 +1,52 @@
+
+default:
+  @just --list
+
+# start the jobrunner service
+jobrunner-start:
+    sudo systemctl start jobrunner
+
+# stop the jobrunner service
+jobrunner-stop:
+    sudo systemctl stop jobrunner
+
+# restart the jobrunner service
+jobrunner-restart:
+    sudo systemctl restart jobrunner
+
+# destroy containers & volumes for all running jobs
+jobrunner-prepare-reboot: jobrunner-stop
+    # TODO: does this need a path or a venv?
+    python3 -m jobrunner.cli.prepare_for_reboot
+
+# stop accepting new jobs
+jobrunner-pause-enable:
+    # TODO: does this need a path or a venv?
+    python3 -m jobrunner.cli.flags set paused=true
+
+# start accepting new jobs
+jobrunner-pause-disable:
+    # TODO: does this need a path or a venv?
+    python3 -m jobrunner.cli.flags set paused=
+
+# show jobrunner logs (limited to 1000 lines) 
+jobrunner-logs:
+    journalctl -xe -u jobrunner
+
+# show jobrunner logs for a specific job_id
+jobrunner-logs-id job_id:
+    journalctl -u jobrunner | grep {{ job_id }}
+
+# list all currently running jobs
+jobrunner-jobs-ls:
+    lsjobs
+
+# show docker stats for all currently running jobs
+jobrunner-jobs-stats:
+    docker stats --no-stream
+
+# retry a specific job
+jobrunner-job-retry job_id:
+    # TODO: does this need a path or a venv?
+    python3 -m jobrunner.cli.retry_job {{ job_id }}
+

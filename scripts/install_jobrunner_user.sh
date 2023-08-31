@@ -69,3 +69,5 @@ cp playbook.md $HOME_DIR/playbook.md
 # clean up old playbook if present
 rm -f /srv/playbook.md
 
+# update user-wide justfile
+cp justfile-jobrunner-user $HOME_DIR/justfile
