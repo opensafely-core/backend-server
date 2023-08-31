@@ -1,5 +1,8 @@
 #!/bin/bash
 set -euo pipefail
+
+./scripts/bootstrap.sh test
+
 # Test install scripts
 ./scripts/install.sh
 ./scripts/update-users.sh developers
@@ -10,7 +13,8 @@ set -euo pipefail
 . tests/utils.sh
 
 # add test user that we know the key for
-./scripts/update-users.sh tests/developers
+developers=tests/developers ./scripts/update-users.sh test
+
 # set password so ssh does not bounce us
 echo 'testuser:10f9afsasva21d%' | chpasswd
 

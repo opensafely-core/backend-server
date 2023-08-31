@@ -13,19 +13,31 @@ always having full administrative control of that environment, each
 backend is different in some way. We do try to minimise these
 differences, but they are unavoidable.
 
+## Initial Setup
+
+First time on a new backend machine, you need to do an initial checkout and bootstrap.
+
+```
+sudo mkdir -m 755 -p /srv
+sudo git checkout github-proxy.opensafely.org/opensafely-core/backend-server /srv/backend-server
+cd /srv/backend-server
+sudo ./scripts/bootstrap.sh $BACKEND_ID
+```
+
 ## Usage
 
-Check out the version of this repo you wish to use (typically main), and then run:
+You should work from the /srv/backend-server directory.  All commands should be
+be run as root, invoked via just.
 
-    sudo ./scripts/bootstrap.sh YOUR_BACKEND
-    # e.g. sudo ./scripts/bootstrap.sh tpp
-    sudo just manage
+```
+sudo just manage
+```
 
-This will ensure the right packages, users, groups is configured, and set up
+This will ensure the right packages, users, groups are configured, and set up
 jobrunner and other services as needed.
 
-Note: the checkout is ephemeral so it doesn't matter where you check the repo out
-(your home dir is fine) or whether there are other checkouts already on the server.
+A plain `just` will list other commands available, with help
+
 
 ## Base assumptions
 

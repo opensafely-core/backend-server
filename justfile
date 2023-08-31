@@ -1,10 +1,12 @@
 export TESTS := `ls tests/install.sh tests/backends/*.sh`
 export TEST := "true"
 github_actions := env_var_or_default('GITHUB_ACTIONS', "false")
+BACKEND_SERVER_DIR := env_var_or_default('BACKEND_SERVER_DIR', "/srv/backend-server")
 # run-in-lxd.sh uses these env_vars
 export DEBUG := env_var_or_default('DEBUG', "")
 export GITHUB_ACTIONS := env_var_or_default('GITHUB_ACTIONS', "false")
 set dotenv-load := true
+
 
 default:
   @just --list
@@ -13,18 +15,12 @@ default:
 lint:
   shellcheck -x */*.sh services/*/*.sh services/jobrunner/bashrc bin/lsjobs run-in-lxd.sh build-lxd-image.sh
 
-# install required system packages
-install-packages:
-  ./scripts/install_packages.sh
-
-# install/update groups & system level configuration 
-install:
-  ./scripts/install.sh
-
 [private]
-check_backend_set:
+check:
   #!/bin/bash
   set -euo pipefail
+
+  test $PWD = {{ BACKEND_SERVER_DIR }}* || { echo "You must run this from {{ BACKEND_SERVER_DIR }}"; exit 1; }
 
   if test -z $BACKEND_JUST
   then
@@ -41,31 +37,40 @@ check_backend_set:
     exit 1
   fi
 
+# install required system packages
+install-packages: check
+  ./scripts/install_packages.sh
+
+# install/update groups & system level configuration 
+install: check
+  ./scripts/install.sh
+
+
 # report which backend configuration this justfile is using
-whereami: check_backend_set
+whereami: check
   @echo "Your current backend is: $BACKEND_JUST"
 
-update-users: check_backend_set
+update-users: check
   ./scripts/update-users.sh $BACKEND_JUST
 
-install-jobrunner: check_backend_set
+install-jobrunner: check
   ./services/jobrunner/install.sh $BACKEND_JUST
 
-install-release-hatch:
+install-release-hatch: check
   ./services/release-hatch/install.sh
 
-install-osrelease:
+install-osrelease: check
   ./services/osrelease/install.sh
 
-install-collector:
+install-collector: check
   ./services/collector/install.sh
 
 # Update jobrunner to the specified commit_id & restart
-update-jobrunner commit_id="HEAD":
+update-jobrunner commit_id="HEAD": check
   ./services/jobrunner/bin/update-jobrunner.sh {{ commit_id }}
 
 # install everything for a backend
-manage: check_backend_set
+manage: check
   @{{ just_executable() }} manage-$BACKEND_JUST
 
 [private]
