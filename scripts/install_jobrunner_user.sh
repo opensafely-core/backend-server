@@ -63,6 +63,8 @@ if test -f "${TEST_CONFIG:-}"; then
 fi
 
 # update playbook
+# explicitly remove it first, in case it's a symlink to an old location
+rm $HOME_DIR/playbook.md
 cp playbook.md $HOME_DIR/playbook.md
 # clean up old playbook if present
 rm -f /srv/playbook.md
