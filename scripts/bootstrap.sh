@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+if test -z "${1:-}"; then
+    echo "You must specify a backend to bootstrap"
+    exit 1
+fi
+
 BACKEND_SERVER_DIR="${BACKEND_SERVER_DIR:-/srv/backend-server}"
 
 if test "$EUID" -ne 0; then
