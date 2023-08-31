@@ -73,7 +73,7 @@ done
 set +a;
 
 # update playbook
-cp $SRC_DIR/playbook.md $HOME_DIR/playbook.md
+cp playbook.md $HOME_DIR/playbook.md
 # clean up old playbook if present
 rm -f /srv/playbook.md
 
