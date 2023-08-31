@@ -47,7 +47,7 @@ install: check
 
 # create jobrunner user & env
 install-jobrunner-user: check
-  ./scripts/install_jobrunner_user.sh
+  ./scripts/install_jobrunner_user.sh $BACKEND_JUST
 
 # report which backend configuration this justfile is using
 whereami: check
