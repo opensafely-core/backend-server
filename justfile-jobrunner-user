@@ -30,8 +30,8 @@ jobrunner-pause-disable:
     python3 -m jobrunner.cli.flags set paused=
 
 # show jobrunner logs (limited to 1000 lines) 
-jobrunner-logs:
-    journalctl -xe -u jobrunner
+jobrunner-logs lines="1000":
+    journalctl -xe -u jobrunner -n{{ lines }}
 
 # show jobrunner logs for a specific job_id
 jobrunner-logs-id job_id:

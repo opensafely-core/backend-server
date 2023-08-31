@@ -46,19 +46,15 @@ a password, or can be run as your regular user too.
 
 #### Using just
 
-    just jobrunner-logs
+You can view logs via:
+
+    just jobrunner-logs <lines>
+
+This uses a pager and defaults to 1000 lines, so may not show relevant logs if you're looking for more distant events. Alternative values to try include "2000" or "all".
 
 To look for all logs for a specific job id:
 
     just jobrunner-logs-id <job_id>
-
-#### Manually
-
-You can view logs via journtalctl:
-
-    journalctl -xe -u jobrunner
-
-Note: `-e` engages the pager, so you can scroll up.  It is implicitly limited to 1000, so may not show relevant logs if you're looking for more distant events.  Use e.g. `-n2000` to increase the limit, or `-nall` to disable it.
 
 ### Configuring the job-runner
 
