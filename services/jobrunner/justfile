@@ -3,6 +3,11 @@
 default:
   @just --list
 
+# show the status of the jobrunner service
+status:
+    sudo systemctl status -n0 jobrunner
+    python3 -m jobrunner.cli.flags get paused
+
 # start the jobrunner service
 start:
     sudo systemctl start jobrunner
