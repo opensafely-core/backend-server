@@ -51,7 +51,9 @@ chown -R "jobrunner:$REVIEWERS_GROUP" "$MEDIUM_PRIVACY_STORAGE_BASE"
 
 
 # create initial db if not present
-test -f $TARGET_DIR/code/workdir/db.sqlite || PYTHONPATH=$TARGET_DIR/lib:$TARGET_DIR/code python3 -m jobrunner.cli.migrate
+export PYTHONPATH=$TARGET_DIR/lib:$TARGET_DIR/code
+workdir=$(python3 -c "from jobrunner import config; print(config.WORKDIR)")
+test -f "$workdir/db.sqlite" || python3 -m jobrunner.cli.migrate
 
 # ensure file ownership and permissions
 chown -R jobrunner:jobrunner $TARGET_DIR
