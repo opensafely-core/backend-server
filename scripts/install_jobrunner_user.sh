@@ -69,3 +69,8 @@ rm -f $HOME_DIR/playbook.md
 cp playbook.md $HOME_DIR/playbook.md
 # clean up old playbook if present
 rm -f /srv/playbook.md
+
+# update user-wide justfiles for management tasks
+cp justfile-user $HOME_DIR/justfile
+mkdir -p $HOME_DIR/jobrunner
+cp services/jobrunner/justfile $HOME_DIR/jobrunner/justfile

@@ -35,24 +35,26 @@ The jobrunner is installed in `/home/jobrunner/jobrunner`
 
 Run the appropriate command:
 
-    sudo systemctl restart jobrunner
-    sudo systemctl stop jobrunner
-    sudo systemctl start jobrunner
+    just jobrunner/start
+    just jobrunner/stop
+    just jobrunner/restart
 
 All of these are allowed to be run by the jobrunner user via sudo without
 a password, or can be run as your regular user too.
 
 ### Viewing job-runner logs
 
-You can view logs via journtalctl:
+#### Using just
 
-    journalctl -xe -u jobrunner
+You can view logs via:
 
-Note: `-e` engages the pager, so you can scroll up.  It is implicitly limited to 1000, so may not show relevant logs if you're looking for more distant events.  Use e.g. `-n2000` to increase the limit, or `-nall` to disable it.
+    just jobrunner/logs <lines>
+
+This uses a pager and defaults to 1000 lines, so may not show relevant logs if you're looking for more distant events. Alternative values to try include "2000" or "all".
 
 To look for all logs for a specific job id:
 
-    journalctl -u jobrunner | grep <job id>
+    just jobrunner/logs-id <job_id>
 
 ### Configuring the job-runner
 
@@ -103,7 +105,7 @@ image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 See the list of currently running jobs, with job identifier, job name and associated workspace in job-server:
 
 ```
-lsjobs
+just jobrunner/jobs-ls
 ```
 
 ### View the logs of completed jobs
@@ -157,7 +159,7 @@ for stracing (see below).
 View the CPU and memory usage of jobs using:
 
 ```
-docker stats --no-stream
+just jobrunner/jobs-stats
 ```
 
 To see overall system CPU and memory usage, use
@@ -201,14 +203,14 @@ When this happens the job's container and volume are not
 automatically cleaned up and so it's possible to retry the job without
 having to start from scratch. You can run this with:
 
-    python3 -m jobrunner.cli.retry_job <job_id>
+    just jobrunner/job-retry <job_id>
 
 The `job_id` actually only has to be a sub-string of the job ID (full
 ones are a bit awkward to type) and you will be able to select the
 correct job if there are multiple matches.
 
 
-### Killing a job
+### Killing a job 
 
 To kill a running job (or prevent it starting if it hasn't yet) use the
 `kill_job` command:
@@ -277,13 +279,13 @@ fail and force the user to manually restart them.
 To do this, first stop the [job-runner service](#startingstopping-the-service):
 
 ```sh
-systemctl stop jobrunner
+just jobrunner/stop
 ```
 
 After the service is stopped you can run the `prepare_for_reboot` command:
 
 ```sh
-python3 -m jobrunner.cli.prepare_for_reboot
+just jobrunner/prepare-for-reboot
 ```
 
 This is quite a destructive command as it will destroy the containers
@@ -301,7 +303,7 @@ Sometimes we are informed that a reboot will take place out of hours. In this ca
 For example, this will start shutting things down in four hours:
 
 ```sh
-sleep $((4*3600)); systemctl stop job-runner && python -m jobrunner.cli.prepare_for_reboot
+sleep $((4*3600)); just jobrunner/stop && just jobrunner/prepare-for-reboot
 ```
 
 ### After a restart
@@ -326,16 +328,13 @@ When we know ahead of time that there will be a period when the system is going 
 Stop accepting new jobs:
 
 ```sh
-python3 -m jobrunner.cli.flags set paused=true
+just jobrunner/pause
 ```
 
 Start accepting new jobs again:
 
 ```sh
-python3 -m jobrunner.cli.flags set paused=
+just jobrunner/unpause
 ```
-
-> **Note**
-This is not a typo, the paused flag needs to be set to `None`
 
 Setting and unsetting flags takes effect immediately, so it's not necessary to restart jobrunner.
