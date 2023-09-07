@@ -31,10 +31,15 @@ tout 5s systemctl status jobrunner
 /home/jobrunner/jobrunner/code/scripts/update-docker-image.sh cohortextractor
 
 # run a job
-echo "
+cat << EOF | su - jobrunner -c bash
+set -a
+for f in /home/jobrunner/config/*.env; do
+    . "\$f"
+done
+set +a
 export PYTHONPATH=/home/jobrunner/jobrunner/code:/home/jobrunner/jobrunner/lib
 python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template generate_study_population
-" | su - jobrunner -c bash
+EOF
 
 script=$(mktemp)
 cat << EOF > "$script"
