@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euxo pipefail
 
 systemctl stop jobrunner
 
@@ -14,4 +14,4 @@ chmod -R 600 ~jobrunner/config/*.env
 
 echo "Please verify contents of ~jobrunner/config/ and remove /srv/jobrunner/environ/ if correct"
 
-sed -i 's#/srv/jobrunner/bashrc#~/jobrunner/bashrc#g' ~/.bashrc
+sed -i 's#/srv/jobrunner/bashrc#~/jobrunner/bashrc#g' ~jobrunner/.bashrc
