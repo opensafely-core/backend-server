@@ -74,7 +74,13 @@ update-jobrunner commit_id="HEAD": check
 
 # install everything for a backend
 manage: check
-  @{{ just_executable() }} manage-$BACKEND_JUST
+  #!/bin/bash
+  set -euo pipefail
+  if test -d /srv/jobrunner/environ -a ! -d ~jobrunner/config; then
+    echo "You need to manually run ./scripts/migrate.sh first"
+    exit 1
+  fi
+  {{ just_executable() }} manage-$BACKEND_JUST
 
 [private]
 manage-emis: install update-users install-jobrunner install-release-hatch
