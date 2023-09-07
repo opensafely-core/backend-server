@@ -12,4 +12,6 @@ cp -r /srv/jobrunner/code/workdir ~jobrunner/jobrunner/workdir
 chown -R jobrunner:jobrunner ~jobrunner/jobrunner ~jobrunner/config
 chmod -R 600 ~jobrunner/config/*.env
 
+echo "Please verify contents of ~jobrunner/config/ and remove /srv/jobrunner/environ/ if correct"
+
 sed -i 's#/srv/jobrunner/bashrc#~/jobrunner/bashrc#g' ~/.bashrc
