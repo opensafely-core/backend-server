@@ -60,12 +60,12 @@ chown -R jobrunner:jobrunner $TARGET_DIR
 chown -R jobrunner:jobrunner $HOME_DIR
 
 # set up some nice helpers for jobrunner when we su into the shared user
-jobrunner_bashrc=$TARGET_DIR/bashrc
+opensafely_bashrc=$HOME_DIR/.bashrc-opensafely
 user_bashrc=$HOME_DIR/.bashrc
-cp $SRC_DIR/bashrc $jobrunner_bashrc
-chmod 644 $jobrunner_bashrc
+cp scripts/user.bashrc $opensafely_bashrc
+chmod 644 $opensafely_bashrc
 test -f $user_bashrc || touch $user_bashrc
-grep -q "jobrunner/bashrc" $user_bashrc || echo "test -f $jobrunner_bashrc && . $jobrunner_bashrc" >> $user_bashrc
+grep -q ".bashrc-opensafely" $user_bashrc || echo "test -f $opensafely_bashrc && . $opensafely_bashrc" >> $user_bashrc
 
 # set up systemd service
 # Note: do this *after* permissions have been set on the $TARGET_DIR properly

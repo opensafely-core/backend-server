@@ -8,8 +8,8 @@ done
 set +a
 
 # let jobrunner user use the jobrunner commands and scripts easily
-export PYTHONPATH=/srv/jobrunner/code:/srv/jobrunner/lib
-export PATH=$PATH:/srv/jobrunner/bin:/srv/jobrunner/code/scripts
+export PYTHONPATH=/home/jobrunner/jobrunner/code:/home/jobrunner/jobrunner/lib
+export PATH=$PATH:/home/jobrunner/bin:/home/jobrunner/jobrunner/code/scripts
 
 cat << EOF
 You have logged into the shared jobrunner account for managing the jobrunner service.
