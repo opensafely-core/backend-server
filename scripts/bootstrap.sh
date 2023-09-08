@@ -25,7 +25,8 @@ then
   exit 1
 fi
 
-echo "BACKEND_JUST=$1" > .env
+# put in .env to ensure `just` has access to it
+echo "BACKEND=$1" > .env
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]
 then
