@@ -2,7 +2,7 @@
 # load config into this shell so we can just run stuff
 set -a
 # shellcheck disable=SC1090
-for f in /srv/jobrunner/environ/*.env; do
+for f in /home/jobrunner/config/*.env; do
     . "$f"
 done
 set +a
