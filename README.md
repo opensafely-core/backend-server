@@ -21,7 +21,7 @@ First time on a new backend machine, you need to do an initial checkout and boot
 sudo mkdir -m 755 -p /srv
 sudo git clone github-proxy.opensafely.org/opensafely-core/backend-server /srv/backend-server
 cd /srv/backend-server
-sudo ./scripts/bootstrap.sh $BACKEND_ID
+sudo ./scripts/bootstrap.sh $BACKEND
 ```
 
 After running bootstrap you may wish to restart your shell in order to enable 

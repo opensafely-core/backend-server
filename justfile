@@ -22,18 +22,18 @@ check:
 
   test $PWD = {{ BACKEND_SERVER_DIR }}* || { echo "You must run this from {{ BACKEND_SERVER_DIR }}"; exit 1; }
 
-  if test -z $BACKEND_JUST
+  if test -z $BACKEND
   then
-    echo "BACKEND_JUST is not set in .env";
+    echo "BACKEND is not set in .env";
     exit 1
   fi
-  if [[ $BACKEND_JUST == *"-backend"* ]]; then
-    echo "Please shorten BACKEND_JUST (i.e. 'test' instead of 'test-backend')"
+  if [[ $BACKEND == *"-backend"* ]]; then
+    echo "Please shorten BACKEND (i.e. 'test' instead of 'test-backend')"
     exit 1
   fi
-  if test ! -e backends/$BACKEND_JUST
+  if test ! -e backends/$BACKEND
   then
-    echo "Backend 'backends/$BACKEND_JUST' does not exist in this repo"
+    echo "Backend 'backends/$BACKEND' does not exist in this repo"
     exit 1
   fi
 
@@ -47,17 +47,17 @@ install: check
 
 # create jobrunner user & config
 install-jobrunner-user: check
-  ./scripts/install_jobrunner_user.sh $BACKEND_JUST
+  ./scripts/install_jobrunner_user.sh $BACKEND
 
 # report which backend configuration this justfile is using
 whereami: check
-  @echo "Your current backend is: $BACKEND_JUST"
+  @echo "Your current backend is: $BACKEND"
 
 update-users: check
-  ./scripts/update-users.sh $BACKEND_JUST
+  ./scripts/update-users.sh $BACKEND
 
 install-jobrunner: check install-jobrunner-user
-  ./services/jobrunner/install.sh $BACKEND_JUST
+  ./services/jobrunner/install.sh $BACKEND
 
 install-release-hatch: check
   ./services/release-hatch/install.sh
@@ -80,7 +80,7 @@ manage: check
     echo "You need to manually run ./scripts/migrate.sh first"
     exit 1
   fi
-  {{ just_executable() }} manage-$BACKEND_JUST
+  {{ just_executable() }} manage-$BACKEND
 
 [private]
 manage-emis: install update-users install-jobrunner install-release-hatch

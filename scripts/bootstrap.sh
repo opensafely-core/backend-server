@@ -1,7 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-if test -z "${1:-}"; then
+BACKEND=${1:-}
+
+if test -z "$BACKEND"; then
     echo "You must specify a backend to bootstrap"
     exit 1
 fi
@@ -18,14 +20,21 @@ if test "$PWD" != "$BACKEND_SERVER_DIR"; then
   exit 1
 fi
 
-if test -z "$1"
+if test -z "$BACKEND"
 then
   echo "Please specify your backend when running this file. For example:"
   echo "$0 my_backend";
   exit 1
 fi
 
-echo "BACKEND_JUST=$1" > .env
+# put in .env to ensure `just` has access to it
+echo "BACKEND=$BACKEND" > .env
+
+# also put it in the default profile so everything else has access to it
+mkdir -p /etc/opensafely/profile.d
+BACKEND_PROFILE=/etc/opensafely/profile.d/backend.sh
+grep -q "$BACKEND" $BACKEND_PROFILE || printf "readonly BACKEND=%s\nexport BACKEND" "$BACKEND" >> $BACKEND_PROFILE
+ln -s $BACKEND_PROFILE /etc/profile.d/backend.sh
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]
 then

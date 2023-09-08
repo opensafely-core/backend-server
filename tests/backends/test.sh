@@ -16,6 +16,8 @@ tout() {
 
 ./scripts/bootstrap.sh test
 
+./tests/check-bootstrap.sh test
+
 just manage
 # run again to check for idempotency
 just manage

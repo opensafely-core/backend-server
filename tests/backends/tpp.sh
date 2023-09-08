@@ -3,6 +3,8 @@ set -euo pipefail
 
 ./scripts/bootstrap.sh tpp
 
+./tests/check-bootstrap.sh tpp
+
 just manage
 # run again to check for idempotency
 just manage

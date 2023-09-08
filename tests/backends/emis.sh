@@ -15,6 +15,8 @@ set -u
 
 ./scripts/bootstrap.sh emis
 
+./tests/check-bootstrap.sh emis
+
 just manage
 # run again to check for idempotency
 just manage
