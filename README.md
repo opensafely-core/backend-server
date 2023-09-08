@@ -24,6 +24,9 @@ cd /srv/backend-server
 sudo ./scripts/bootstrap.sh $BACKEND_ID
 ```
 
+After running bootstrap you may wish to restart your shell in order to enable 
+autocompletion for `just`.
+
 ## Usage
 
 You should work from the /srv/backend-server directory.  All commands should be
