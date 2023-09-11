@@ -18,13 +18,28 @@ The explicit list can be found in [core-packages.txt](core-packages.txt).
 
 ## Services
 
-The is currently a single service, `job-runner`, which is installed in /home/jobrunner.
-A `jobrunner` user is created to run it, and appropriate systemd unit file is installed.
+The are currently three services, installed and run by the `opensafely` user
+
+### jobrunner
+
+This lives in ~opensafely/jobrunner.
 
 This service does not listen on any port, but regularly initiates requests to the
 OpenSAFELY platform, to request new jobs and to publish job statuses.  It also
 downloads github repositories containing the jobs to execute and the Docker
 images used to run them, via the OpenSAFELY proxies (see below).
+
+### release-hatch
+
+This service lives in ~opensafely/release-hatch
+
+It is run via docker-compose and auto deploys.
+
+### collector
+
+This service lives in ~opensafely/collector
+
+It collects and emits host metrics
 
 
 ## Network Requirements

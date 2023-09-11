@@ -3,12 +3,12 @@ set -euxo pipefail
 
 # set DNS for RELEASE_HOST to 127.0.0.1
 # shellcheck source=/dev/null
-source <(cat /home/jobrunner/config/*.env)
+source <(cat /home/opensafely/config/*.env)
 HOSTNAME="$(echo "$RELEASE_HOST" | cut -d'/' -f3 | cut -d':' -f1)"
 grep -q "$HOSTNAME" /etc/hosts || echo "127.0.0.1 $HOSTNAME" >> /etc/hosts
 
 # run release-hatch tests
-docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml run --rm release-hatch-test
+docker-compose -f ~opensafely/release-hatch/docker-compose.yaml run --rm release-hatch-test
 
 # check CORS preflight
 cors_check=0

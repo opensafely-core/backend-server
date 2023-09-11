@@ -3,15 +3,15 @@ Description=OpenTelemetry Collector
 Documentation=https://github.com/opensafely-core/backend-server
 
 [Service]
-EnvironmentFile=/home/jobrunner/config/01_defaults.env
-EnvironmentFile=/home/jobrunner/config/02_secrets.env
-EnvironmentFile=/home/jobrunner/config/03_backend.env
-EnvironmentFile=/home/jobrunner/config/04_local.env
-WorkingDirectory=/home/jobrunner/collector
-ExecStart=/home/jobrunner/collector/collector --config /home/jobrunner/collector/collector.yaml
+EnvironmentFile=/home/opensafely/config/01_defaults.env
+EnvironmentFile=/home/opensafely/config/02_secrets.env
+EnvironmentFile=/home/opensafely/config/03_backend.env
+EnvironmentFile=/home/opensafely/config/04_local.env
+WorkingDirectory=/home/opensafely/collector
+ExecStart=/home/opensafely/collector/collector --config /home/opensafely/collector/collector.yaml
 ExecStop=/bin/kill -INT ${MAINPID}
-User=jobrunner
-Group=jobrunner
+User=opensafely
+Group=opensafely
 Restart=on-failure
 RestartSec=60s
 

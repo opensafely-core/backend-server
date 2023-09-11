@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-DIR=~jobrunner/release-hatch
+DIR=~opensafely/release-hatch
 SSL_CERT=$DIR/certs/release-hatch.crt
 SSL_KEY=$DIR/certs/release-hatch.key
 SYSTEM_CERTS=/usr/local/share/ca-certificates/release-hatch
@@ -11,7 +11,7 @@ cp -a ./services/release-hatch/* "$DIR"
 
 if ! test -e $SSL_KEY -a -e $SSL_CERT; then
     # shellcheck disable=SC1090
-    source <(cat /home/jobrunner/config/*.env)
+    source <(cat /home/opensafely/config/*.env)
 
     # clean http:// and ports
     HOSTNAME="$(echo "$RELEASE_HOST" | cut -d'/' -f3 | cut -d':' -f1)"
@@ -29,7 +29,7 @@ if ! test -e $SSL_KEY -a -e $SSL_CERT; then
     update-ca-certificates
 fi
 
-chown -R jobrunner:jobrunner "$DIR"
+chown -R opensafely:opensafely "$DIR"
 chmod -R go-rwx "$DIR"
 
 systemctl enable "$DIR/release-hatch.service"
