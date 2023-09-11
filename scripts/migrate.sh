@@ -14,4 +14,8 @@ chmod -R 600 ~jobrunner/config/*.env
 
 echo "Please verify contents of ~jobrunner/config/ and remove /srv/jobrunner/environ/ if correct"
 
-sed -i 's#/srv/jobrunner/bashrc#~/jobrunner/bashrc#g' ~jobrunner/.bashrc
+sed -i 's#/srv/jobrunner/bashrc#~/.bashrc-opensafely#g' ~jobrunner/.bashrc
+
+# remove old bashrc(s)
+rm -f /srv/jobrunner/bashrc
+rm -f /home/jobrunner/jobrunner/bashrc
