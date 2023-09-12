@@ -11,32 +11,26 @@ set +a
 export PYTHONPATH=/srv/opensafely/code:/srv/opensafely/lib
 export PATH=$PATH:/srv/opensafely/bin:/srv/opensafely/code/scripts
 
-cat << EOF
-You have logged into the shared opensafely account for managing the jobrunner
-and other services.
 
-Current status:
+# let opensafely user use the opensafely commands and scripts easily
+export PYTHONPATH=/srv/opensafely/code:/srv/opensafely/lib
+export PATH=$PATH:/srv/opensafely/bin:/srv/opensafely/code/scripts
 
-systemctl status -n0 jobrunner
-$(systemctl status -n0 jobrunner)
+echo -e "
+You have logged into the shared opensafely account for managing OpenSAFELY
+services on the \033[1m$BACKEND backend\033[0m.
 
+All configuration is in ~/config/*.env, and is sourced into your shell on
+login.
 
-********************************************
-** Nb. these paths changed September 2023 **
-********************************************
+Medium privacy files are at \033[1m$MEDIUM_PRIVACY_STORAGE_BASE\033[0m
+High privacy files are at \033[1m$HIGH_PRIVACY_STORAGE_BASE\033[0m
 
-Environment variables have been set from /home/opensafely/config/*.env"
+jobrunner: ~/jobrunner
+release-hatch: ~/release-hatch
+collector: ~/collector
 
-Code: /home/opensafely/jobrunner/code
-Deps: /home/opensafely/jobrunner/lib
-Config: /home/opensafely/config
+Please consult ~/playbook.md for operational documentation, or run: just
+"
 
-Medium privacy files are at $MEDIUM_PRIVACY_STORAGE_BASE
-High privacy files are at $HIGH_PRIVACY_STORAGE_BASE
-
-To restart:
-
-    sudo systemctl restart jobrunner
-
-Please consult ~/playbook.md for operational documentation.
-EOF
+just
