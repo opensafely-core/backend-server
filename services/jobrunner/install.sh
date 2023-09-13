@@ -38,6 +38,7 @@ BIN_DIR=$HOME_DIR/bin
 mkdir -p $BIN_DIR
 
 cp $SRC_DIR/bin/* $BIN_DIR/
+cp bin/lsjobs $BIN_DIR/
 cp $SRC_DIR/sbin/* /usr/local/sbin
 
 # setup output directories
