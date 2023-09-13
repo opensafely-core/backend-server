@@ -56,7 +56,7 @@ A plain `just` will list other commands available, with help
 ### Workspace state
 
 Currently in `/srv/high_privacy` and `/srv/medium_privacy`. Files owned by
-`jobrunner` user. Medium privacy files can be read by `reviewers` group.
+`opensafely` user. Medium privacy files can be read by `reviewers` group.
 
 ### job-runner
  
