@@ -1,3 +1,3 @@
 
 default:
-  just -f jobrunner/justfile -l --list-prefix jobrunner/
+  @just -f jobrunner/justfile -l --list-prefix jobrunner/

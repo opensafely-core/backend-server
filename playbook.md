@@ -12,23 +12,23 @@ This will apply all current backend server configuration, including users, group
 and jobrunner configuration.
 
 
-## jobrunner service
-
-### jobrunner user
+## opensafely user
 
 **IMPORTANT**: All operations begin by switching from your user to
-the jobrunner user with:
+the opensafely user with:
 
-    sudo su - jobrunner
+    sudo su - opensafely
 
+
+## jobrunner service
 This will set up your shell with the correct environment variables.
 
-The jobrunner is installed in `/home/jobrunner/jobrunner`
+The jobrunner is installed in `/home/opensafely/jobrunner`
 
-    /home/jobrunner/jobrunner/code     # the checkout of jobrunner currently running
-    /home/jobrunner/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
-    /home/jobrunner/config  # environment configuration
-    /home/jobrunner/secret   # any secret files (e.g. x509 client certificates for emis)
+    /home/opensafely/jobrunner/code     # the checkout of jobrunner currently running
+    /home/opensafely/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
+    /home/opensafely/config  # environment configuration
+    /home/opensafely/secret   # any secret files (e.g. x509 client certificates for emis)
 
 
 ### Starting/stopping the service
@@ -39,7 +39,7 @@ Run the appropriate command:
     just jobrunner/stop
     just jobrunner/restart
 
-All of these are allowed to be run by the jobrunner user via sudo without
+All of these are allowed to be run by the opensafely user via sudo without
 a password, or can be run as your regular user too.
 
 ### Viewing job-runner logs
@@ -58,7 +58,7 @@ To look for all logs for a specific job id:
 
 ### Configuring the job-runner
 
-All env files are in /home/jobrunner/config/\*.env
+All env files are in /home/opensafely/config/\*.env
 
     01_defaults.env   # job runner default production values. DO NOT EDIT
     02_secrets.env    # secrets for this backend (e.g. github tokens)
@@ -77,12 +77,12 @@ In a clone of the [backend-server](https://github.com/opensafely-core/backend-se
 just update-jobrunner
 ```
 
-If there are dependency updates cd into `/home/jobrunner/jobrunner/lib` and run:
+If there are dependency updates cd into `/home/opensafely/jobrunner/lib` and run:
 
     git pull
 
 
-If there are config updates, cd into `/home/jobrunner/jobrunner/config` and [edit the appropriate file(s)](#configuring-the-job-runner).
+If there are config updates, cd into `/home/opensafely/jobrunner/config` and [edit the appropriate file(s)](#configuring-the-job-runner).
 
 
 Make sure you [restart the service](#startingstopping-the-service) after either of these tasks.

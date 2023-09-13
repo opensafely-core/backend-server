@@ -23,23 +23,23 @@ just manage
 just manage
 
 # test user setup
-test "$(id -u jobrunner)" == "10000"
-test "$(id -g jobrunner)" == "10000"
+test "$(id -u opensafely)" == "10000"
+test "$(id -g opensafely)" == "10000"
 
 # test service is up
 tout 5s systemctl status jobrunner
 
 # hack to pull in the cohortextactor for this job
-/home/jobrunner/jobrunner/code/scripts/update-docker-image.sh cohortextractor
+/home/opensafely/jobrunner/code/scripts/update-docker-image.sh cohortextractor
 
 # run a job
-cat << EOF | su - jobrunner -c bash
+cat << EOF | su - opensafely -c bash
 set -a
-for f in /home/jobrunner/config/*.env; do
+for f in /home/opensafely/config/*.env; do
     . "\$f"
 done
 set +a
-export PYTHONPATH=/home/jobrunner/jobrunner/code:/home/jobrunner/jobrunner/lib
+export PYTHONPATH=/home/opensafely/jobrunner/code:/home/opensafely/jobrunner/lib
 python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template generate_study_population
 EOF
 

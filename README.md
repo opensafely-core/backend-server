@@ -62,7 +62,7 @@ Currently in `/srv/high_privacy` and `/srv/medium_privacy`. Files owned by
  
 Repo: https://github.com/opensafely-core/job-runner
 
-Manages the jobs and their state. Currently deployed in `/home/jobrunner` as a git
+Manages the jobs and their state. Currently deployed in `/home/opensafely` as a git
 checkout and managed by a systemd unit.  Plan is to move this to docker
 soonish.
 

@@ -38,9 +38,9 @@ install-packages: check
 install: check
   ./scripts/install.sh
 
-# create jobrunner user & config
-install-jobrunner-user: check
-  ./scripts/install_jobrunner_user.sh $BACKEND
+# create opensafely user & config
+install-opensafely-user: check
+  ./scripts/install_opensafely_user.sh $BACKEND
 
 # report which backend configuration this justfile is using
 whereami: check
@@ -49,7 +49,7 @@ whereami: check
 update-users: check
   ./scripts/update-users.sh $BACKEND
 
-install-jobrunner: check install-jobrunner-user
+install-jobrunner: check install-opensafely-user
   ./services/jobrunner/install.sh $BACKEND
 
 install-release-hatch: check
@@ -69,7 +69,7 @@ update-jobrunner commit_id="HEAD": check
 manage: check
   #!/bin/bash
   set -euo pipefail
-  if test -d /srv/jobrunner/environ -a ! -d ~jobrunner/config; then
+  if test -d /srv/jobrunner/environ -a ! -d ~opensafely/config; then
     echo "You need to manually run ./scripts/migrate.sh first"
     exit 1
   fi
@@ -80,7 +80,7 @@ manage-emis: install update-users install-jobrunner install-release-hatch
   #!/bin/bash
   set -euo pipefail
 
-  for f in /home/jobrunner/config/*.env; do
+  for f in /home/opensafely/config/*.env; do
       # shellcheck disable=SC1090
       . "$f"
   done

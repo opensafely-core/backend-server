@@ -27,8 +27,8 @@ grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
 # awkwardly, to test EMIS release-hatch, we need to release-hatch on port 8001
 # rather than 443, because of SSH tunnelling shenanagins run release-hatch
 
-docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml stop release-hatch
-docker-compose -f ~jobrunner/release-hatch/docker-compose.yaml run -d -p 8001:8001 release-hatch
+docker-compose -f ~opensafely/release-hatch/docker-compose.yaml stop release-hatch
+docker-compose -f ~opensafely/release-hatch/docker-compose.yaml run -d -p 8001:8001 release-hatch
 
 # tests
 ./tests/check-release-hatch.sh

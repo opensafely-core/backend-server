@@ -1,0 +1,11 @@
+#!/bin/bash
+# shellcheck source=/dev/null
+. /etc/profile
+name=$(echo "$BACKEND" | tr '[:lower:]' '[:upper:]' || echo "$BACKEND")
+echo "###########################################"
+echo "#"
+echo "# This is the $name OpenSAFELY backend"
+echo "#"
+echo "# Authorized access only."
+echo "#"
+echo "###########################################"

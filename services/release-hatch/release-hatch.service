@@ -3,9 +3,9 @@ Description=Update release-hatch service
 Wants=release-hatch.timer
 
 [Service]
-WorkingDirectory=/home/jobrunner
-ExecStart=/home/jobrunner/release-hatch/deploy.sh
-User=jobrunner
+WorkingDirectory=/home/opensafely
+ExecStart=/home/opensafely/release-hatch/deploy.sh
+User=opensafely
 Type=oneshot
 
 [Install]

@@ -10,19 +10,19 @@ normal docker tools or via docker-compose.
 # Configuration
 
 release-hatch shares the same configuration as jobrunner, which currently lives
-in `/home/jobrunner/config/*.env`. In particular, it uses `JOB_SERVER_TOKEN` to
+in `/home/opensafely/config/*.env`. In particular, it uses `JOB_SERVER_TOKEN` to
 sign and validate requests, and it uses `RELEASE_HOST` to know what domain it
 should be serving files from.
 
 The only additional configuration is the TLS cert/key files. These live at
-`~jobrunner/release-hatch/certs/release-hatch.{crt,key}`, and are used by the
+`~opensafely/release-hatch/certs/release-hatch.{crt,key}`, and are used by the
 docker container to configure TLS. 
 
 The default install will generate self-signed certifcates, but these can replaced.
 
 # Useful commands
 
-All these commands assume you are runing from `~jobrunner/release-hatch` directory.
+All these commands assume you are runing from `~opensafely/release-hatch` directory.
 
  - *restart*: docker-compose restart 
  - *logs*: docker-compose logs

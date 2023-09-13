@@ -2,40 +2,35 @@
 # load config into this shell so we can just run stuff
 set -a
 # shellcheck disable=SC1090
-for f in /home/jobrunner/config/*.env; do
+for f in /home/opensafely/config/*.env; do
     . "$f"
 done
 set +a
 
-# let jobrunner user use the jobrunner commands and scripts easily
-export PYTHONPATH=/home/jobrunner/jobrunner/code:/home/jobrunner/jobrunner/lib
-export PATH=$PATH:/home/jobrunner/bin:/home/jobrunner/jobrunner/code/scripts
-
-cat << EOF
-You have logged into the shared jobrunner account for managing the jobrunner service.
-
-Current status:
-
-systemctl status -n0 jobrunner
-$(systemctl status -n0 jobrunner)
+# let opensafely user use the opensafely commands and scripts easily
+export PYTHONPATH=/srv/opensafely/code:/srv/opensafely/lib
+export PATH=$PATH:/srv/opensafely/bin:/srv/opensafely/code/scripts
 
 
-********************************************
-** Nb. these paths changed September 2023 **
-********************************************
+# let opensafely user use the opensafely commands and scripts easily
+export PYTHONPATH=/srv/opensafely/code:/srv/opensafely/lib
+export PATH=$PATH:/srv/opensafely/bin:/srv/opensafely/code/scripts
 
-Environment variables have been set from /home/jobrunner/config/*.env"
+echo -e "
+You have logged into the shared opensafely account for managing OpenSAFELY
+services on the \033[1m$BACKEND backend\033[0m.
 
-Code: /home/jobrunner/jobrunner/code
-Deps: /home/jobrunner/jobrunner/lib
-Config: /home/jobrunner/config
+All configuration is in ~/config/*.env, and is sourced into your shell on
+login.
 
-Medium privacy files are at $MEDIUM_PRIVACY_STORAGE_BASE
-High privacy files are at $HIGH_PRIVACY_STORAGE_BASE
+Medium privacy files are at \033[1m$MEDIUM_PRIVACY_STORAGE_BASE\033[0m
+High privacy files are at \033[1m$HIGH_PRIVACY_STORAGE_BASE\033[0m
 
-To restart:
+jobrunner: ~/jobrunner
+release-hatch: ~/release-hatch
+collector: ~/collector
 
-    sudo systemctl restart jobrunner
+Please consult ~/playbook.md for operational documentation, or run: just
+"
 
-Please consult ~/playbook.md for operational documentation.
-EOF
+just

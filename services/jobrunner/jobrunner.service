@@ -3,12 +3,12 @@ Description=OpenSAFELY Jobrunner
 Documentation=https://github.com/opensafely-core/job-runner
 
 [Service]
-Environment=PYTHONPATH=/home/jobrunner/jobrunner/lib
-EnvironmentFile=/home/jobrunner/config/01_defaults.env
-EnvironmentFile=/home/jobrunner/config/02_secrets.env
-EnvironmentFile=/home/jobrunner/config/03_backend.env
-EnvironmentFile=/home/jobrunner/config/04_local.env
-WorkingDirectory=/home/jobrunner/jobrunner/code
+Environment=PYTHONPATH=/home/opensafely/jobrunner/lib
+EnvironmentFile=/home/opensafely/config/01_defaults.env
+EnvironmentFile=/home/opensafely/config/02_secrets.env
+EnvironmentFile=/home/opensafely/config/03_backend.env
+EnvironmentFile=/home/opensafely/config/04_local.env
+WorkingDirectory=/home/opensafely/jobrunner/code
 
 # Creates and configures a Docker network which allows network access to only
 # the IPs listed in DATABASE_IP_LIST. Any Docker container run with:
@@ -27,7 +27,7 @@ ExecStartPre=+/usr/local/sbin/jobrunner-network-config.sh \
 
 ExecStart=/usr/bin/python3 -m jobrunner.service
 ExecStop=/bin/kill -INT ${MAINPID}
-User=jobrunner
+User=opensafely
 Group=reviewers
 Restart=on-failure
 RestartSec=60s

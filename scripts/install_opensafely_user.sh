@@ -1,10 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-# Set up the job-runner service
 SRC_DIR=services/jobrunner
 BACKEND_SRC_DIR=backends/$1
-HOME_DIR=/home/jobrunner
+HOME_DIR=/home/opensafely
 
 # set default file creation permission for this script be 640 for files and 750
 # for directories
@@ -12,14 +11,14 @@ umask 027
 
 
 # ensure shared user is set up properly
-if id -u jobrunner 2>/dev/null; then
-    # ensure jobrunner is in docker group
-    usermod -a -G docker jobrunner
-    # ensure jobrunner group ids
-    usermod -u 10000 jobrunner
-    groupmod -g 10000 jobrunner
+if id -u opensafely 2>/dev/null; then
+    # ensure opensafely is in docker group
+    usermod -a -G docker opensafely
+    # ensure opensafely group ids
+    usermod -u 10000 opensafely
+    groupmod -g 10000 opensafely
 else
-    useradd jobrunner --create-home --shell /bin/bash --uid 10000 -G docker
+    useradd opensafely --create-home --shell /bin/bash --uid 10000 -G docker
 fi
 
 

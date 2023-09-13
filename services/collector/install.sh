@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu -o pipefail
 
-DIR=/home/jobrunner/collector
+DIR=/home/opensafely/collector
 mkdir -p "$DIR"
 
 BIN=$DIR/collector
@@ -13,7 +13,7 @@ curl -s https://github-proxy.opensafely.org/opensafely-core/backend-server/relea
 mv /tmp/collector "$BIN"
 chmod +x "$BIN"
 
-chown -R jobrunner:jobrunner "$DIR"
+chown -R opensafely:opensafely "$DIR"
 chmod -R go-rwx "$DIR"
 
 systemctl enable "$DIR/collector.service"
