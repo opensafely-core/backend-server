@@ -41,6 +41,7 @@ then
   echo "Installing just in /usr/local/bin/just"
   install -m 755 "$PWD/bin/just-1.14.0-x86_64-unknown-linux-musl" /usr/local/bin/just
   just --completions bash > /etc/bash_completion.d/just
+  chmod 755 /etc/bash_completion.d/just
 else
   echo "Only linux-gnu is currently supported for installing 'just'."
   echo "Please install 'just' manually."

@@ -59,6 +59,9 @@ test -f "$workdir/db.sqlite" || python3 -m jobrunner.cli.migrate
 chown -R opensafely:opensafely $TARGET_DIR
 chown -R opensafely:opensafely $HOME_DIR
 
+#clean up old bashrc
+rm -rf $HOME_DIR/jobrunner/bashrc
+
 # set up some nice helpers for jobrunner when we su into the shared user
 opensafely_bashrc=$HOME_DIR/.bashrc-opensafely
 user_bashrc=$HOME_DIR/.bashrc
