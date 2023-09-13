@@ -8,13 +8,8 @@ done
 set +a
 
 # let opensafely user use the opensafely commands and scripts easily
-export PYTHONPATH=/srv/opensafely/code:/srv/opensafely/lib
-export PATH=$PATH:/srv/opensafely/bin:/srv/opensafely/code/scripts
-
-
-# let opensafely user use the opensafely commands and scripts easily
-export PYTHONPATH=/srv/opensafely/code:/srv/opensafely/lib
-export PATH=$PATH:/srv/opensafely/bin:/srv/opensafely/code/scripts
+export PYTHONPATH=/home/opensafely/jobrunner/code:/home/opensafely/jobrunner/lib
+export PATH=$PATH:/home/opensafely/jobrunner/bin:/home/opensafely/jobrunner/code/scripts
 
 echo -e "
 You have logged into the shared opensafely account for managing OpenSAFELY
