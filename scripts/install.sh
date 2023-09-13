@@ -31,6 +31,7 @@ chmod 0640 /etc/opensafely/*
 ln -sf /etc/opensafely/profile /etc/profile.d/opensafely.sh
 ln -sf /etc/opensafely/sudoers /etc/sudoers.d/opensafely
 ln -sf /etc/opensafely/ssh.conf /etc/ssh/sshd_config.d/99-opensafely.conf
+rm -f /etc/opensafely/ssh-banner
 
 chmod 0755 /etc/opensafely/{banner,bashrc}
 
