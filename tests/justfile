@@ -12,7 +12,7 @@ default:
 lint:
   # run this from the parent directory so that shellcheck can locate the other files referred
   # to in these scripts
-  cd .. && shellcheck -x */*.sh services/*/*.sh scripts/user.bashrc bin/lsjobs run-in-lxd.sh build-lxd-image.sh
+  cd .. && shellcheck -x */*.sh services/*/*.sh scripts/user.bashrc bin/lsjobs tests/run-in-lxd.sh tests/build-lxd-image.sh
 
 # build resources required to run tests
 build: testuser-key build-test-image
@@ -22,8 +22,8 @@ build-test-image:
   #!/usr/bin/env bash
   set -euo pipefail
 
-  test packages.txt -nt .test-image -o ../core-packages.txt -nt .test-image -o ../purge-packages.txt -nt .test-image -o ../build-lxd-image.sh -nt .test-image || exit 0
-  (cd .. && time {{ if github_actions == "true" { "sudo" } else { "" } }} ./build-lxd-image.sh)
+  test packages.txt -nt .test-image -o ../core-packages.txt -nt .test-image -o ../purge-packages.txt -nt .test-image -o ./build-lxd-image.sh -nt .test-image || exit 0
+  time {{ if github_actions == "true" { "sudo" } else { "" } }} ./build-lxd-image.sh
   touch .test-image
 
 # create ssh key for tests
@@ -50,7 +50,7 @@ test: build
 
 # run a specific test
 run_test target: build
-  (cd .. && {{ if github_actions == "true" { "sudo -E" } else { "" } }} ./run-in-lxd.sh {{target}})
+  (cd .. && {{ if github_actions == "true" { "sudo -E" } else { "" } }} ./tests/run-in-lxd.sh {{target}})
 
 # remove temporary files relating to tests
 clean:
