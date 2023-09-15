@@ -1,15 +1,7 @@
 #!/bin/bash
-# load config into this shell so we can just run stuff
-set -a
-# shellcheck disable=SC1090
-for f in /home/opensafely/config/*.env; do
-    . "$f"
-done
-set +a
 
-# let opensafely user use the opensafely commands and scripts easily
-export PYTHONPATH=/home/opensafely/jobrunner/code:/home/opensafely/jobrunner/lib
-export PATH=$PATH:/home/opensafely/jobrunner/bin:/home/opensafely/jobrunner/code/scripts
+# shellcheck source=/dev/null
+test -f ~/config/load-env && . ~/config/load-env
 
 echo -e "
 You have logged into the shared opensafely account for managing OpenSAFELY

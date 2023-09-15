@@ -80,10 +80,7 @@ manage-emis: install update-users install-jobrunner install-release-hatch
   #!/bin/bash
   set -euo pipefail
 
-  for f in /home/opensafely/config/*.env; do
-      # shellcheck disable=SC1090
-      . "$f"
-  done
+  . /home/opensafely/config/load-env
 
   if test -z "${PRESTO_TLS_KEY_PATH:-}"; then
       echo "WARNING: PRESTO_TLS_KEY_PATH env var not defined"
