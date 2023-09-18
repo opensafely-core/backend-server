@@ -61,6 +61,9 @@ install-osrelease: check
 install-collector: check
   ./services/collector/install.sh
 
+install-timers: check
+  ./services/timers/install.sh
+
 # Update jobrunner to the specified commit_id & restart
 update-jobrunner commit_id="HEAD": check
   ./services/jobrunner/bin/update-jobrunner.sh {{ commit_id }}
@@ -97,7 +100,7 @@ manage-emis: install update-users install-jobrunner install-release-hatch
 manage-test: install-packages install update-users install-jobrunner install-release-hatch install-osrelease install-collector
 
 [private]
-manage-tpp: install-packages install update-users install-jobrunner install-release-hatch install-collector
+manage-tpp: install-packages install update-users install-jobrunner install-release-hatch install-collector install-timers
 
 test:
   echo "Please see `just tests/`"
