@@ -12,17 +12,10 @@ REVIEWERS_GROUP="${REVIEWERS_GROUP:-reviewers}"
 # for directories
 umask 027
 
-# load config
-set -a
-# shellcheck disable=SC1090
-for f in "$HOME_DIR"/config/*.env; do
-    # shellcheck disable=1090
-    . "$f"
-done
-set +a;
+# shellcheck source=/dev/null
+. scripts/load-env
 
 # set up jobrunner
-
 mkdir -p $TARGET_DIR
 # ensure we have a checkout of job-runner and dependencies
 test -d $TARGET_DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $TARGET_DIR/code
@@ -60,17 +53,6 @@ test -f "$workdir/db.sqlite" || python3 -m jobrunner.cli.migrate
 chown -R opensafely:opensafely $TARGET_DIR
 chown -R opensafely:opensafely $HOME_DIR
 
-#clean up old bashrc
-rm -rf $HOME_DIR/jobrunner/bashrc
-
-# set up some nice helpers for jobrunner when we su into the shared user
-opensafely_bashrc=$HOME_DIR/.bashrc-opensafely
-user_bashrc=$HOME_DIR/.bashrc
-cp scripts/user.bashrc $opensafely_bashrc
-chmod 644 $opensafely_bashrc
-test -f $user_bashrc || touch $user_bashrc
-grep -q ".bashrc-opensafely" $user_bashrc || echo "test -f $opensafely_bashrc && . $opensafely_bashrc" >> $user_bashrc
-
 # set up systemd service
 # Note: do this *after* permissions have been set on the $TARGET_DIR properly
 cp $SRC_DIR/jobrunner.service /etc/systemd/system/
@@ -81,3 +63,7 @@ test -d "$BACKEND_SRC_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_SRC_DIR/jobru
 
 # Dump all the logs if this fails to start
 systemctl enable --now jobrunner || (journalctl -xe && exit 1)
+
+# set up jobrunner justfile
+mkdir -p $HOME_DIR/jobrunner
+cp services/jobrunner/justfile $HOME_DIR/jobrunner/justfile

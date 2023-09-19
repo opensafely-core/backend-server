@@ -10,8 +10,8 @@ mkdir -p $DIR
 cp -a ./services/release-hatch/* "$DIR"
 
 if ! test -e $SSL_KEY -a -e $SSL_CERT; then
-    # shellcheck disable=SC1090
-    source <(cat /home/opensafely/config/*.env)
+    # shellcheck disable=SC1091
+    . ~opensafely/config/load-env
 
     # clean http:// and ports
     HOSTNAME="$(echo "$RELEASE_HOST" | cut -d'/' -f3 | cut -d':' -f1)"

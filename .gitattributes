@@ -1,2 +1,3 @@
 * text eol=lf
 bin/just-1.14.0-x86_64-unknown-linux-musl binary
+bin/otel-cli binary

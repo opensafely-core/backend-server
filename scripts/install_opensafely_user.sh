@@ -50,6 +50,7 @@ local_env="$HOME_DIR/config/04_local.env"
 copy_with_warning $SRC_DIR/defaults.env "$defaults_env"
 copy_with_warning "$BACKEND_SRC_DIR/backend.env" "$backend_env"
 
+
 # TODO: test for new secrets in template not in env?
 test -f $secrets_env || cp $SRC_DIR/secrets-template.env $secrets_env
 chmod 0600 $secrets_env
@@ -69,7 +70,17 @@ cp playbook.md $HOME_DIR/playbook.md
 # clean up old playbook if present
 rm -f /srv/playbook.md
 
+#clean up old bashrc
+rm -rf $HOME_DIR/jobrunner/bashrc
+
+# set up some nice helpers for when we su into the shared user
+cp scripts/load-env $HOME_DIR/config/load-env
+opensafely_bashrc=$HOME_DIR/.bashrc-opensafely
+user_bashrc=$HOME_DIR/.bashrc
+cp scripts/user.bashrc $opensafely_bashrc
+chmod 644 $opensafely_bashrc
+test -f $user_bashrc || touch $user_bashrc
+grep -q ".bashrc-opensafely" $user_bashrc || echo "test -f $opensafely_bashrc && . $opensafely_bashrc" >> $user_bashrc
+
 # update user-wide justfiles for management tasks
 cp justfile-user $HOME_DIR/justfile
-mkdir -p $HOME_DIR/jobrunner
-cp services/jobrunner/justfile $HOME_DIR/jobrunner/justfile
