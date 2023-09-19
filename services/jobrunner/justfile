@@ -52,3 +52,13 @@ jobs-stats:
 job-retry job_id:
     python3 -m jobrunner.cli.retry_job {{ job_id }}
 
+# deploy latest version of job-runner
+deploy:
+    #!/bin/bash
+    set -euo pipefail
+    cd ~openafely/jobrunner/code
+    git fetch --all
+    git checkout main --force
+    sudo systemctl restart jobrunner
+
+
