@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # this needs to be called DATABASE_URL in cohortextractor, but we do not want to expose it in telemetry
-export DATABASE_URL=$FULL_DATABASE_URL
+export DATABASE_URL=$DEFAULT_DATABASE_URL
 
 export OTEL_EXPORTER_OTLP_HEADERS="$(echo $OTEL_EXPORTER_OTLP_HEADERS | sed 's#%20# #g')"
 
