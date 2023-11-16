@@ -64,10 +64,6 @@ install-collector: check
 install-timers: check
   ./services/timers/install.sh
 
-# Update jobrunner to the specified commit_id & restart
-update-jobrunner commit_id="HEAD": check
-  ./services/jobrunner/bin/update-jobrunner.sh {{ commit_id }}
-
 # install everything for a backend
 manage: check
   #!/bin/bash

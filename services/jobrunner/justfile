@@ -20,6 +20,18 @@ stop:
 restart:
     sudo systemctl restart jobrunner
 
+# Update jobrunner to the specified ref & restart
+deploy ref="origin/main":
+    ~/bin/update-jobrunner.sh {{ ref }}
+
+# update jobrunner dependencies
+update-lib:
+    git -C jobrunner/lib pull
+
+# run jobrunner migrations
+migrate:
+    python3 -m jobrunner.cli.migrate
+
 # destroy containers & volumes for all running jobs
 prepare-for-reboot: stop
     python3 -m jobrunner.cli.prepare_for_reboot
