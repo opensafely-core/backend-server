@@ -14,13 +14,13 @@ if ! git diff-files --quiet; then
 fi
 
 echo "Pending commits:"
-git log --ancestry-path HEAD..$ref
+git log --ancestry-path "HEAD..$ref"
 
 if test -t 1; then
     echo "Confirm you wish to deploy the above changes"
     read -p "Are you sure (y/n)? " -n 1 -r
     echo
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
+    if ! [[ $REPLY =~ ^[Yy]$ ]]; then
         exit 1
     fi
 fi
