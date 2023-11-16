@@ -84,7 +84,7 @@ just jobrunner/update-dependencies
 just jobrunner/migrate
 ```
 
-3. If there are new config fields, updated by adding to appropriate files in `/home/opensafely/config`.
+3. If there are new config fields, update by adding to appropriate files in `/home/opensafely/config`.
 
 4. Update and restart jobrunner
 
