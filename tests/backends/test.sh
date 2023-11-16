@@ -29,7 +29,7 @@ test "$(id -g opensafely)" == "10000"
 # test service is up
 tout 5s systemctl status jobrunner
 
-# hack to pull in the cohortextactor for this job
+# hack to pull in ehrql for this job
 /home/opensafely/jobrunner/code/scripts/update-docker-image.sh ehrql:v0
 
 # run a job
