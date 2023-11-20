@@ -1,11 +1,17 @@
 #!/bin/bash
 set -euo pipefail
 
+run() {
+    echo "$@"
+    # shellcheck disable=SC2068
+    $@
+}
+
 ref=${1:-origin/main}
 TARGET_DIR=/home/opensafely/jobrunner/code
 
 cd $TARGET_DIR
-git fetch --all
+run git fetch --all
 if ! git diff-files --quiet; then
     echo "Dirty checkout in $TARGET_DIR. Please fix by either:"
     echo " a) stashing/removing local changes and re-running this command, or"
@@ -14,7 +20,7 @@ if ! git diff-files --quiet; then
 fi
 
 echo "Pending commits:"
-git log --ancestry-path "HEAD..$ref"
+git --no-pager log --ancestry-path "HEAD..$ref"
 
 if test -t 1; then
     echo "Confirm you wish to deploy the above changes"
@@ -24,5 +30,23 @@ if test -t 1; then
         exit 1
     fi
 fi
+
+echo
+echo "Updating python dependencies..."
+run git -C jobrunner/lib pull
+
+echo
+echo "Chekking out $ref..."
 git reset "$ref" --hard
-sudo systemctl restart jobrunner
+
+echo
+echo "Running migrations..."
+run python3 -m jobrunner.cli.migrate
+
+echo
+echo "Restarting jobrunner..."
+run sudo systemctl restart jobrunner
+
+echo 
+echo "Checking status..."
+run systemctl status jobrunner --no-pager

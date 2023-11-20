@@ -20,15 +20,11 @@ stop:
 restart:
     sudo systemctl restart jobrunner
 
-# Update jobrunner to the specified ref & restart
+# Update jobrunner and dependencies to the specified ref & restart
 deploy ref="origin/main":
     ~/bin/update-jobrunner.sh {{ ref }}
 
-# update jobrunner dependencies
-update-lib:
-    git -C jobrunner/lib pull
-
-# run jobrunner migrations
+# run jobrunner db migrations
 migrate:
     python3 -m jobrunner.cli.migrate
 

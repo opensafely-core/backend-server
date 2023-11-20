@@ -72,27 +72,21 @@ need to merge a change to the `services/jobrunner/defaults.env` or
 
 ### Deploy job-runner
 
-1. If there dependency updates, update lib
+1. If there are new config fields, update by adding to appropriate files in `/home/opensafely/config`.
 
-```bash
-just jobrunner/update-dependencies
-```
-
-2. If there are migrations, run them
-
-```bash
-just jobrunner/migrate
-```
-
-3. If there are new config fields, update by adding to appropriate files in `/home/opensafely/config`.
-
-4. Update and restart jobrunner
+2. Update and restart jobrunner via:
 
 
 ```bash
 just jobrunner/deploy
 ```
 
+Notes: the script to actually do all this is in `~opensafely/bin/update-jobrunner.sh`. It basically does some checks, and then:
+
+ a) update dependencies
+ b) pull code
+ c) run migrations
+ d) restart service
 
 ### Update docker image
 
