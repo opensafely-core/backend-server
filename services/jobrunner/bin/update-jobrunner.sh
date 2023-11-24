@@ -36,7 +36,7 @@ echo "Updating python dependencies..."
 run git -C jobrunner/lib pull
 
 echo
-echo "Chekking out $ref..."
+echo "Checking out $ref..."
 git reset "$ref" --hard
 
 echo
