@@ -1,3 +1,5 @@
 %opensafely ALL= NOPASSWD: /usr/bin/systemctl restart jobrunner*
 %opensafely ALL= NOPASSWD: /usr/bin/systemctl start jobrunner*
-%opensefely ALL= NOPASSWD: /usr/bin/systemctl stop jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/systemctl stop jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/systemctl status jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/journalctl -u jobrunner*
