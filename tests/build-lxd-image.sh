@@ -17,6 +17,9 @@ lxc exec "$name" -- apt-get upgrade --yes
 sed 's/^#.*//' "$BACKEND_SERVER_PATH"/core-packages.txt | lxc exec "$name" -- xargs apt-get install -y
 sed 's/^#.*//' "$BACKEND_SERVER_PATH"/packages.txt | lxc exec "$name" -- xargs apt-get install -y
 
+# preload ehrql:v1
+lxc exec "$name" -- docker pull ghcr.io/opensafely-core/ehrql:v1
+
 lxc stop "$name"
 time lxc publish --quiet "$name" --alias "$name"
 # GHA version of lxd doesn't have this, so don't error

@@ -30,7 +30,7 @@ test "$(id -g opensafely)" == "10000"
 tout 5s systemctl status jobrunner
 
 # hack to pull in ehrql for this job
-/home/opensafely/jobrunner/code/scripts/update-docker-image.sh ehrql:v0
+/home/opensafely/jobrunner/code/scripts/update-docker-image.sh ehrql:v1
 
 # run a job
 cat << EOF | su - opensafely -c bash
