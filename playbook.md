@@ -182,7 +182,7 @@ Start a privileged container which can see other containers processes:
 
     docker run --rm -it --privileged --pid=host ghcr.io/opensafely-core/tools
 
-Find the pid of the relevent process inside the job in question:
+Find the pid of the relevant process inside the job in question:
 
     ps faux | less
 
@@ -218,7 +218,7 @@ To kill a running job (or prevent it starting if it hasn't yet) use the
     python3 -m jobrunner.cli.kill_job --cleanup <job_id> [... <job_id>]
 
 The `job_id` actually only has to be a sub-string of the job ID (full
-ones are a bit awkward to type) and you wil be able to select the
+ones are a bit awkward to type) and you will be able to select the
 correct job if there are multiple matches.
 
 Multiple job IDs can be supplied to kill multiple jobs simultaneously.
@@ -265,6 +265,36 @@ the permissions to obtain an accurate row count for these tables_
 For tables within the `OpenCORONATempTables` database:
 
     SELECT COUNT(*) FROM <name of table> (NOLOCK).
+
+
+### Removing a Level 4 file
+
+There are times when these medium privacy outputs may need to be deleted. For
+example, the researcher or output checkers may realise they should have been
+marked as high privacy, or the researcher may no longer need the output and
+want to preserve disk space.
+
+All outputs are put into the `/srv/high_privacy/workspaces/` directory for
+a workspace on the VM.
+
+Outputs that have been marked as having a medium privacy level are then copied
+into the matching `/srv/medium_privacy/workspaces/` directory.
+
+To remove a level 4 file, you can just delete the file from the correct
+`/srv/medium_privacy/workspaces/$WORKSPACE` directory.
+
+
+#### Removing Level 4 file from TPP
+
+Medium privacy outputs are copied from L3 to L4 every five minutes by a sync
+script controlled by TPP. *Note: this sync script is unidirectional, so any
+changes to L4 are not reflected back to the source files in the VM.*
+
+Once you have removed the file from `/srv/medium_privacy` as per above, you then need to:
+
+1. Login to L4 (after deleting the file from L3)
+2. Browse to `D:\Level4Files\workspaces\$WORKSPACE`
+3. Permanently delete the file (using SHIFT+DEL or by emptying the recycle bin after deleting normally).
 
 
 ## Start up and Shutdown
