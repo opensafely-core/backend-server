@@ -284,7 +284,7 @@ To remove a level 4 file, you can just delete the file from the correct
 `/srv/medium_privacy/workspaces/$WORKSPACE` directory.
 
 
-#### Removing Level 4 file from TPP
+#### Removing a Level 4 file from TPP
 
 Medium privacy outputs are copied from L3 to L4 every five minutes by a sync
 script controlled by TPP. *Note: this sync script is unidirectional, so any
