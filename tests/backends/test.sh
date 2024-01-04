@@ -22,12 +22,37 @@ just manage
 # run again to check for idempotency
 just manage
 
+# test disable user
+#
+# create a user using a throwaway developers file
+echo "disabled_user" > /tmp/developers
+developers=/tmp/developers ./scripts/update-users.sh test
+
+# since disabled_user is not in actual developers, we should be able to disable it.
+just disable-user disabled_user
+
+if test -f ~disabled_user/.ssh; then
+    echo "disabled_user .ssh/authorized_keys not deleted"
+    exit 1
+fi
+
+if groups disabled_user | grep -q developers; then
+    echo "disabled_user still in developers group"
+    exit 1
+fi
+
+if ! passwd -S disabled_user | grep -q "disabled_user L"; then
+    echo "disabled_user password not locked"
+    exit 1
+fi
+
 # test user setup
 test "$(id -u opensafely)" == "10000"
 test "$(id -g opensafely)" == "10000"
 
 # test service is up
 tout 5s systemctl status jobrunner
+
 
 # hack to pull in ehrql for this job
 /home/opensafely/jobrunner/code/scripts/update-docker-image.sh ehrql:v1

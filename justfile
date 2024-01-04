@@ -46,6 +46,10 @@ install-opensafely-user: check
 whereami: check
   @echo "Your current backend is: $BACKEND"
 
+# disable a users permissions and ssh access
+disable-user user:
+  ./scripts/disable-user.sh {{ user }}
+
 update-users: check
   ./scripts/update-users.sh $BACKEND
 
