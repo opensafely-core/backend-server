@@ -5,12 +5,13 @@ DIR=~opensafely/release-hatch
 
 mkdir -p $DIR
 cp -a ./services/release-hatch/* "$DIR"
-chown -R opensafely:opensafely "$DIR"
-chmod -R go-rwx "$DIR"
 
-if test "$TEST" = "true"; then
+if test "${TEST:-}" = "true"; then
     just -f $DIR/justfile create-test-certificates
 fi
+
+chown -R opensafely:opensafely "$DIR"
+chmod -R go-rwx "$DIR"
 
 systemctl enable "$DIR/release-hatch.service"
 systemctl enable "$DIR/release-hatch.timer"

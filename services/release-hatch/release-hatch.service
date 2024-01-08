@@ -4,7 +4,7 @@ Wants=release-hatch.timer
 
 [Service]
 WorkingDirectory=/home/opensafely/release-hatch
-ExecStart=/usr/local/bin/just deploy
+ExecStart=/usr/local/bin/just autodeploy
 User=opensafely
 Type=oneshot
 
