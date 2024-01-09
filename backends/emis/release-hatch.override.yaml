@@ -1,0 +1,8 @@
+# docker-compose version on 20.04 (v1.25) does not support the version-less
+# compose specfication, so we explicitly set the highest version
+# it supports.
+version: "3.7"
+services:
+  release-hatch:
+    security_opt:
+      - seccomp:unconfined

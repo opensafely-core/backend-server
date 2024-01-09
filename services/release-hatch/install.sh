@@ -2,9 +2,14 @@
 set -euo pipefail
 
 DIR=~opensafely/release-hatch
+OVERRIDE_FILE="backends/$BACKEND/release-hatch.override.yaml"
 
 mkdir -p $DIR
 cp -a ./services/release-hatch/* "$DIR"
+
+if test -f "$OVERRIDE_FILE"; then
+    cp "$OVERRIDE_FILE" "$DIR/docker-compose.override.yaml"
+fi
 
 if test "${TEST:-}" = "true"; then
     just -f $DIR/justfile create-test-certificates
