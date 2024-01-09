@@ -3,8 +3,8 @@ Description=Update release-hatch service
 Wants=release-hatch.timer
 
 [Service]
-WorkingDirectory=/home/opensafely
-ExecStart=/home/opensafely/release-hatch/deploy.sh
+WorkingDirectory=/home/opensafely/release-hatch
+ExecStart=/usr/local/bin/just autodeploy
 User=opensafely
 Type=oneshot
 

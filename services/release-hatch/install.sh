@@ -2,31 +2,12 @@
 set -euo pipefail
 
 DIR=~opensafely/release-hatch
-SSL_CERT=$DIR/certs/release-hatch.crt
-SSL_KEY=$DIR/certs/release-hatch.key
-SYSTEM_CERTS=/usr/local/share/ca-certificates/release-hatch
 
 mkdir -p $DIR
 cp -a ./services/release-hatch/* "$DIR"
 
-if ! test -e $SSL_KEY -a -e $SSL_CERT; then
-    # shellcheck disable=SC1091
-    . ~opensafely/config/load-env
-
-    # clean http:// and ports
-    HOSTNAME="$(echo "$RELEASE_HOST" | cut -d'/' -f3 | cut -d':' -f1)"
-
-    mkdir -p "$(dirname $SSL_CERT)"
-
-    # generate a self signed certificate
-    openssl req -x509 -newkey ed25519 -keyout $SSL_KEY -out $SSL_CERT -sha256 -days 365 -nodes \
-	    -subj "/C=GB/O=OpenSAFELY/CN=$HOSTNAME/emailAddress=tech@opensafely.org" \
-	    -addext "subjectAltName = DNS:$HOSTNAME"
-
-    # ensure self signed is trusted by this machine
-    mkdir -p $SYSTEM_CERTS
-    ln -sf $SSL_CERT $SYSTEM_CERTS/
-    update-ca-certificates
+if test "${TEST:-}" = "true"; then
+    just -f $DIR/justfile create-test-certificates
 fi
 
 chown -R opensafely:opensafely "$DIR"

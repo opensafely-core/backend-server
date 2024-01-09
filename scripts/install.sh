@@ -33,6 +33,9 @@ ln -sf /etc/opensafely/profile /etc/profile.d/opensafely.sh
 ln -sf /etc/opensafely/sudoers /etc/sudoers.d/opensafely
 ln -sf /etc/opensafely/ssh.conf /etc/ssh/sshd_config.d/99-opensafely.conf
 
+# create directory for selfsigned test certifcates
+mkdir -p /usr/local/share/ca-certificates/opensafely
+
 # clean up old files
 rm -f /etc/opensafely/ssh-banner
 
