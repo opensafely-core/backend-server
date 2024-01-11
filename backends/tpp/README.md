@@ -93,3 +93,29 @@ in git-bash on Windows.
 
 Once the VM is deployed, we will maintain it directly, and do not
 anticipate generating VM images regularly.
+
+### Enabling Clock Sync
+
+Hyper V clocks [will drift
+slower](https://learn.microsoft.com/en-gb/archive/blogs/virtual_pc_guy/time-synchronization-in-hyper-v).
+We don't have network access to an ntp server, but Hyper-V [provides a ptp
+clock our linux guest can sync
+with](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/time-sync).
+
+Unfortunately, the 20.04 default of systemd-timesyncd does not support this. We
+need to use chrony. However, installing, configuring, and testing that in our
+LXD based test suite is hard/impossible. So instead, here we document the
+manual steps involved in enabling clock sync.
+
+Based on the microsft docs: https://learn.microsoft.com/en-us/azure/virtual-machines/linux/time-sync
+
+1. Double check that `/dev/ptp_hyperv` device exists. 
+2. `sudo apt install chrony`. This should remove systemd-timesyncd, but can be a bit odd, may need to be re-run.
+3. Add the following line to /etc/chrony/chrony.conf: ```refclock PHC /dev/ptp_hyperv poll 3 dpoll -2 offset 0 stratum 2```
+4. Stop jobrunner, release-hatch temporarily, to avoid weirdness from adjusting the clock
+5. `sudo systemctl restart chronyd && sudo systemctl restart chrony`
+6. Restart jobrunner and release-hatch
+
+You can check chrony is working correctly with `journalctl -u chrony`
+
+
