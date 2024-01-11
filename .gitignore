@@ -1,5 +1,5 @@
 tests/backends/*.log
 tests/*.log
 .test-image
-keys/testuser*
+tests/keys/testuser*
 
