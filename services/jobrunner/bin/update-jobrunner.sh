@@ -33,7 +33,7 @@ fi
 
 echo
 echo "Updating python dependencies..."
-run git -C jobrunner/lib pull
+run git -C ../lib pull
 
 echo
 echo "Checking out $ref..."
