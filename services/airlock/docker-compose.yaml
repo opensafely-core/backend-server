@@ -1,0 +1,25 @@
+# docker-compose version on 20.04 (v1.25) does not support the version-less
+# compose specfication, so we explicitly set the highest version
+# it supports.
+version: "3.7"
+services:
+  airlock: &service
+    image: docker-proxy.opensafely.org/opensafely-core/airlock:latest
+    container_name: airlock
+    init: true
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - "443:8000"
+    user: 10000:10000
+    env_file:
+      - /home/opensafely/config/01_defaults.env
+      - /home/opensafely/config/02_secrets.env
+      - /home/opensafely/config/03_backend.env
+      - /home/opensafely/config/04_local.env
+    command: gunicorn --config gunicorn.conf.py --certfile /certs/airlock.crt --keyfile /certs/airlock.key airlock.wsgi
+    volumes:
+      - /home/opensafely/airlock/workdir:/workdir
+      - /srv/medium_privacy/workspaces:/workspaces:ro
+      - /srv/medium_privacy/requests:/requests
+      - ./certs:/certs

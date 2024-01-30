@@ -59,6 +59,9 @@ install-jobrunner: check install-opensafely-user
 install-release-hatch: check
   ./services/release-hatch/install.sh
 
+install-airlock: check
+  ./services/airlock/install.sh
+
 install-osrelease: check
   ./services/osrelease/install.sh
 
@@ -97,7 +100,7 @@ manage-emis: install update-users install-jobrunner install-release-hatch
   fi
 
 [private]
-manage-test: install-packages install update-users install-jobrunner install-release-hatch install-osrelease install-collector
+manage-test: install-packages install update-users install-jobrunner install-airlock install-osrelease install-collector
 
 [private]
 manage-tpp: install-packages install update-users install-jobrunner install-release-hatch install-collector install-timers
