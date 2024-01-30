@@ -8,12 +8,13 @@ run() {
 }
 
 ref=${1:-origin/main}
-TARGET_DIR=/home/opensafely/jobrunner/code
+HOME_DIR=/home/opensafely
+TARGET_DIR=$HOME_DIR/jobrunner
 
-cd $TARGET_DIR
+cd $TARGET_DIR/code
 run git fetch --all
 if ! git diff-files --quiet; then
-    echo "Dirty checkout in $TARGET_DIR. Please fix by either:"
+    echo "Dirty checkout in $TARGET_DIR/code. Please fix by either:"
     echo " a) stashing/removing local changes and re-running this command, or"
     echo " b) manually checking out the ref you want and running 'just jobserver/restart'"
     exit 1
@@ -33,7 +34,7 @@ fi
 
 echo
 echo "Updating python dependencies..."
-run git -C jobrunner/lib pull
+run git -C $TARGET_DIR/lib pull
 
 echo
 echo "Checking out $ref..."
