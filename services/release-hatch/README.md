@@ -24,7 +24,7 @@ The default install will generate self-signed certifcates, but these can replace
 
 All these commands assume you are runing from `~opensafely/release-hatch` directory.
 
- - *restart*: docker-compose restart 
- - *logs*: docker-compose logs
- - *update*: ./deploy.sh
+ - *restart*: just restart
+ - *logs*: just logs
+ - *update*: just deploy
  - *root shell*: docker-compose exec -u 0 release-hatch bash
