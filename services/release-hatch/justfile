@@ -18,6 +18,12 @@ deploy: && restart
 restart *args:
     docker-compose --no-ansi up --no-build {{ args }} --detach release-hatch
 
+
+# get docker logs
+logs *args:
+    docker-compose logs {{ args }}
+
+
 # update to the certificate for release-hatch from backends.opensafely.org
 update-certs:
     #!/bin/bash
