@@ -22,7 +22,7 @@ else
     # note: a quirk of the github ssh api here is that a non-existent user
     # returns an empty 200 response. Which is handy here for using with test
     # users
-    curl -s -f "https://github-proxy.opensafely.org/$user.keys" >> "$tmp"
+    curl --silent --fail "https://github-proxy.opensafely.org/$user.keys" >> "$tmp"
 fi
 
 # replace current authorized_keys
