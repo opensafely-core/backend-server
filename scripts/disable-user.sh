@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+developers=${developers:-developers}
 user=${1}
 
 log=$(mktemp)
@@ -15,7 +16,7 @@ find_user() {
     fi
 }
 
-find_user developers
+find_user "$developers"
 find_user "backends/$BACKEND/reviewers"
 find_user "backends/$BACKEND/researchers"
 
