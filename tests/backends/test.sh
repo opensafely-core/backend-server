@@ -23,7 +23,7 @@ just manage
 just manage
 
 
-# override develoeprs fiels to be able to disable user
+# override developers field to be able to disable user
 # user must exist, using test author :shrug:
 developers=/dev/null just disable-user bloodearnest
 
