@@ -22,27 +22,23 @@ just manage
 # run again to check for idempotency
 just manage
 
-# test disable user
-#
-# create a user using a throwaway developers file
-echo "disabled_user" > /tmp/developers
-developers=/tmp/developers ./scripts/update-users.sh test
 
-# since disabled_user is not in actual developers, we should be able to disable it.
-just disable-user disabled_user
+# override developers field to be able to disable user
+# user must exist, using test author :shrug:
+developers=/dev/null just disable-user bloodearnest
 
-if test -f ~disabled_user/.ssh; then
-    echo "disabled_user .ssh/authorized_keys not deleted"
+if test -f ~bloodearnest/.ssh; then
+    echo "bloodearnest .ssh/authorized_keys not deleted"
     exit 1
 fi
 
-if groups disabled_user | grep -q developers; then
-    echo "disabled_user still in developers group"
+if groups bloodearnest | grep -q developers; then
+    echo "bloodearnest still in developers group"
     exit 1
 fi
 
-if ! passwd -S disabled_user | grep -q "disabled_user L"; then
-    echo "disabled_user password not locked"
+if ! passwd -S bloodearnest | grep -q "bloodearnest L"; then
+    echo "bloodearnest password not locked"
     exit 1
 fi
 
