@@ -1,0 +1,10 @@
+[Unit]
+Description=Run airlock update regularly
+Requires=airlock.service
+
+[Timer]
+OnUnitActiveSec=3min
+Unit=airlock.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,12 @@
+[Unit]
+Description=Update airlock service
+Wants=airlock.timer
+
+[Service]
+WorkingDirectory=/home/opensafely/airlock
+ExecStart=/usr/local/bin/just autodeploy
+User=opensafely
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
