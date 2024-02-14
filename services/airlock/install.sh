@@ -19,9 +19,9 @@ fi
 chown -R opensafely:opensafely "$DIR"
 chmod -R go-rwx "$DIR"
 
-RELEASES_DIR="$MEDIUM_PRIVACY_STORAGE_BASE/releases"
-mkdir -p "$RELEASES_DIR"
-find "$RELEASES_DIR" -type f -exec chmod 640 {} +
+REQUESTS_DIR="$MEDIUM_PRIVACY_STORAGE_BASE/requests"
+mkdir -p "$REQUESTS_DIR"
+find "$REQUESTS_DIR" -type f -exec chmod 640 {} +
 
 
 systemctl enable "$DIR/airlock.service"
