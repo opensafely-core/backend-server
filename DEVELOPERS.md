@@ -36,19 +36,24 @@ Directory layout:
 
 ## Testing
 
-To run tests, we use LXD to provide and isolate VM-like environment. You will
-need to have LXD installed and configured, and `shiftfs` enabled. Currently,
-this probably only works on Ubuntu.
+To run tests, we use LXD to provide and isolate VM-like environment. 
 
-https://linuxcontainers.org/lxd/getting-started-cli/
+### Configuring LXD
 
-Quickstart for ubuntu:
+You will need to have LXD installed and configured, and `shiftfs` enabled. Currently,
+this probably only works on Ubuntu. Try their [First steps with LXD](https://documentation.ubuntu.com/lxd/en/latest/tutorial/first_steps/). 
+
+Don't forget to [configure your firewall](https://documentation.ubuntu.com/lxd/en/latest/howto/network_bridge_firewalld/) appropriately.
+
+#### LXD Quickstart for ubuntu:
 
 ```
 snap install lxd --classic
 sudo snap set lxd shiftfs.enable=true
 sudo lxd init --auto
 ```
+
+### Running tests
 
 To run tests:
 
