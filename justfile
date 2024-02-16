@@ -103,7 +103,7 @@ manage-emis: install update-users install-jobrunner install-release-hatch
 manage-test: install-packages install update-users install-jobrunner install-airlock install-osrelease install-collector
 
 [private]
-manage-tpp: install-packages install update-users install-jobrunner install-release-hatch install-collector install-timers
+manage-tpp: install-packages install update-users install-jobrunner install-airlock install-collector install-timers
 
 test:
   echo "Please see `just tests/`"

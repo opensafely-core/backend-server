@@ -20,8 +20,8 @@ systemctl status jobrunner || { journalctl -u jobrunner --no-pager; exit 1; }
 # test collector service up
 systemctl status collector || { journalctl -u collector --no-pager; exit 2; }
 
-# run release-hatch tests
-./tests/check-release-hatch.sh
+# run airlock tests
+./tests/check-airlock.sh
 
 msg="Wrong scheme for MS-SQL URL"
 rc=0
