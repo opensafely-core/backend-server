@@ -1,5 +1,8 @@
+# system-specific configuration
+.env
+
+# test artefacts
 tests/backends/*.log
 tests/*.log
 .test-image
 tests/keys/testuser*
-
