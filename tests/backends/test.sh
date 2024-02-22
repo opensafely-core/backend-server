@@ -75,3 +75,6 @@ EOF
 tout 60s bash "$script" || { journalctl -u jobrunner; exit 1; }
 
 systemctl status collector || { journalctl -u collector; exit 1; }
+
+# run airlock tests
+./tests/check-airlock.sh

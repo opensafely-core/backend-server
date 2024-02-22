@@ -17,6 +17,11 @@ services:
       - /home/opensafely/config/02_secrets.env
       - /home/opensafely/config/03_backend.env
       - /home/opensafely/config/04_local.env
+    environment:
+      AIRLOCK_WORK_DIR: /workdir/
+      AIRLOCK_WORKSPACE_DIR: /workspaces/
+      AIRLOCK_REQUEST_DIR: /requests/
+      DJANGO_DEBUG: "False"
     command: gunicorn --config gunicorn.conf.py --certfile /certs/airlock.crt --keyfile /certs/airlock.key airlock.wsgi
     volumes:
       - /home/opensafely/airlock/workdir:/workdir
