@@ -10,8 +10,11 @@ normal docker tools or via `docker compose`.
 # Configuration
 
 airlock shares the same configuration as jobrunner, which currently lives
-in `/home/opensafely/config/*.env`. In particular, it uses `AIRLOCK_API_TOKEN` to
-sign and validate requests. This currently duplicates `JOB_SERVER_TOKEN`.
+in `/home/opensafely/config/*.env`. It requires the following environment variables:
+
+* `DJANGO_ALLOWED_HOSTS` in backend.env
+* `DJANGO_SECRET_KEY` in secrets.env
+* `AIRLOCK_API_TOKEN` in secrets.env (this duplicates `JOB_SERVER_TOKEN`)
 
 The only additional configuration is the TLS cert/key files. These live at
 `~opensafely/airlock/certs/airlock.{crt,key}`, and are used by the
