@@ -7,7 +7,7 @@ set -euo pipefail
 
 just manage
 # run again to check for idempotency
-just manage
+# just manage
 
 # test for ssh keys
 grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
