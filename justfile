@@ -40,7 +40,8 @@ install: check
 
 # create opensafely user & config
 install-opensafely-user: check
-  ./scripts/install_opensafely_user.sh $BACKEND
+  ./scripts/install_opensafely_user.sh
+  ./scripts/update-config.sh $BACKEND
 
 # report which backend configuration this justfile is using
 whereami: check
@@ -59,7 +60,7 @@ install-jobrunner: check install-opensafely-user
 install-release-hatch: check
   ./services/release-hatch/install.sh
 
-install-airlock: check
+install-airlock: check install-opensafely-user
   ./services/airlock/install.sh
 
 install-osrelease: check
