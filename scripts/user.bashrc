@@ -14,7 +14,7 @@ Medium privacy files are at \033[1m$MEDIUM_PRIVACY_STORAGE_BASE\033[0m
 High privacy files are at \033[1m$HIGH_PRIVACY_STORAGE_BASE\033[0m
 
 jobrunner: ~/jobrunner
-release-hatch: ~/release-hatch
+airlock: ~/airlock
 collector: ~/collector
 
 Please consult ~/playbook.md for operational documentation, or run: just
