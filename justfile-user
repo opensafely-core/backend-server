@@ -2,4 +2,4 @@
 default:
   @test jobrunner/justfile && just -f jobrunner/justfile -l --list-prefix jobrunner/
   @echo
-  @test release-hatch/justfile && just -f release-hatch/justfile -l --list-prefix release-hatch/
+  @test airlock/justfile && just -f airlock/justfile -l --list-prefix airlock/
