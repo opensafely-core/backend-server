@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+
 user=$1
 TEST=${TEST:-}
 
