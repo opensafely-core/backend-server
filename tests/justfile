@@ -12,7 +12,7 @@ default:
 lint:
   # run this from the parent directory so that shellcheck can locate the other files referred
   # to in these scripts
-  cd .. && shellcheck -x */*.sh services/*/*.sh scripts/user.bashrc bin/lsjobs tests/run-in-lxd.sh tests/build-lxd-image.sh
+  cd .. && shellcheck -x */*.sh services/*/*.sh scripts/user.bashrc scripts/load-env bin/lsjobs tests/run-in-lxd.sh tests/build-lxd-image.sh
 
 # build resources required to run tests
 build: testuser-key build-test-image
