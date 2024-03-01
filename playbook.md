@@ -66,7 +66,7 @@ All env files are in /home/opensafely/config/\*.env
     04_local.env      # local overrides - use this to temporarily override config
 
 If you wish to change the config in `01_defaults.env` or `03_backend.env`, you
-need to merge a change to the `services/jobrunner/defaults.env` or
+need to merge a change to the `config/defaults.env` or
 `BACKEND/backend.env`, and update the infrastructure code as above.
 
 
