@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+
 user=$1
 TEST=${TEST:-}
 
@@ -25,7 +26,14 @@ else
     curl --silent --fail "https://github-proxy.opensafely.org/$user.keys" >> "$tmp"
 fi
 
-# replace current authorized_keys
-mkdir -p "/home/$user/.ssh"
-mv "$tmp" "/home/$user/.ssh/authorized_keys"
-chown -R "$user:$user" "/home/$user/.ssh/"
+# ensure .ssh directory exists
+ssh_directory="/home/$user/.ssh"
+mkdir -p "$ssh_directory"
+chown -R "$user:$user" "$ssh_directory"
+chmod -R 0700 "$ssh_directory"
+
+# replace authorized_keys file
+authorized_keys_file="$ssh_directory/authorized_keys"
+mv "$tmp" "$authorized_keys_file"
+chown "$user:$user" "$authorized_keys_file"
+chmod 0600 "$authorized_keys_file"

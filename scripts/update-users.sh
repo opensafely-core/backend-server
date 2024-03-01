@@ -28,7 +28,7 @@ add_user() {
     done
     echo "$user groups: $(groups "$user")"
 
-    ./scripts/update-ssh.sh "$user"
+    ./scripts/update-user-ssh-keys.sh "$user"
 }
 
 # add a list of users from a file, to specific groups
