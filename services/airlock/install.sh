@@ -16,13 +16,20 @@ if test "${TEST:-}" = "true"; then
     just -f $DIR/justfile create-test-certificates
 fi
 
-# airlock/workdir will be created automatically by docker-compose when it
-# attempts to mount it, but it will have root ownership by default &
-# the opensafely user needs to own it.
-mkdir -p $DIR/workdir
-
 chown -R opensafely:opensafely "$DIR"
 chmod -R go-rwx "$DIR"
+
+# give the airlock user read access to the certs
+chown -R opensafely:airlock "$DIR/certs"
+chmod -R g+rx "$DIR/certs"
+
+# airlock/workdir will be created automatically by docker-compose when it
+# attempts to mount it, but it will have root ownership by default &
+# the airlock user needs to own it.
+AIRLOCK_WORKDIR=~airlock/workdir
+mkdir -p "$AIRLOCK_WORKDIR"
+chown -R airlock:airlock "$AIRLOCK_WORKDIR"
+chmod -R go-rwx "$AIRLOCK_WORKDIR"
 
 REQUESTS_DIR="$MEDIUM_PRIVACY_STORAGE_BASE/requests"
 mkdir -p "$REQUESTS_DIR"

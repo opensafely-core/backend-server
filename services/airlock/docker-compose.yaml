@@ -11,7 +11,7 @@ services:
     network_mode: bridge
     ports:
       - "443:8000"
-    user: 10000:10000
+    user: 10006:10006
     env_file:
       - /home/opensafely/config/01_defaults.env
       - /home/opensafely/config/02_secrets.env
@@ -24,7 +24,7 @@ services:
       DJANGO_DEBUG: "False"
     command: gunicorn --config gunicorn.conf.py --certfile /certs/airlock.crt --keyfile /certs/airlock.key airlock.wsgi
     volumes:
-      - /home/opensafely/airlock/workdir:/workdir
+      - /home/airlock/workdir:/workdir
       - /srv/medium_privacy/workspaces:/workspaces:ro
       - /srv/medium_privacy/requests:/requests
       - ./certs:/certs
