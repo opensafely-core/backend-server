@@ -33,6 +33,7 @@ check:
 # install required system packages
 install-packages: check
   ./scripts/install_packages.sh
+  ./scripts/install_docker_compose-latest.sh
 
 # install/update groups & system level configuration 
 install: check
