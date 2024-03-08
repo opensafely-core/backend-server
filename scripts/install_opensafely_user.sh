@@ -17,7 +17,10 @@ if id -u opensafely 2>/dev/null; then
     groupmod -g 10000 opensafely
 else
     useradd opensafely --create-home --shell /bin/bash --uid 10000 -G docker
+    # TODO verify opensafely gid is 10000
 fi
+
+chmod -R 0750 $HOME_DIR
 
 # update playbook
 # explicitly remove it first, in case it's a symlink to an old location

@@ -17,10 +17,10 @@ if test "${TEST:-}" = "true"; then
 fi
 
 chown -R opensafely:opensafely "$DIR"
-chmod -R go-rwx "$DIR"
+chmod -R 0750 "$DIR"
 
 # give the airlock user read access to the certs
-chown -R opensafely:airlock "$DIR/certs"
+chown -R airlock:airlock "$DIR/certs"
 chmod -R g+rx "$DIR/certs"
 
 # airlock/workdir will be created automatically by docker-compose when it

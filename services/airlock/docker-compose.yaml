@@ -12,6 +12,10 @@ services:
     ports:
       - "443:8000"
     user: 10006:10006
+    # add reviewers & opensafely groups
+    group_add:
+      - 10000
+      - 10010
     env_file:
       - /home/opensafely/config/01_defaults.env
       - /home/opensafely/config/02_secrets.env
