@@ -1,8 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-HOME_DIR=/home/airlock
-
 # set default file creation permission for this script be 640 for files and 750
 # for directories
 umask 027
@@ -16,5 +14,6 @@ if id -u airlock 2>/dev/null; then
     usermod -u 10006 airlock
     groupmod -g 10006 airlock
 else
+  # TODO: do not --create-home
     useradd airlock --create-home --shell /bin/bash --uid 10006 -G reviewers
 fi
