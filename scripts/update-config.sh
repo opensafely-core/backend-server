@@ -41,7 +41,7 @@ copy_with_warning "$BACKEND_SRC_DIR/backend.env" "$backend_env"
 
 # TODO: test for new secrets in template not in env?
 test -f $secrets_env || cp $CONFIG_SRC_DIR/secrets-template.env $secrets_env
-chmod 0600 $secrets_env
+chmod 0640 $secrets_env
 
 # make sure local env exists
 test -f "$local_env" || echo "# add local overrides here (this file is safe to edit by hand)" > "$local_env"
