@@ -61,8 +61,12 @@ chmod a+rx /usr/local/bin
 
 systemctl reload ssh
 
-# hardcode /etc/hosts entries so we don't need DNS
+# disable cloud-init management of /etc/hosts
+echo -e "manage_etc_hosts: false" > /etc/cloud/cloud.cfg.d/99-opensafely.cfg
+# remove confusing banner in /etc/hosts if present
+sed -i.bak -z "s/# Your system has configured 'manage_etc_hosts'.*cloud-config from user-data\n#\n//" /etc/hosts
 
+# hardcode /etc/hosts entries so we don't need DNS
 if grep -q "## start opensafely dns" /etc/hosts; then
     # -z use NULL for new line, enables multiline matching
     # first -e adds the current file content
