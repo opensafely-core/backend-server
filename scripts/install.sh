@@ -60,3 +60,15 @@ cp bin/otel-cli /usr/local/bin/
 chmod a+rx /usr/local/bin
 
 systemctl reload ssh
+
+# hardcode /etc/hosts entries so we don't need DNS
+
+if grep -q "## start opensafely dns" /etc/hosts; then
+    # -z use NULL for new line, enables multiline matching
+    # first -e adds the current file content
+    # second -e removes the old file content
+    sed -z -e '/## start opensafely dns.*## end opensafely dns/r etc/opensafely/hosts' -e 's/## start opensafely dns.*## end opensafely dns//' -i.bak /etc/hosts
+else
+    echo "" >> /etc/hosts
+    cat etc/opensafely/hosts >> /etc/hosts
+fi
