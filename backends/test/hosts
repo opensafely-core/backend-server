@@ -1,0 +1,5 @@
+# hosts does not do round-robin, so pick one
+172.67.148.71 mirrors.digitalocean.com
+# 104.21.29.13  mirrors.digitalocean.com
+# we currently use tailscale on test backend
+199.38.181.239 pkgs.tailscale.com

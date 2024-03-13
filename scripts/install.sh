@@ -67,12 +67,19 @@ echo -e "manage_etc_hosts: false" > /etc/cloud/cloud.cfg.d/99-opensafely.cfg
 sed -i.bak -z "s/# Your system has configured 'manage_etc_hosts'.*cloud-config from user-data\n#\n//" /etc/hosts
 
 # hardcode /etc/hosts entries so we don't need DNS
-if grep -q "## start opensafely dns" /etc/hosts; then
-    # -z use NULL for new line, enables multiline matching
-    # first -e adds the current file content
-    # second -e removes the old file content
-    sed -z -e '/## start opensafely dns.*## end opensafely dns/r etc/opensafely/hosts' -e 's/## start opensafely dns.*## end opensafely dns//' -i.bak /etc/hosts
-else
-    echo "" >> /etc/hosts
-    cat etc/opensafely/hosts >> /etc/hosts
+mkdir -p /etc/opensafely/hosts.d
+
+if ! test -f /etc/opensafely/hosts.original; then
+    cp /etc/hosts /etc/opensafely/hosts.original
 fi
+
+tmp=$(mktemp)
+cp /etc/opensafely/hosts.original "$tmp"
+echo -e "\n## opensafely core hosts\n" >> "$tmp"
+cat etc/opensafely/hosts >> "$tmp"
+if test -f "backends/$BACKEND/hosts"; then
+    echo -e "\n## backend specific hosts\n" >> "$tmp"
+    cat "backends/$BACKEND/hosts" >> "$tmp"
+fi
+cp /etc/hosts /etc/hosts.bak
+mv "$tmp" /etc/hosts
