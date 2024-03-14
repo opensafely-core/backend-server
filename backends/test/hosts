@@ -1,4 +1,6 @@
-# hosts does not do round-robin, so pick one
+# /etc/hosts can't do round robin DNS, so we have to pick one IP
+185.125.190.39 archive.ubuntu.com security.ubuntu.com
+#185.125.190.36 archive.ubuntu.com security.ubuntu.com
 172.67.148.71 mirrors.digitalocean.com
 # 104.21.29.13  mirrors.digitalocean.com
 # we currently use tailscale on test backend

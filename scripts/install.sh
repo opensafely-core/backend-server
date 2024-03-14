@@ -83,3 +83,4 @@ if test -f "backends/$BACKEND/hosts"; then
 fi
 cp /etc/hosts /etc/hosts.bak
 mv "$tmp" /etc/hosts
+chmod 644 /etc/hosts
