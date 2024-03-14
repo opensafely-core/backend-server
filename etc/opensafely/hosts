@@ -1,12 +1,2 @@
-## start opensafely dns
-
 # Hardcoded values for our core DNS names
 157.245.31.108 jobs.opensafely.org github-proxy.opensafely.org docker-proxy.opensafely.org collector.opensafely.org
-
-# ubuntu archives.
-# /etc/hosts can't do round robin DNS, so we have to pick one IP
-# TODO: add DNS for alternative archives as needed (e.g. aws mirror for EMIS)
-185.125.190.39 archive.ubuntu.com security.ubuntu.com
-#185.125.190.36 archive.ubuntu.com security.ubuntu.com
-
-## end opensafely dns
