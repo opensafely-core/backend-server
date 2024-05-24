@@ -98,6 +98,14 @@ Note that the script provides the repository name, so you must provide
 only the last component of the image name. For example to update the R
 image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 
+#### Updating ehrQL
+
+For example, to update the ehrQL Docker image, first ensure that CI has finished the `tag-new-version` job & then run:
+
+```bash
+update-docker-image.sh ehrql:v1
+```
+
 ## Debugging jobs
 
 ### Show currently running jobs
