@@ -1,7 +1,9 @@
+# Test backend host entries
 # /etc/hosts can't do round robin DNS, so we have to pick one IP
-185.125.190.39 archive.ubuntu.com security.ubuntu.com
-#185.125.190.36 archive.ubuntu.com security.ubuntu.com
+185.125.190.83 archive.ubuntu.com security.ubuntu.com
+
+# DO stuff
 172.67.148.71 mirrors.digitalocean.com
-# 104.21.29.13  mirrors.digitalocean.com
-# we currently use tailscale on test backend
+
+# we currently use tailscale on test backend, and we need their package archive
 199.38.181.239 pkgs.tailscale.com
