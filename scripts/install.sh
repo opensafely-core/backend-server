@@ -61,26 +61,41 @@ chmod a+rx /usr/local/bin
 
 systemctl reload ssh
 
-# disable cloud-init management of /etc/hosts
-echo -e "manage_etc_hosts: false" > /etc/cloud/cloud.cfg.d/99-opensafely.cfg
-# remove confusing banner in /etc/hosts if present
-sed -i.bak -z "s/# Your system has configured 'manage_etc_hosts'.*cloud-config from user-data\n#\n//" /etc/hosts
+# ensure cloud-init management of /etc/hosts
+echo -e "manage_etc_hosts: true" > /etc/cloud/cloud.cfg.d/99-opensafely.cfg
 
 # hardcode /etc/hosts entries so we don't need DNS
 mkdir -p /etc/opensafely/hosts.d
 
-if ! test -f /etc/opensafely/hosts.original; then
-    cp /etc/hosts /etc/opensafely/hosts.original
+
+HOSTS_TEMPLATE=/etc/cloud/templates/hosts.debian.tmpl
+if ! test -f $HOSTS_TEMPLATE.original; then
+    cp $HOSTS_TEMPLATE $HOSTS_TEMPLATE.original
 fi
 
 tmp=$(mktemp)
-cp /etc/opensafely/hosts.original "$tmp"
+cp $HOSTS_TEMPLATE.original "$tmp"
 echo -e "\n## opensafely core hosts\n" >> "$tmp"
 cat etc/opensafely/hosts >> "$tmp"
 if test -f "backends/$BACKEND/hosts"; then
     echo -e "\n## backend specific hosts\n" >> "$tmp"
     cat "backends/$BACKEND/hosts" >> "$tmp"
 fi
-cp /etc/hosts /etc/hosts.bak
-mv "$tmp" /etc/hosts
-chmod 644 /etc/hosts
+
+mv "$tmp" $HOSTS_TEMPLATE
+chmod 644 $HOSTS_TEMPLATE
+
+# generate and test the hosts templates
+cloud-init single --name update_etc_hosts --frequency always
+
+if ! grep -q "$(cat etc/opensafely/hosts)" /etc/hosts; then
+    echo "safety check: /etc/hosts is missing the contents of etc/opensafely/hosts"
+    exit 1
+fi
+
+
+# allow per-host customisations
+if test -f "backend/$BACKEND/post-install.sh"; then
+    # shellcheck disable=SC1090
+    . "backend/$BACKEND/post-install.sh"
+fi
