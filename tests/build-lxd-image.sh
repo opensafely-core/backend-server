@@ -6,7 +6,7 @@ BACKEND_SERVER_PATH=$(dirname "${BASH_SOURCE[0]}")/../
 
 lxc image delete "$name" || true
 lxc delete -f "$name" || true
-lxc launch ubuntu:20.04 "$name" --quiet -c security.nesting=true
+lxc launch ubuntu:22.04 "$name" --quiet -c security.nesting=true
 lxc exec "$name" -- cloud-init status --wait
 
 # install stuff
