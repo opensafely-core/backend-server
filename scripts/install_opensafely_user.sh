@@ -30,6 +30,9 @@ rm -f /srv/playbook.md
 #clean up old bashrc
 rm -rf $HOME_DIR/jobrunner/bashrc
 
+# ensure bin dir to put on path
+mkdir -p $HOME_DIR/bin
+
 # set up some nice helpers for when we su into the shared user
 opensafely_bashrc=$HOME_DIR/.bashrc-opensafely
 user_bashrc=$HOME_DIR/.bashrc

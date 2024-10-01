@@ -21,17 +21,7 @@ mkdir -p $TARGET_DIR
 test -d $TARGET_DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $TARGET_DIR/code
 test -d $TARGET_DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $TARGET_DIR/lib
 
-# service configuration
-SECRET_DIR=$HOME_DIR/secret
-mkdir -p $SECRET_DIR
-chmod 0700 $SECRET_DIR
-find $SECRET_DIR -type f -exec chmod 0600 {} \;
-
-BIN_DIR=$HOME_DIR/bin
-mkdir -p $BIN_DIR
-
-cp $SRC_DIR/bin/* $BIN_DIR/
-cp bin/lsjobs $BIN_DIR/
+cp $SRC_DIR/bin/* ~opensafely/bin/
 cp $SRC_DIR/sbin/* /usr/local/sbin
 
 # setup output directories
