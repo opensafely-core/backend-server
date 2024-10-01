@@ -1,7 +1,11 @@
 name: Run tests
 
 on:
-    push: 
+  push: 
+  workflow_dispatch:
+  schedule:
+    # run daily at 2:22am
+    - cron: "22 02 * * *"
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
