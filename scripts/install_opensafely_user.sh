@@ -23,6 +23,7 @@ fi
 # explicitly remove it first, in case it's a symlink to an old location
 rm -f $HOME_DIR/playbook.md
 cp playbook.md $HOME_DIR/playbook.md
+chmod +r $HOME_DIR/playbook.md
 # clean up old playbook if present
 rm -f /srv/playbook.md
 
