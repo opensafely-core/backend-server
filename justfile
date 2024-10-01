@@ -82,23 +82,6 @@ manage: check
   fi
   {{ just_executable() }} manage-$BACKEND
 
-[private]
-manage-emis: install update-users install-jobrunner install-release-hatch
-  #!/bin/bash
-  set -euo pipefail
-
-  . /home/opensafely/config/load-env
-
-  if test -z "${PRESTO_TLS_KEY_PATH:-}"; then
-      echo "WARNING: PRESTO_TLS_KEY_PATH env var not defined"
-  else
-      test -e "${PRESTO_TLS_KEY_PATH:-}" ||  echo "WARNING: PRESTO_TLS_KEY_PATH=$PRESTO_TLS_KEY_PATH does not exist"
-  fi
-  if test -z "${PRESTO_TLS_CERT_PATH:-}"; then
-      echo "WARNING: PRESTO_TLS_CERT_PATH env var not defined"
-  else
-      test -e "${PRESTO_TLS_CERT_PATH:-}" ||  echo "WARNING: PRESTO_TLS_CERT_PATH=$PRESTO_TLS_CERT_PATH does not exist"
-  fi
 
 [private]
 manage-test: install-packages install update-users install-jobrunner install-airlock install-osrelease install-collector

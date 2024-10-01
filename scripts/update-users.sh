@@ -4,8 +4,6 @@ set -euo pipefail
 # files containing lists of gh user names for the different roles
 # note: probably will be API calls to job-server in future
 developers="${developers:-developers}"
-researchers="backends/$1/researchers"
-reviewers="backends/$1/reviewers"
 
 # add a user, add to groups, and
 add_user() {
@@ -54,19 +52,4 @@ if test -f "$developers"; then
 else
     echo "Missing developers file!"
     exit 1
-fi
-
-# Note: the following groups are optional, depends on how the users will
-# authenticate with the specific backend
-
-# optional researchers (level 3) group. They got docker to be able manually run stuff if needed.
-if test -f "$researchers"; then
-    add_group "$researchers" researchers reviewers docker
-fi
-
-# optional reviewers (level 4) group. Minimial permissions. Long term goal is
-# no local accounts needed for this group, but early EMIS backend set up
-# requires them.
-if test -f "$reviewers"; then
-    add_group "$reviewers" reviewers
 fi

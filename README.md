@@ -115,4 +115,3 @@ just disable-user USER
 ## Specific Backend Details
 
  - [TPP](backends/tpp/README.md)
- - [EMIS](backends/emis/README.md)
