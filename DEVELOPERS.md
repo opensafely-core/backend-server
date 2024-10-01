@@ -8,14 +8,10 @@ Directory layout:
   * system configuration files/templates
 * ./backends/
   * scripts and config for supported backends
-* ./backends/emis
-  * scripts and config for EMIS backend
 * ./backends/test
   * scripts and config for our test backend
 * ./backends/tpp
   * scripts and config for TPP backends
-* ./emis-access
-  * scripts for managing emis-access VM
 * ./services/jobrunner
   * scripts and config templates for jobrunner
 * ./services/osrelease
