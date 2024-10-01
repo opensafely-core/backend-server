@@ -3,7 +3,9 @@ set -euo pipefail
 
 DIR=~opensafely/airlock
 OVERRIDE_FILE="backends/$BACKEND/airlock.override.yaml"
-MEDIUM_PRIVACY_STORAGE_BASE=/srv/medium_privacy
+
+# shellcheck source=/dev/null
+. scripts/load-env
 
 mkdir -p $DIR
 cp -a ./services/airlock/* "$DIR"
