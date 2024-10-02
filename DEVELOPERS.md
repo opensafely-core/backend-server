@@ -21,10 +21,6 @@ Directory layout:
 * ./developers
   * developers GitHub account list. To be replaced by authenticated API call to
     job-server later, perhaps.
-* ./backends/*/researchers
-  * researchers GitHub account list.
-* ./backends/*/reviewers
-  * reviewers GitHub account list.
 * ./tests
   * test scripts, run in docker container by makefile
 * ./tests/run-in-lxd.sh
