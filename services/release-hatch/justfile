@@ -11,12 +11,12 @@ default:
 # pull latest version and deploy
 deploy: && restart
     echo "Pulling image"
-    docker-compose --no-ansi pull --quiet release-hatch
+    docker-compose --ansi never pull --quiet release-hatch
 
 
 # restart release-hatch
 restart *args:
-    docker-compose --no-ansi up --no-build {{ args }} --detach release-hatch
+    docker-compose --ansi never up --no-build {{ args }} --detach release-hatch
 
 
 # get docker logs
