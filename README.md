@@ -92,17 +92,17 @@ Deployed as a docker service via `docker-compose`.
 
 ## Users and permissions
 
+Note: Access permission is defined in the 
+[Developer Permissions Log](https://www.bennett.wiki/products/developer-permissions-log/); check the log before adding any new users.
+
 Users are created with their github account names, and their github public keys
 added to `authorized_keys`. Additional non-Github registered public keys can be
 added to keys/$USER in this repo if needed.
 
-There are 3 groups to manage permissions:
+There is one group to manage permissions:
 
 * developers: sudo access. Level 2 in opensafely terms.
-* researchers: read access to high privacy files for curation work. Level 3.
-* reviewers: read/write access to medium privacy files. level 4.
 
-Note: Long-term, reviewers will not have local accounts, but instead review via a webapp.
 
 ### Disabling users
 
