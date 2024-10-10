@@ -23,11 +23,15 @@ fi
 # explicitly remove it first, in case it's a symlink to an old location
 rm -f $HOME_DIR/playbook.md
 cp playbook.md $HOME_DIR/playbook.md
+chmod +r $HOME_DIR/playbook.md
 # clean up old playbook if present
 rm -f /srv/playbook.md
 
 #clean up old bashrc
 rm -rf $HOME_DIR/jobrunner/bashrc
+
+# ensure bin dir to put on path
+mkdir -p $HOME_DIR/bin
 
 # set up some nice helpers for when we su into the shared user
 opensafely_bashrc=$HOME_DIR/.bashrc-opensafely
