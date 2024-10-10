@@ -4,6 +4,8 @@ set -euo pipefail
 CONFIG_SRC_DIR=config
 BACKEND_SRC_DIR=backends/$1
 HOME_DIR=/home/opensafely
+CONFIG_DIR=$HOME_DIR/config
+SECRET_DIR=$HOME_DIR/secret
 
 # set default file creation permission for this script be 640 for files and 750
 # for directories
@@ -29,7 +31,7 @@ EOF
 
 # set up config
 
-mkdir -p $HOME_DIR/config
+mkdir -p $CONFIG_DIR $SECRET_DIR
 defaults_env="$HOME_DIR/config/01_defaults.env"
 secrets_env="$HOME_DIR/config/02_secrets.env"
 backend_env="$HOME_DIR/config/03_backend.env"
@@ -38,10 +40,8 @@ local_env="$HOME_DIR/config/04_local.env"
 copy_with_warning $CONFIG_SRC_DIR/defaults.env "$defaults_env"
 copy_with_warning "$BACKEND_SRC_DIR/backend.env" "$backend_env"
 
-
 # TODO: test for new secrets in template not in env?
 test -f $secrets_env || cp $CONFIG_SRC_DIR/secrets-template.env $secrets_env
-chmod 0600 $secrets_env
 
 # make sure local env exists
 test -f "$local_env" || echo "# add local overrides here (this file is safe to edit by hand)" > "$local_env"
@@ -53,3 +53,8 @@ fi
 
 # copy in helper script
 cp scripts/load-env $HOME_DIR/config/load-env
+
+# ensure restricted permissions
+chown -R opensafely:opensafely $CONFIG_DIR $SECRET_DIR
+chmod 0700 $CONFIG_DIR $SECRET_DIR
+find $CONFIG_DIR $SECRET_DIR -type f -exec chmod 0600 {} \;
