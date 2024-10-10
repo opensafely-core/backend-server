@@ -16,9 +16,11 @@ jobs:
     steps:
     - name: Install lint dependencies
       run: sudo apt-get install -y shellcheck
-    - uses: extractions/setup-just@69d82fb0233557aec017ef13706851d0694e0f1d
+    - uses: "opensafely-core/setup-action@v1"
+      with:
+        install-just: true
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Run lint
       run: just tests/lint
   tests:
@@ -35,9 +37,11 @@ jobs:
         sudo snap set lxd shiftfs.enable=true || { sleep 10 && sudo snap set lxd shiftfs.enable=true; }
         sudo lxd init --auto
         sudo lxc info
-    - uses: extractions/setup-just@69d82fb0233557aec017ef13706851d0694e0f1d
+    - uses: "opensafely-core/setup-action@v1"
+      with:
+        install-just: true
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Prepare test image & testuser key
       run: just tests/build
     - name: Run tests
