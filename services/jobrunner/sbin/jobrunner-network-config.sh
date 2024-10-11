@@ -37,7 +37,7 @@ done
 
 # Check if the Docker network already exists and has the expected interface name
 existing_network=$(
-  docker network inspect $network_name \
+  docker network inspect "$network_name" \
   --format '{{ index .Options "com.docker.network.bridge.name" }}' \
     2>/dev/null \
   || true
