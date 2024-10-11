@@ -54,8 +54,11 @@ disable-user user:
 update-users: check
   ./scripts/update-users.sh $BACKEND
 
-install-jobrunner: check install-opensafely-user
+install-jobrunner: check install-opensafely-user install-docker-network
   ./services/jobrunner/install.sh $BACKEND
+
+install-docker-network:
+  ./services/jobrunner/sbin/jobrunner-network-config.sh
 
 install-release-hatch: check
   ./services/release-hatch/install.sh

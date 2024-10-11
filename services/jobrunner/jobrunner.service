@@ -10,21 +10,6 @@ EnvironmentFile=/home/opensafely/config/03_backend.env
 EnvironmentFile=/home/opensafely/config/04_local.env
 WorkingDirectory=/home/opensafely/jobrunner/code
 
-# Creates and configures a Docker network which allows network access to only
-# the IPs listed in DATABASE_IP_LIST. Any Docker container run with:
-#
-#     --network=$DATABASE_ACCESS_NETWORK
-#
-# will be subject to this restriction.
-#
-# Set a default empty list so we fail closed. This will be overridden by any
-# value set in the EnvironmentFiles listed above:
-Environment="DATABASE_IP_LIST="
-Environment="DATABASE_ACCESS_NETWORK=jobrunner-db"
-# Use the `+` prefix to run command as root
-ExecStartPre=+/usr/local/sbin/jobrunner-network-config.sh \
-  ${DATABASE_ACCESS_NETWORK} ${DATABASE_IP_LIST}
-
 ExecStart=/usr/bin/python3 -m jobrunner.service
 ExecStop=/bin/kill -INT ${MAINPID}
 User=opensafely

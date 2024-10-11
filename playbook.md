@@ -56,7 +56,7 @@ To look for all logs for a specific job id:
 
     just jobrunner/logs-id <job_id>
 
-### Configuring the job-runner
+### Configuration management
 
 All env files are in /home/opensafely/config/\*.env
 
@@ -68,6 +68,25 @@ All env files are in /home/opensafely/config/\*.env
 If you wish to change the config in `01_defaults.env` or `03_backend.env`, you
 need to merge a change to the `config/defaults.env` or
 `BACKEND/backend.env`, and update the infrastructure code as above.
+
+#### Database Network Configuration
+
+The config values `DATABASE_ACCESS_NETWORK` and `DATABASE_IP_LIST` need some
+care when changing, or else running db jobs may fail due to the changes.
+
+To apply changes to these values:
+
+As opensafely user:
+1) manually enable DB maintenance mode to kill running db jobs: `just jobrunner/db-maintenance-on`
+2) stop jobrunner: `just jobrunner/stop`
+3) change the values in the config files
+
+As root:
+4) from /srv/backend-server, run `just install-docker-network` to recreate the docker network
+
+As opensafely user:
+5) start job-runner: `just jobrunner/start`
+6) disable db maintenance mode: just jobrunner/db-maintenance-off
 
 
 ### Deploy job-runner
