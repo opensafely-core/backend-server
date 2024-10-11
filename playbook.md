@@ -334,6 +334,21 @@ The next time job-runner restarts (which should be after the reboot) it
 will pick up these jobs again as if it had not run them before and the
 user should not have to do anything.
 
+### Manual DB Maintenance mode
+
+Sometimes, we need to just stop db jobs from running.
+
+This can be done with the following commands, which will kill running db jobs
+and re-queue them to run when db-maintenance mode is switched off.
+
+```sh
+just jobrunner/db-maintenance-on
+```
+and
+```sh
+just jobrunner/db-maintenance-off
+```
+
 ### Planned maintenance
 
 Sometimes we are informed that a reboot will take place out of hours. In this case, in order to ensure a graceful shutdown and to avoid someone having to work late, the [preparing for reboot](#preparing-for-reboot) section can be run as a single command with a sleep statement.

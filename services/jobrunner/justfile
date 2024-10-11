@@ -60,3 +60,10 @@ jobs-stats:
 job-retry job_id:
     python3 -m jobrunner.cli.retry_job {{ job_id }}
 
+# manually enable database maintenance mode. Kill and re-queue all db jobs.
+db-maintenance-on:
+    python3 -m jobrunner.cli.flags set manual-db-maintenance=on
+
+# manually disable database maintenance mode
+db-maintenance-off:
+    python3 -m jobrunner.cli.flags set manual-db-maintenance=
