@@ -9,8 +9,12 @@
 
 set -euo pipefail
 
-network_name="$1"
-shift 1
+# shellcheck source=/dev/null
+. ./scripts/load-env
+
+
+network_name="${DATABASE_ACCESS_NETWORK:-'jobrunner-db'}"
+ip_list="${DATABASE_IP_LIST:-}"  # fail closed with no IPs
 
 insert_iptables_rule() {
   # iptables rule insertion is not idempotent, so we need to check if the rule
@@ -24,20 +28,13 @@ insert_iptables_rule() {
 insert_iptables_rule DOCKER-USER -i "$network_name" -j REJECT
 
 # Add ACCEPT rules for each of the supplied arguments
-while [[ "$#" != "0" ]]; do
-  ip_addr_specs="$1"
-  shift 1
-  # Given the way that systemd handles arguments we can end up with multiple
-  # addresses in a single space-separated argument; so we iterate over them
-  # here
-  for ip_addr_spec in $ip_addr_specs; do
-    insert_iptables_rule DOCKER-USER -i "$network_name" -d "$ip_addr_spec" -j ACCEPT
-  done
+for ip_addr_spec in $ip_list; do
+  insert_iptables_rule DOCKER-USER -i "$network_name" -d "$ip_addr_spec" -j ACCEPT
 done
 
 # Check if the Docker network already exists and has the expected interface name
 existing_network=$(
-  docker network inspect $network_name \
+  docker network inspect "$network_name" \
   --format '{{ index .Options "com.docker.network.bridge.name" }}' \
     2>/dev/null \
   || true
