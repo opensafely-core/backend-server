@@ -15,7 +15,7 @@ grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
 sleep 3
 
 # test jobrunner service up
-systemctl status jobrunner || { journalctl -u jobrunner --no-pager; exit 1; }
+docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec jobrunner true || { docker compose -f ~opensafely/jobrunner/docker-compose logs; exit 1; } 
 
 # test collector service up
 systemctl status collector || { journalctl -u collector --no-pager; exit 2; }
@@ -26,7 +26,9 @@ systemctl status collector || { journalctl -u collector --no-pager; exit 2; }
 msg="Wrong scheme for MS-SQL URL"
 rc=0
 
-/home/opensafely/jobrunner/code/scripts/update-docker-image.sh cohortextractor
+# we need cohortextractor to run the vmp-mapping test
+just -f ~opensafely/jobrunner/justfile update-docker-image cohortextractor
+
 
 echo "We expect this to error in tests!"
 systemctl start --now vmp-mapping || rc=$?

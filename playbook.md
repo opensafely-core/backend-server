@@ -19,17 +19,18 @@ the opensafely user with:
 
     sudo su - opensafely
 
-
-## jobrunner service
 This will set up your shell with the correct environment variables.
 
-The jobrunner is installed in `/home/opensafely/jobrunner`
 
-    /home/opensafely/jobrunner/code     # the checkout of jobrunner currently running
-    /home/opensafely/jobrunner/lib      # dependencies for jobrunner, added via PYTHONPATH
-    /home/opensafely/config  # environment configuration
-    /home/opensafely/secret   # any secret files (e.g. x509 client certificates for emis)
+/home/opensafely/config  # environment configuration
+/home/opensafely/secret   # any secret files (e.g. x509 client certificates for emis)
+/home/opensafely/jobrunner  # jobrunner service workdir and configuration
+/home/opensafely/airlock    # airlcok service workdir and configuration
+/home/opensafely/collector  # otel collector service
 
+## jobrunner service
+
+The jobrunner is installed in `/home/opensafely/jobrunner`.
 
 ### Starting/stopping the service
 
@@ -48,9 +49,10 @@ a password, or can be run as your regular user too.
 
 You can view logs via:
 
-    just jobrunner/logs <lines>
+    just jobrunner/logs [args...]
 
-This uses a pager and defaults to 1000 lines, so may not show relevant logs if you're looking for more distant events. Alternative values to try include "2000" or "all".
+This uses `docker compose logs` under the hood, and args will be passed to that
+command. e.g. -n 1000 will show you 1000 lines, -f follows, etc.
 
 To look for all logs for a specific job id:
 
@@ -100,18 +102,11 @@ As opensafely user:
 just jobrunner/deploy
 ```
 
-Notes: the script to actually do all this is in `~opensafely/bin/update-jobrunner.sh`. It basically does some checks, and then:
-
- a) update dependencies
- b) pull code
- c) run migrations
- d) restart service
-
 ### Update docker image
 
 Run:
 
-    update-docker-image.sh image[:tag]
+    just jobrunner/update-docker-image image[:tag]
 
 Note that the script provides the repository name, so you must provide
 only the last component of the image name. For example to update the R
@@ -122,7 +117,7 @@ image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 For example, to update the ehrQL Docker image, first ensure that ehrQL's CI has finished the `tag-new-version` & `build-and-publish-docker-image` jobs, then run:
 
 ```bash
-update-docker-image.sh ehrql:v1
+just jobrunner/update-docker-image ehrql:v1
 ```
 
 ## Debugging jobs
@@ -131,6 +126,11 @@ update-docker-image.sh ehrql:v1
 
 See the list of currently running jobs, with job identifier, job name and associated workspace in job-server:
 
+```
+lsjobs
+```
+
+or
 ```
 just jobrunner/jobs-ls
 ```
@@ -242,7 +242,7 @@ correct job if there are multiple matches.
 To kill a running job (or prevent it starting if it hasn't yet) use the
 `kill_job` command:
 
-    python3 -m jobrunner.cli.kill_job --cleanup <job_id> [... <job_id>]
+    just jobrunner/kill-job --cleanup <job_id> [... <job_id>]
 
 The `job_id` actually only has to be a sub-string of the job ID (full
 ones are a bit awkward to type) and you will be able to select the
@@ -377,20 +377,6 @@ For example, this will start shutting things down in four hours:
 ```sh
 sleep $((4*3600)); just jobrunner/stop && just jobrunner/prepare-for-reboot
 ```
-
-### After a restart
-
-#### Level 3 file sync
-
-This command ensures files manually generated on the Windows host are copied to the Ubuntu VM (both Level 3). It's only used by a small number of researchers, as normally researchers would access their outputs via Level 4.
-
-From a Tmux session run:
-
-```sh
-while true; do rsync -auP /e/FILESFORL4/workspaces/ /srv/medium_privacy/workspaces/ ; sleep 120; done
-```
-
-*Tip: Search the bash history to find the command rather than typing it out*
 
 ### Pausing new jobs
 

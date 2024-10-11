@@ -5,8 +5,7 @@ set -euo pipefail
 SRC_DIR=services/jobrunner
 BACKEND_SRC_DIR=backends/$1
 HOME_DIR=/home/opensafely
-TARGET_DIR=$HOME_DIR/jobrunner
-REVIEWERS_GROUP="${REVIEWERS_GROUP:-reviewers}"
+DIR=$HOME_DIR/jobrunner
 
 # set default file creation permission for this script be 640 for files and 750
 # for directories
@@ -15,45 +14,34 @@ umask 027
 # shellcheck source=/dev/null
 . scripts/load-env
 
+
 # set up jobrunner
-mkdir -p $TARGET_DIR
-# ensure we have a checkout of job-runner and dependencies
-test -d $TARGET_DIR/code || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner $TARGET_DIR/code
-test -d $TARGET_DIR/lib || git clone https://github-proxy.opensafely.org/opensafely-core/job-runner-dependencies $TARGET_DIR/lib
-
+mkdir -p $DIR/workdir
+cp -a services/jobrunner/* $DIR/
 cp $SRC_DIR/bin/* ~opensafely/bin/
-cp $SRC_DIR/sbin/* /usr/local/sbin
+# setup some automated config for docker group id
+echo "DOCKER_HOST_GROUPID=$(getent group docker | awk -F: '{print $3}')" > $DIR/.env
 
+chown -R opensafely:opensafely $DIR
+
+# TODO: this should probably live somewhere else, as its more than just a jobrunner thing
 # setup output directories
 for output_dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"; do
     mkdir -p "$output_dir/workspaces"
     # only group read access, no world access
     find "$output_dir" -type f -exec chmod 640 {} +
 done
-chown -R opensafely:opensafely "$HIGH_PRIVACY_STORAGE_BASE"
-chown -R "opensafely:$REVIEWERS_GROUP" "$MEDIUM_PRIVACY_STORAGE_BASE"
 
+chown -R opensafely:opensafely "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"
 
 # create initial db if not present
-export PYTHONPATH=$TARGET_DIR/lib:$TARGET_DIR/code
-workdir=$(python3 -c "from jobrunner import config; print(config.WORKDIR)")
-test -f "$workdir/db.sqlite" || python3 -m jobrunner.cli.migrate
+test -f "$DIR/workdir/db.sqlite" || just -f $DIR/justfile migrate
 
-# ensure file ownership and permissions
-chown -R opensafely:opensafely $TARGET_DIR
-chown -R opensafely:opensafely $HOME_DIR
-
-# set up systemd service
-# Note: do this *after* permissions have been set on the $TARGET_DIR properly
-cp $SRC_DIR/jobrunner.service /etc/systemd/system/
-cp $SRC_DIR/jobrunner.sudo /etc/sudoers.d/jobrunner
 
 # backend specific unit overrides
-test -d "$BACKEND_SRC_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_SRC_DIR/jobrunner.service.d" /etc/systemd/system/
+test -d "$BACKEND_SRC_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_SRC_DIR/jobrunner.service.d" $DIR/
 
-# Dump all the logs if this fails to start
-systemctl enable --now jobrunner || (journalctl -xe && exit 1)
-
-# set up jobrunner justfile
-mkdir -p $HOME_DIR/jobrunner
-cp services/jobrunner/justfile $HOME_DIR/jobrunner/justfile
+systemctl enable "$DIR/jobrunner.service"
+systemctl enable "$DIR/jobrunner.timer"
+systemctl start jobrunner.timer
+systemctl start jobrunner.service || { journalctl -u jobrunner.service; exit 1; }
