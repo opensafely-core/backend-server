@@ -119,7 +119,7 @@ image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 
 #### Updating ehrQL
 
-For example, to update the ehrQL Docker image, first ensure that CI has finished the `tag-new-version` job & then run:
+For example, to update the ehrQL Docker image, first ensure that ehrQL's CI has finished the `tag-new-version` & `build-and-publish-docker-image` jobs, then run:
 
 ```bash
 update-docker-image.sh ehrql:v1
