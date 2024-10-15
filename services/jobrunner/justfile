@@ -81,7 +81,7 @@ update-docker-image image:
     docker pull docker-proxy.opensafely.org/opensafely-core/{{ image }}
     # tag as if we'd pulled direct from ghcr.io 
     docker tag docker-proxy.opensafely.org/opensafely-core/{{ image }} ghcr.io/opensafely-core/{{ image }}
-    docker image prune --force
+    docker image prune --force --filter "label=org.opensafely.action={{ image }}"
 
 # add a job run run
 add-job repo action:
