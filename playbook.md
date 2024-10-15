@@ -25,7 +25,7 @@ This will set up your shell with the correct environment variables.
 /home/opensafely/config  # environment configuration
 /home/opensafely/secret   # any secret files (e.g. x509 client certificates for emis)
 /home/opensafely/jobrunner  # jobrunner service workdir and configuration
-/home/opensafely/airlock    # airlcok service workdir and configuration
+/home/opensafely/airlock    # airlock service workdir and configuration
 /home/opensafely/collector  # otel collector service
 
 ## jobrunner service

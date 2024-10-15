@@ -41,7 +41,7 @@ pause:
 unpause:
     docker compose run jobrunner python3 -m jobrunner.cli.flags set paused=
 
-# show jobrunner logs
+# show jobrunner logs (using `docker compose logs`)
 logs *args:
     docker compose logs {{ args }} jobrunner
 
