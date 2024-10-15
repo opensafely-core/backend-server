@@ -41,6 +41,8 @@ test -f "$DIR/workdir/db.sqlite" || just -f $DIR/justfile migrate
 # backend specific unit overrides
 test -d "$BACKEND_SRC_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_SRC_DIR/jobrunner.service.d" $DIR/
 
+chown -R opensafely:opensafely "$DIR"
+
 systemctl enable "$DIR/jobrunner.service"
 systemctl enable "$DIR/jobrunner.timer"
 systemctl start jobrunner.timer
