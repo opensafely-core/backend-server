@@ -11,7 +11,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: Run lint
     steps:
     - name: Install lint dependencies
@@ -37,12 +37,18 @@ jobs:
         sudo snap set lxd shiftfs.enable=true || { sleep 10 && sudo snap set lxd shiftfs.enable=true; }
         sudo lxd init --auto
         sudo lxc info
+    - name: debugging
+      run: df -h
     - uses: "opensafely-core/setup-action@v1"
       with:
         install-just: true
     - name: Checkout
       uses: actions/checkout@v4
     - name: Prepare test image & testuser key
-      run: just tests/build
+      run: |
+        # some debugging info in case stuff fails
+        df -h
+        just tests/build
+        sudo lxc image ls
     - name: Run tests
       run: just tests/run_test tests/backends/${{ matrix.backend_name }}.sh

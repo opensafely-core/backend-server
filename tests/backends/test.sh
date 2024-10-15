@@ -47,32 +47,19 @@ test "$(id -u opensafely)" == "10000"
 test "$(id -g opensafely)" == "10000"
 
 # test service is up
-tout 5s systemctl status jobrunner
 
-
-# hack to pull in ehrql for this job
-/home/opensafely/jobrunner/code/scripts/update-docker-image.sh ehrql:v1
-
-# run a job
-cat << EOF | su - opensafely -c bash
-set -a
-for f in /home/opensafely/config/*.env; do
-    . "\$f"
-done
-set +a
-export PYTHONPATH=/home/opensafely/jobrunner/code:/home/opensafely/jobrunner/lib
-python3 -m jobrunner.cli.add_job https://github.com/opensafely/research-template generate_dataset
-EOF
+just -f ~opensafely/jobrunner/justfile update-docker-image ehrql:v1
+just -f ~opensafely/jobrunner/justfile add-job https://github.com/opensafely/research-template generate_dataset
 
 script=$(mktemp)
 cat << EOF > "$script"
-until journalctl -u jobrunner | grep -q 'Completed successfully status=StatusCode.SUCCEEDED workspace=test action=generate_dataset'
+until docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs -n 10 jobrunner | grep -q 'Completed successfully status=StatusCode.SUCCEEDED workspace=test action=generate_dataset'
 do
     sleep 2
 done
 EOF
 
-tout 60s bash "$script" || { journalctl -u jobrunner; exit 1; }
+tout 60s bash "$script" || { docker compose -f opensafely/jobrunner/docker-compose.yaml logs jobrunner; exit 1; }
 
 systemctl status collector || { journalctl -u collector; exit 1; }
 

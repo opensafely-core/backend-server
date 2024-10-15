@@ -3,20 +3,10 @@ Description=OpenSAFELY Jobrunner
 Documentation=https://github.com/opensafely-core/job-runner
 
 [Service]
-Environment=PYTHONPATH=/home/opensafely/jobrunner/lib
-EnvironmentFile=/home/opensafely/config/01_defaults.env
-EnvironmentFile=/home/opensafely/config/02_secrets.env
-EnvironmentFile=/home/opensafely/config/03_backend.env
-EnvironmentFile=/home/opensafely/config/04_local.env
-WorkingDirectory=/home/opensafely/jobrunner/code
-
-ExecStart=/usr/bin/python3 -m jobrunner.service
-ExecStop=/bin/kill -INT ${MAINPID}
+WorkingDirectory=/home/opensafely/jobrunner/
+ExecStart=/usr/local/bin/just deploy
 User=opensafely
-Group=reviewers
-Restart=on-failure
-RestartSec=60s
-
+Type=oneshot
 
 [Install]
 WantedBy=multi-user.target

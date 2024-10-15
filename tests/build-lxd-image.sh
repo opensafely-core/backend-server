@@ -14,11 +14,11 @@ sed 's/^#.*//' "$BACKEND_SERVER_PATH"/purge-packages.txt | lxc exec "$name" -- x
 lxc exec "$name" -- apt-get autoremove --yes
 lxc exec "$name" -- apt-get update
 lxc exec "$name" -- apt-get upgrade --yes
-sed 's/^#.*//' "$BACKEND_SERVER_PATH"/core-packages.txt | lxc exec "$name" -- xargs apt-get install -y
-sed 's/^#.*//' "$BACKEND_SERVER_PATH"/packages.txt | lxc exec "$name" -- xargs apt-get install -y
+sed 's/^#.*//' "$BACKEND_SERVER_PATH"/core-packages.txt | lxc exec "$name" -- xargs apt-get install --no-install-recommends -y
+sed 's/^#.*//' "$BACKEND_SERVER_PATH"/packages.txt | lxc exec "$name" -- xargs apt-get --no-install-recommends install -y
 
 # preload ehrql:v1
-lxc exec "$name" -- docker pull ghcr.io/opensafely-core/ehrql:v1
+#lxc exec "$name" -- docker pull ghcr.io/opensafely-core/ehrql:v1
 
 lxc stop "$name"
 time lxc publish --quiet "$name" --alias "$name"
