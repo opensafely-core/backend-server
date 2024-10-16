@@ -41,11 +41,11 @@ unpause:
 
 # show jobrunner logs (using `docker compose logs`)
 logs *args:
-    docker compose logs {{ args }} jobrunner
+    sudo journalctl -t jobrunner {{ args }}
 
 # show jobrunner logs for a specific job_id
 logs-id job_id:
-    docker compose logs |& grep {{ job_id }}
+    sudo journalctl -t jobrunner -g {{ job_id }}
 
 # list all currently running jobs
 jobs-ls:

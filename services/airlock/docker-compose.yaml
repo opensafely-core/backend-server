@@ -9,6 +9,10 @@ services:
     init: true
     restart: unless-stopped
     network_mode: bridge
+    logging:
+      driver: journald
+      options:
+        tag: airlock
     ports:
       - "443:8000"
     user: 10000:10000

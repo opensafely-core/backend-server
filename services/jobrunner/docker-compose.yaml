@@ -9,6 +9,10 @@ services:
     init: true
     restart: unless-stopped
     network_mode: bridge
+    logging:
+      driver: journald
+      options:
+        tag: jobrunner
     user: 10000:10000
     # run as the the current user to preserve file permissions
     group_add: ["${DOCKER_HOST_GROUPID}"]
