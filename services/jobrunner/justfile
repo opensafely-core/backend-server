@@ -22,7 +22,7 @@ alias start:=restart
 deploy: && restart
     echo "Pulling image"
     docker compose pull --quiet jobrunner
-    
+
 # run jobrunner db migrations
 migrate:
     docker compose run jobrunner python3 -m jobrunner.cli.migrate
@@ -79,9 +79,10 @@ update-docker-image image:
     docker pull docker-proxy.opensafely.org/opensafely-core/{{ image }}
     # tag as if we'd pulled direct from ghcr.io 
     docker tag docker-proxy.opensafely.org/opensafely-core/{{ image }} ghcr.io/opensafely-core/{{ image }}
-    docker image prune --force --filter "label=org.opensafely.action={{ image }}"
+    action_name="$(echo {{ image }} | awk -F: '{print $1}')"
+    # delete dangling version of this image 
+    docker image prune --force --filter "label=org.opensafely.action=$action_name"
 
 # add a job run run
 add-job repo action:
     docker compose run jobrunner python3 -m jobrunner.cli.add_job {{ repo }} {{ action }}
-
