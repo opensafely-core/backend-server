@@ -43,3 +43,5 @@ grep -q ".bashrc-opensafely" $user_bashrc || echo "test -f $opensafely_bashrc &&
 
 # update user-wide justfiles for management tasks
 cp justfile-user $HOME_DIR/justfile
+
+chown -R opensafely:opensafely $HOME_DIR
