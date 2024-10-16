@@ -8,10 +8,6 @@ default:
 status:
     docker compose status jobrunner
 
-# start the jobrunner service
-start:
-    sudo systemctl start jobrunner
-
 # stop the jobrunner service
 stop:
     docker-compose stop
@@ -19,6 +15,8 @@ stop:
 # restart the jobrunner service
 restart *args:
     docker-compose up --no-build {{ args }} --detach jobrunner
+
+alias start:=restart
 
 # Update jobrunner and restart
 deploy: && restart
