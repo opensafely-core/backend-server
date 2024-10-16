@@ -61,7 +61,7 @@ EOF
 
 tout 60s bash "$script" || { docker compose -f opensafely/jobrunner/docker-compose.yaml logs jobrunner; exit 1; }
 
-systemctl status collector || { journalctl -u collector; exit 1; }
+systemctl status --no-pager collector || { journalctl -u collector; exit 1; }
 
 # run airlock tests
 ./tests/check-airlock.sh
