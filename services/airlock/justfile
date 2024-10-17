@@ -18,6 +18,10 @@ deploy: && restart
 restart *args:
     docker-compose --ansi never up --no-build {{ args }} --detach airlock
 
+# show airlock logs
+logs *args:
+    sudo journalctl -t airlock {{ args }}
+
 # update to the certificate for airlock from backends.opensafely.org
 update-certs:
     #!/bin/bash

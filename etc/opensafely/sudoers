@@ -7,4 +7,12 @@ Defaults logfile=/var/log/sudo.log
 # developers group has sudo access
 %developers  ALL=(ALL:ALL) ALL
 
-
+# opensafely user can manage some services
+%opensafely ALL= NOPASSWD: /usr/bin/systemctl restart jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/systemctl start jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/systemctl stop jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/systemctl status jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/journalctl -u jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/journalctl -t jobrunner*
+%opensafely ALL= NOPASSWD: /usr/bin/journalctl -u airlock*
+%opensafely ALL= NOPASSWD: /usr/bin/journalctl -t airlock*
