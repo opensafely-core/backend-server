@@ -16,39 +16,35 @@ jobs:
     steps:
     - name: Install lint dependencies
       run: sudo apt-get install -y shellcheck
-    - uses: "opensafely-core/setup-action@v1"
-      with:
-        install-just: true
+    - uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # 2.0.0
     - name: Checkout
       uses: actions/checkout@v4
     - name: Run lint
       run: just tests/lint
   tests:
+    name: Tests tests
     strategy:
       fail-fast: false
       matrix:
         backend_name: ['test', 'tpp']
-    runs-on: ubuntu-20.04
-    name: Tests tests
+    runs-on: ubuntu-22.04
     steps:
-    - name: Set up LXD
-      run: |
-        # sometimes autorefresh blocks this, so let it finish updating and try again, once.
-        sudo snap set lxd shiftfs.enable=true || { sleep 10 && sudo snap set lxd shiftfs.enable=true; }
-        sudo lxd init --auto
-        sudo lxc info
-    - name: debugging
-      run: df -h
-    - uses: "opensafely-core/setup-action@v1"
+    - name: Setup lxd
+      uses: canonical/setup-lxd@4e959f8e0d9c5feb27d44c5e4d9a330a782edee0 # 0.1.1
       with:
-        install-just: true
+        channel: latest/stable
+    - name: Setup just
+      uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # 2.0.0
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Prepare test image & testuser key
+    - name: Prepare test image
       run: |
         # some debugging info in case stuff fails
         df -h
         just tests/build
+        # delete base ubuntu image as we sometimes run out of diskspace
+        lxc image delete "$(lxc image ls -f csv | grep "ubuntu" | awk -F, '{print $2}')"
         sudo lxc image ls
+        df -h
     - name: Run tests
       run: just tests/run_test tests/backends/${{ matrix.backend_name }}.sh
