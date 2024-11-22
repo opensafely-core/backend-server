@@ -65,11 +65,11 @@ kill-job *args:
 
 # manually enable database maintenance mode. Kill and re-queue all db jobs.
 db-maintenance-on:
-    docker compose run jobrunner python3 -m jobrunner.cli.flags set manual-db-maintenance=on
+    docker compose run jobrunner python3 -m jobrunner.cli.flags set mode=db-maintenance manual-db-maintenance=on
 
 # manually disable database maintenance mode
 db-maintenance-off:
-    docker compose run jobrunner python3 -m jobrunner.cli.flags set manual-db-maintenance=
+    docker compose run jobrunner python3 -m jobrunner.cli.flags set mode= manual-db-maintenance=
 
 # update docker image
 update-docker-image image:
