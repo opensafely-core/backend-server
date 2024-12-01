@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Setup lxd
-      uses: canonical/setup-lxd@4e959f8e0d9c5feb27d44c5e4d9a330a782edee0 # 0.1.1
+      uses: canonical/setup-lxd@54a5806e490d92e207b57183cf111ed54bbdeff4 # 0.1.2
       with:
         channel: latest/stable
     - name: Setup just
