@@ -1,3 +1,4 @@
+jobrunner_cli := 'docker compose run jobrunner python3 -m jobrunner.cli'
 
 [private]
 default:
@@ -25,19 +26,19 @@ deploy: && restart
 
 # run jobrunner db migrations
 migrate:
-    docker compose run jobrunner python3 -m jobrunner.cli.migrate
+    {{ jobrunner_cli }}.migrate
 
 # destroy containers & volumes for all running jobs
 prepare-for-reboot: stop
-    docker compose run jobrunner python3 -m jobrunner.cli.prepare_for_reboot
+    {{ jobrunner_cli }}.prepare_for_reboot
 
 # stop accepting new jobs
 pause:
-    docker compose run jobrunner python3 -m jobrunner.cli.flags set paused=true
+    {{ jobrunner_cli }}.flags set paused=true
 
 # start accepting new jobs
 unpause:
-    docker compose run jobrunner python3 -m jobrunner.cli.flags set paused=
+    {{ jobrunner_cli }}.flags set paused=
 
 # show jobrunner logs (using `docker compose logs`)
 logs *args:
@@ -57,32 +58,32 @@ jobs-stats:
 
 # retry a specific job
 job-retry job_id:
-    docker compose run jobrunner python3 -m jobrunner.cli.retry_job {{ job_id }}
+    {{ jobrunner_cli }}.retry_job {{ job_id }}
 
 # kill a job
 kill-job *args:
-    docker compose run jobrunner python3 -m jobrunner.cli.kill_job {{ args }}
+    {{ jobrunner_cli }}.kill_job {{ args }}
 
 # manually enable database maintenance mode. Kill and re-queue all db jobs.
 db-maintenance-on:
-    docker compose run jobrunner python3 -m jobrunner.cli.flags set mode=db-maintenance manual-db-maintenance=on
+    {{ jobrunner_cli }}.flags set mode=db-maintenance manual-db-maintenance=on
 
 # manually disable database maintenance mode
 db-maintenance-off:
-    docker compose run jobrunner python3 -m jobrunner.cli.flags set mode= manual-db-maintenance=
+    {{ jobrunner_cli }}.flags set mode= manual-db-maintenance=
 
 # update docker image
 update-docker-image image:
     #!/bin/bash
     set -euo pipefail
-    # pull from proxy 
+    # pull from proxy
     docker pull docker-proxy.opensafely.org/opensafely-core/{{ image }}
-    # tag as if we'd pulled direct from ghcr.io 
+    # tag as if we'd pulled direct from ghcr.io
     docker tag docker-proxy.opensafely.org/opensafely-core/{{ image }} ghcr.io/opensafely-core/{{ image }}
     action_name="$(echo {{ image }} | awk -F: '{print $1}')"
-    # delete dangling version of this image 
+    # delete dangling version of this image
     docker image prune --force --filter "label=org.opensafely.action=$action_name"
 
 # add a job run run
 add-job repo action:
-    docker compose run jobrunner python3 -m jobrunner.cli.add_job {{ repo }} {{ action }}
+    {{ jobrunner_cli }}.add_job {{ repo }} {{ action }}
