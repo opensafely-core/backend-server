@@ -1,4 +1,4 @@
-jobrunner_cli := 'docker compose run jobrunner python3 -m jobrunner.cli'
+jobrunner_cli := 'docker compose run --rm jobrunner python3 -m jobrunner.cli'
 
 [private]
 default:
