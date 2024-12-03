@@ -33,7 +33,7 @@ echo "BACKEND=$BACKEND" > .env
 # also put it in the default profile so everything else has access to it
 mkdir -p /etc/opensafely/profile.d
 BACKEND_PROFILE=/etc/opensafely/profile.d/backend.sh
-grep -q "$BACKEND" $BACKEND_PROFILE 2>/dev/null || printf "readonly BACKEND=%s\nexport BACKEND" "$BACKEND" >> $BACKEND_PROFILE
+grep -q "$BACKEND" $BACKEND_PROFILE 2>/dev/null || printf "BACKEND=%s\nexport BACKEND" "$BACKEND" >> $BACKEND_PROFILE
 ln -sf $BACKEND_PROFILE /etc/profile.d/backend.sh
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]
