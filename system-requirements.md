@@ -10,9 +10,6 @@ configured to apply security updates automatically.
 
 ## Dependencies
 
-The required packages are `python3` (which is python 3.8 in 20.04) and
-`docker.io` (the Ubuntu packaged version of docker).
-
 The explicit list can be found in [core-packages.txt](core-packages.txt).
 
 
