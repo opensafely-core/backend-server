@@ -77,9 +77,6 @@ must SSH in again to actually access it.
 
  - Developers need a local SSH key on the Level 2/3 server to log in to
    the backend ubuntu server (RDP doesn't do agent forwarding!)
- - The VM publishes an SMB share with level 4 outputs in, which initially will
-   be synced to the level 4 VM. At somepoint, releases will got via the UI and
-   release-hatch, and this will not be necessary.
 
 
 ### Hyper-V Image
@@ -112,9 +109,9 @@ Based on the microsft docs: https://learn.microsoft.com/en-us/azure/virtual-mach
 1. Double check that `/dev/ptp_hyperv` device exists. 
 2. `sudo apt install chrony`. This should remove systemd-timesyncd, but can be a bit odd, may need to be re-run.
 3. Add the following line to /etc/chrony/chrony.conf: ```refclock PHC /dev/ptp_hyperv poll 3 dpoll -2 offset 0 stratum 2```
-4. Stop jobrunner, release-hatch temporarily, to avoid weirdness from adjusting the clock
+4. Stop jobrunner, airlock temporarily, to avoid weirdness from adjusting the clock
 5. `sudo systemctl restart chronyd && sudo systemctl restart chrony`
-6. Restart jobrunner and release-hatch
+6. Restart jobrunner and airlock
 
 You can check chrony is working correctly with `journalctl -u chrony`
 

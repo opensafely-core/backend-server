@@ -14,8 +14,6 @@ Directory layout:
   * scripts and config for TPP backends
 * ./services/jobrunner
   * scripts and config templates for jobrunner
-* ./services/osrelease
-  * scripts and config templates for osrelease
 * ./keys/$USER
   * public keys to add to ssh for $USER
 * ./developers

@@ -29,12 +29,6 @@ OpenSAFELY platform, to request new jobs and to publish job statuses.  It also
 downloads github repositories containing the jobs to execute and the Docker
 images used to run them, via the OpenSAFELY proxies (see below).
 
-### release-hatch
-
-This service lives in ~opensafely/release-hatch
-
-It is run via docker-compose and auto deploys.
-
 ### collector
 
 This service lives in ~opensafely/collector

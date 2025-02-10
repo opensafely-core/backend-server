@@ -66,21 +66,6 @@ Manages the jobs and their state. Currently deployed in `/home/opensafely` as a 
 checkout and managed by a systemd unit.  Plan is to move this to docker
 soonish.
 
-### osrelease
-
-Repo: https://github.com/opensafely-core/output-publisher
-
-Command line tool to release files. Currently deployed via `sudo pip install`,
-which is problematic, so will be switching something else soonish.
-
-### release-hatch
-
-Repo: https://github.com/opensafely-core/release-hatch
-
-New tool to manage the review and release process. Will hopefully replace osrelease soonish.
-Deployed as a docker service via `docker-compose`.
-
-
 ## Common goals for all backends
 
  * docker installed and configured appropriately
