@@ -17,6 +17,7 @@ deploy: && restart
 # restart airlock
 restart *args:
     docker-compose --ansi never up --no-build {{ args }} --detach airlock
+    docker-compose --ansi never up --no-build {{ args }} --detach airlock-file-uploader
 
 # show airlock logs
 logs *args:

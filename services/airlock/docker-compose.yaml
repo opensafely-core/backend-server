@@ -3,9 +3,8 @@
 # it supports.
 version: "3.7"
 services:
-  airlock: &service
+  airlock-base: &service
     image: docker-proxy.opensafely.org/opensafely-core/airlock:latest
-    container_name: airlock
     init: true
     restart: unless-stopped
     network_mode: bridge
@@ -13,8 +12,6 @@ services:
       driver: journald
       options:
         tag: airlock
-    ports:
-      - "443:8000"
     user: 10000:10000
     dns: 127.0.0.1  # disable dns, as there's no resolver running inside the container
     env_file:
@@ -27,7 +24,6 @@ services:
       AIRLOCK_WORKSPACE_DIR: /workspaces/
       AIRLOCK_REQUEST_DIR: /requests/
       DJANGO_DEBUG: "False"
-    command: gunicorn --config gunicorn.conf.py --certfile /certs/airlock.crt --keyfile /certs/airlock.key airlock.wsgi
     volumes:
       - /home/opensafely/airlock/workdir:/workdir
       - /srv/medium_privacy/workspaces:/workspaces:ro
@@ -35,3 +31,25 @@ services:
       - ./certs:/certs
       # use our hardcoded DNS
       - /etc/hosts:/etc/hosts
+    
+  airlock:
+    # The version of docker-compose in Ubuntu 20.04 (1.25) does not support
+    # `extends`, so we use YAML anchor tricks to create a test service that
+    # extends the base service. This statement copies all the keys from the
+    # anchor &service above
+    <<: *service
+    container_name: airlock
+    ports:
+      - "443:8000"
+    command: gunicorn --config gunicorn.conf.py --certfile /certs/airlock.crt --keyfile /certs/airlock.key airlock.wsgi
+
+
+  airlock-file-uploader:
+    depends_on: [airlock]
+    # The version of docker-compose in Ubuntu 20.04 (1.25) does not support
+    # `extends`, so we use YAML anchor tricks to create a test service that
+    # extends the base service. This statement copies all the keys from the
+    # anchor &service above
+    <<: *service
+    container_name: airlock-file-uploader
+    command: python manage.py run_file_uploader
