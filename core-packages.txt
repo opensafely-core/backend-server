@@ -1,6 +1,5 @@
 # these are the core dependencies need to run a backend
 docker.io
-docker-compose
 docker-compose-v2
 tzdata
 ca-certificates

@@ -44,7 +44,7 @@ A plain `just` will list other commands available, with help
 
 ## Base assumptions
 
- * Ubuntu server (20.04 baseline)
+ * Ubuntu server (22.04 baseline)
  * Internet access to {jobs,docker-proxy,github-proxy}.opensafely.org
  * Internet access to an official ubuntu archive
  * SSH access for developers to the backend host

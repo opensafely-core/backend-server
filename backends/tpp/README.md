@@ -99,7 +99,7 @@ We don't have network access to an ntp server, but Hyper-V [provides a ptp
 clock our linux guest can sync
 with](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/time-sync).
 
-Unfortunately, the 20.04 default of systemd-timesyncd does not support this. We
+Unfortunately, the 22.04 default of systemd-timesyncd does not support this. We
 need to use chrony. However, installing, configuring, and testing that in our
 LXD based test suite is hard/impossible. So instead, here we document the
 manual steps involved in enabling clock sync.

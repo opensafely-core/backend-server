@@ -2,7 +2,7 @@
 
 ## Base System
 
-The OpenSAFELY backend is designed and tested to run on an Ubuntu 20.04 LTS VM.
+The OpenSAFELY backend is designed and tested to run on an Ubuntu 22.04 LTS VM.
 
 This should have access to an appropriate Ubuntu archive mirror, and be
 configured to apply security updates automatically.

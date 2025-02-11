@@ -11,11 +11,11 @@ status:
 
 # stop the jobrunner service
 stop:
-    docker-compose stop
+    docker compose stop
 
 # restart the jobrunner service
 restart *args:
-    docker-compose up --no-build {{ args }} --detach jobrunner
+    docker compose up --no-build {{ args }} --detach jobrunner
 
 alias start:=restart
 
