@@ -6,7 +6,13 @@ for job in $(docker ps -f label=org.opensafely.action=cohortextractor | grep -oE
 do
   docker logs --tail 10000 "$job" |& tac | grep -Em 1 '^2022-' -B10000 | tac > "$tmp" || true
   ts=$(grep -oE "202.-..-.. ..:..:..:" "$tmp")
-  delta=$(python3 -c "from datetime import datetime; d = datetime.now() - datetime.fromisoformat(\"$ts\"); print(d)")
-  echo "$ts: $job: $delta"
+  now=$(date +%s)
+  time=$(date -d "$ts" +%s)
+  delta=$((now - time))
+  days=$((delta / 86400))
+  hours=$(( (delta % 86400) / 3600 ))
+  minutes=$(( (delta % 3600) / 60 ))
+  seconds=$((delta % 60))
+  echo "$ts: $job: ${days}days, $hours:$minutes:$seconds"
   test -n "$verbose" && { cat "$tmp"; echo; }
 done
