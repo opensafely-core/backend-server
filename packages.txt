@@ -4,9 +4,10 @@ gpg
 unattended-upgrades
 libpam-pwquality
 # debug tools
+python3
 vim
 tree
-silversearcher-ag
+ripgrep
 #temp disabled sysstat
 iotop
 tcpdump
