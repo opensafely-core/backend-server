@@ -53,13 +53,13 @@ just -f ~opensafely/jobrunner/justfile add-job https://github.com/opensafely/res
 
 script=$(mktemp)
 cat << EOF > "$script"
-until docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs -n 10 jobrunner | grep -q 'Completed successfully status=StatusCode.SUCCEEDED workspace=test action=generate_dataset'
+until journalctl -t jobrunner -n 10 | grep -q 'Completed successfully status=StatusCode.SUCCEEDED workspace=test action=generate_dataset'
 do
     sleep 2
 done
 EOF
 
-tout 60s bash "$script" || { docker compose -f opensafely/jobrunner/docker-compose.yaml logs jobrunner; exit 1; }
+tout 60s bash "$script" || { journalctl -t jobrunner; exit 1; }
 
 systemctl status --no-pager collector || { journalctl -u collector; exit 1; }
 

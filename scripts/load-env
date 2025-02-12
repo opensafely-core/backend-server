@@ -3,10 +3,6 @@
 
 # function to load and set out environment config
 load-env() {
-    # let opensafely user use the opensafely commands and scripts easily
-    export PYTHONPATH=/home/opensafely/jobrunner/code:/home/opensafely/jobrunner/lib
-    export PATH=$PATH:/home/opensafely/jobrunner/bin:/home/opensafely/jobrunner/code/scripts
-
     # load config into this shell so we can just run stuff
     set -a
     # shellcheck disable=SC1090

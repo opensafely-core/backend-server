@@ -11,12 +11,12 @@ default:
 # pull latest version and deploy
 deploy: && restart
     echo "Pulling image"
-    docker-compose --ansi never pull --quiet airlock
+    docker compose --ansi never pull --quiet airlock
 
 
 # restart airlock
 restart *args:
-    docker-compose --ansi never up --no-build {{ args }} --detach airlock
+    docker compose --ansi never up --no-build {{ args }} --detach airlock
 
 # show airlock logs
 logs *args:

@@ -2,16 +2,13 @@
 
 ## Base System
 
-The OpenSAFELY backend is designed and tested to run on an Ubuntu 20.04 LTS VM.
+The OpenSAFELY backend is designed and tested to run on an Ubuntu 22.04 LTS VM.
 
 This should have access to an appropriate Ubuntu archive mirror, and be
 configured to apply security updates automatically.
 
 
 ## Dependencies
-
-The required packages are `python3` (which is python 3.8 in 20.04) and
-`docker.io` (the Ubuntu packaged version of docker).
 
 The explicit list can be found in [core-packages.txt](core-packages.txt).
 
@@ -28,12 +25,6 @@ This service does not listen on any port, but regularly initiates requests to th
 OpenSAFELY platform, to request new jobs and to publish job statuses.  It also
 downloads github repositories containing the jobs to execute and the Docker
 images used to run them, via the OpenSAFELY proxies (see below).
-
-### release-hatch
-
-This service lives in ~opensafely/release-hatch
-
-It is run via docker-compose and auto deploys.
 
 ### collector
 

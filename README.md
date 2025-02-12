@@ -44,7 +44,7 @@ A plain `just` will list other commands available, with help
 
 ## Base assumptions
 
- * Ubuntu server (20.04 baseline)
+ * Ubuntu server (22.04 baseline)
  * Internet access to {jobs,docker-proxy,github-proxy}.opensafely.org
  * Internet access to an official ubuntu archive
  * SSH access for developers to the backend host
@@ -65,21 +65,6 @@ Repo: https://github.com/opensafely-core/job-runner
 Manages the jobs and their state. Currently deployed in `/home/opensafely` as a git
 checkout and managed by a systemd unit.  Plan is to move this to docker
 soonish.
-
-### osrelease
-
-Repo: https://github.com/opensafely-core/output-publisher
-
-Command line tool to release files. Currently deployed via `sudo pip install`,
-which is problematic, so will be switching something else soonish.
-
-### release-hatch
-
-Repo: https://github.com/opensafely-core/release-hatch
-
-New tool to manage the review and release process. Will hopefully replace osrelease soonish.
-Deployed as a docker service via `docker-compose`.
-
 
 ## Common goals for all backends
 

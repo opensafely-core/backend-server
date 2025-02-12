@@ -23,6 +23,6 @@ The default install will generate self-signed certifcates, but these can replace
 
 All these commands assume you are runing from `~opensafely/airlock` directory.
 
- - *restart*: docker-compose restart
- - *logs*: docker-compose logs
- - *root shell*: docker-compose exec -u 0 airlock bash
+ - *restart*: docker compose restart
+ - *logs*: docker compose logs
+ - *root shell*: docker compose exec -u 0 airlock bash

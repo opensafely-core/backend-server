@@ -66,9 +66,6 @@ install-release-hatch: check
 install-airlock: check install-opensafely-user
   ./services/airlock/install.sh
 
-install-osrelease: check
-  ./services/osrelease/install.sh
-
 install-collector: check
   ./services/collector/install.sh
 
@@ -87,7 +84,7 @@ manage: check
 
 
 [private]
-manage-test: install-packages install update-users install-jobrunner install-airlock install-osrelease install-collector
+manage-test: install-packages install update-users install-jobrunner install-airlock install-collector
 
 [private]
 manage-tpp: install-packages install update-users install-jobrunner install-airlock install-collector install-timers
