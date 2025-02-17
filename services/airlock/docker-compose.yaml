@@ -30,4 +30,10 @@ services:
       - /srv/medium_privacy/requests:/requests
       - ./certs:/certs
       # use our hardcoded DNS
-      - /etc/hosts:/etc/hosts
+      - /etc/hosts:/etc/hosts:ro
+      # map opensafely user/group/uid/gid info from host. Supresses confusing
+      # error message.
+      # Note: this is *required* for run-one-constantly to work
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+

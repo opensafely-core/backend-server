@@ -16,3 +16,11 @@ if docker exec airlock touch /workspaces/test; then
   echo "airlock:/workspaces unexpectedly writable"
   exit 1
 fi
+
+# verify the background uploaded process is running
+if ! docker exec airlock pgrep --full run_file_uploader; then
+  echo "Could not detect the background run_file_uploader process"
+  echo "docker exec airlock ps aux"
+  docker exec airlock ps aux
+  exit 1
+fi
