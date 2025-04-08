@@ -85,5 +85,5 @@ update-docker-image image:
     docker image prune --force --filter "label=org.opensafely.action=$action_name"
 
 # add a job run run
-add-job repo action:
-    {{ jobrunner_cli }}.add_job {{ repo }} {{ action }}
+add-job *args:
+    {{ jobrunner_cli }}.add_job {{ args }}
