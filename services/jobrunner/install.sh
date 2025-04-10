@@ -24,6 +24,11 @@ cp $SRC_DIR/bin/* ~opensafely/bin/
 # setup some automated config for docker group id
 echo "DOCKER_HOST_GROUPID=$(getent group docker | awk -F: '{print $3}')" > $DIR/.env
 
+# run the dev container on the test-backend
+if [ "$BACKEND" = "test" ]; then
+  echo "JOB_RUNNER_DOCKER_IMAGE=job-runner-dev" >> $DIR/.env
+fi
+
 chown -R opensafely:opensafely $DIR
 
 # TODO: this should probably live somewhere else, as its more than just a jobrunner thing

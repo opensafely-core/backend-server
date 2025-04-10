@@ -1,6 +1,6 @@
 services:
   jobrunner:
-    image: docker-proxy.opensafely.org/opensafely-core/job-runner:latest
+    image: docker-proxy.opensafely.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
     container_name: jobrunner
     init: true
     restart: unless-stopped
