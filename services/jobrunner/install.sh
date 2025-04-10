@@ -1,9 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+BACKEND=$1
+
 # Set up the job-runner service
 SRC_DIR=services/jobrunner
-BACKEND_SRC_DIR=backends/$1
+BACKEND_SRC_DIR=backends/$BACKEND
 HOME_DIR=/home/opensafely
 DIR=$HOME_DIR/jobrunner
 
