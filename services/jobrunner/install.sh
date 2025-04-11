@@ -1,9 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+BACKEND=$1
+
 # Set up the job-runner service
 SRC_DIR=services/jobrunner
-BACKEND_SRC_DIR=backends/$1
+BACKEND_SRC_DIR=backends/$BACKEND
 HOME_DIR=/home/opensafely
 DIR=$HOME_DIR/jobrunner
 
@@ -21,6 +23,11 @@ cp -a services/jobrunner/* $DIR/
 cp $SRC_DIR/bin/* ~opensafely/bin/
 # setup some automated config for docker group id
 echo "DOCKER_HOST_GROUPID=$(getent group docker | awk -F: '{print $3}')" > $DIR/.env
+
+# run the dev container on the test-backend
+if [ "$BACKEND" = "test" ]; then
+  echo "JOB_RUNNER_DOCKER_IMAGE=job-runner-split" >> $DIR/.env
+fi
 
 chown -R opensafely:opensafely $DIR
 

@@ -1,6 +1,6 @@
 services:
   jobrunner:
-    image: docker-proxy.opensafely.org/opensafely-core/job-runner:latest
+    image: docker-proxy.opensafely.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
     container_name: jobrunner
     init: true
     restart: unless-stopped
@@ -23,7 +23,7 @@ services:
       # identical absolute paths inside the container. This allows for
       # job-runner to use the same value for both its own file access, and for
       # what to pass to the host docker as a bindmount source directory, which
-      # needs to be on the host. 
+      # needs to be on the host.
       # We can potentially fix this by adding an explicit bind mount source configs, if we want to
       # Note: we cannot interpolate the multiple envfiles here, so we have to hard code these paths.
       - /srv/high_privacy:/srv/high_privacy
