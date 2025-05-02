@@ -15,7 +15,7 @@ grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
 sleep 3
 
 # test jobrunner service up
-docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec jobrunner true || { docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs; exit 1; } 
+docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec jobrunner true || { docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs; exit 1; }
 
 # test collector service up
 systemctl status collector || { journalctl -u collector --no-pager; exit 2; }
@@ -39,4 +39,3 @@ if ! journalctl -u vmp-mapping | grep -q 'Wrong scheme for MS-SQL URL'; then
     journalctl -u vmp-mapping
     exit 1
 fi
-

@@ -22,7 +22,6 @@ just manage
 # run again to check for idempotency
 just manage
 
-
 # override developers field to be able to disable user
 # user must exist, using test author :shrug:
 developers=/dev/null just disable-user bloodearnest
