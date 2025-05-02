@@ -7,7 +7,7 @@ default:
 
 # show the status of the jobrunner service
 status:
-    docker compose status jobrunner
+    docker compose ps jobrunner
 
 # stop the jobrunner service
 stop:
