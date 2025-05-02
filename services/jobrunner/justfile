@@ -23,7 +23,7 @@ restart-if-running:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    JOBRUNNER_STATE=`docker compose ps --format "{{.State}}" jobrunner`
+    JOBRUNNER_STATE=`docker compose ps --format "\{\{.State\}\}" jobrunner`
     if [ "$JOBRUNNER_STATE" = "running" ]; then
         docker compose up --no-build --detach jobrunner
     fi
