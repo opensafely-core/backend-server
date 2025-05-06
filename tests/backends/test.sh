@@ -19,9 +19,13 @@ tout() {
 ./tests/check-bootstrap.sh test
 
 just manage
+
+# jobrunner.service runs `just deploy` which will not start jobrunner if it not
+# already running, so manually start it here
+just -f ~opensafely/jobrunner/justfile start
+
 # run again to check for idempotency
 just manage
-
 
 # override developers field to be able to disable user
 # user must exist, using test author :shrug:
