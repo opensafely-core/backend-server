@@ -6,6 +6,11 @@ set -euo pipefail
 ./tests/check-bootstrap.sh tpp
 
 just manage
+
+# jobrunner.service runs `just deploy` which will not start jobrunner if it not
+# already running, so manually start it here
+just -f ~opensafely/jobrunner/justfile start
+
 # run again to check for idempotency
 just manage
 
@@ -15,7 +20,7 @@ grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
 sleep 3
 
 # test jobrunner service up
-docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec jobrunner true || { docker compose -f ~opensafely/jobrunner/docker-compose logs; exit 1; } 
+docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec jobrunner true || { docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs; exit 1; }
 
 # test collector service up
 systemctl status collector || { journalctl -u collector --no-pager; exit 2; }
@@ -39,4 +44,3 @@ if ! journalctl -u vmp-mapping | grep -q 'Wrong scheme for MS-SQL URL'; then
     journalctl -u vmp-mapping
     exit 1
 fi
-
