@@ -30,7 +30,6 @@ restart-if-running:
 
 # Update jobrunner and restart
 deploy: && restart-if-running
-    echo "Pulling image"
     docker compose pull --quiet jobrunner
 
 # Run a jobrunner cli command
