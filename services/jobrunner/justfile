@@ -23,14 +23,15 @@ restart-if-running:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    JOBRUNNER_STATE=`docker compose ps --format "\{\{.State\}\}" jobrunner`
+    # The quadruple opening braces are not a typo: they are how we have to escape the braces
+    # inside a Justfile (the closing braces do not need escaping)
+    JOBRUNNER_STATE=`docker compose ps --format "{{{{.State}}" jobrunner`
     if [ "$JOBRUNNER_STATE" = "running" ]; then
         docker compose up --no-build --detach jobrunner
     fi
 
 # Update jobrunner and restart
 deploy: && restart-if-running
-    echo "Pulling image"
     docker compose pull --quiet jobrunner
 
 # Run a jobrunner cli command
