@@ -53,7 +53,7 @@ test "$(id -g opensafely)" == "10000"
 # test service is up
 
 just -f ~opensafely/jobrunner/justfile update-docker-image ehrql:v1
-just -f ~opensafely/jobrunner/justfile add-job https://github.com/opensafely/research-template generate_dataset
+just -f ~opensafely/jobrunner/justfile add-job test https://github.com/opensafely/research-template generate_dataset
 
 script=$(mktemp)
 cat << EOF > "$script"
