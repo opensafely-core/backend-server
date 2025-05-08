@@ -40,19 +40,20 @@ cli command *ARGS:
 
 # run jobrunner db migrations
 migrate:
-    {{ just_executable() }} cli migrate
+    {{ just_executable() }} cli controller.migrate
 
-# destroy containers & volumes for all running jobs
-prepare-for-reboot: stop
-    {{ just_executable() }} cli prepare_for_reboot
+# ensure backend is paused and cancel all running jobs
+# Use --status to check status of jobs before rebooting
+prepare-for-reboot backend *args:
+    {{ just_executable() }} cli controller.prepare_for_reboot --backend {{ backend }} {{ args }}
 
 # stop accepting new jobs
-pause:
-    {{ just_executable() }} cli flags set paused=true
+pause backend:
+    {{ just_executable() }} cli controller.flags set paused=true --backend {{ backend }}
 
 # start accepting new jobs
-unpause:
-    {{ just_executable() }} cli flags set paused=
+unpause backend:
+    {{ just_executable() }} cli controller.flags set paused= --backend {{ backend }}
 
 # show jobrunner logs (using `docker compose logs`)
 logs *args:
@@ -70,21 +71,13 @@ jobs-ls:
 jobs-stats:
     docker stats --no-stream
 
-# retry a specific job
-job-retry job_id:
-    {{ just_executable() }} cli retry_job {{ job_id }}
-
-# kill a job
-kill-job *args:
-    {{ just_executable() }} cli kill_job {{ args }}
-
 # manually enable database maintenance mode. Kill and re-queue all db jobs.
-db-maintenance-on:
-    {{ just_executable() }} cli flags set mode=db-maintenance manual-db-maintenance=on
+db-maintenance-on backend:
+    {{ just_executable() }} cli controller.flags set mode=db-maintenance manual-db-maintenance=on --backend {{ backend }}
 
 # manually disable database maintenance mode
-db-maintenance-off:
-    {{ just_executable() }} cli flags set mode= manual-db-maintenance=
+db-maintenance-off backend:
+    {{ just_executable() }} cli controller.flags set mode= manual-db-maintenance= --backend {{ backend }}
 
 # update docker image
 update-docker-image image:
@@ -99,5 +92,5 @@ update-docker-image image:
     docker image prune --force --filter "label=org.opensafely.action=$action_name"
 
 # add a job run run
-add-job *args:
-    {{ just_executable() }} cli add_job {{ args }}
+add-job backend *args:
+    {{ just_executable() }} cli controller.add_job {{ args }} --backend {{ backend }}
