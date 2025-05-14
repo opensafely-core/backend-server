@@ -1,21 +1,21 @@
-jobrunner_cli := 'docker compose run --rm jobrunner python3 -m jobrunner.cli'
+jobrunner_cli := 'docker compose run --rm controller python3 -m jobrunner.cli'
 
 [private]
 default:
   @just --list
 
 
-# show the status of the jobrunner service
+# show the status of the jobrunner services
 status:
-    docker compose ps jobrunner
+    docker compose ps agent controller
 
-# stop the jobrunner service
+# stop the jobrunner services
 stop:
     docker compose stop
 
-# restart the jobrunner service
+# restart the jobrunner services
 restart *args:
-    docker compose up --no-build {{ args }} --detach jobrunner
+    docker compose up --no-build {{ args }} --detach agent controller
 
 alias start:=restart
 
@@ -23,22 +23,26 @@ restart-if-running:
     #!/usr/bin/env bash
     set -euo pipefail
 
+    # Note that we check if the agent is running and, if so, restart the agent
+    # *and* the controller. This is a bit awkward but probably OK given that
+    # this state of affairs is supposed to be temporary.
+
     # The quadruple opening braces are not a typo: they are how we have to escape the braces
     # inside a Justfile (the closing braces do not need escaping)
-    JOBRUNNER_STATE=`docker compose ps --format "{{{{.State}}" jobrunner`
+    JOBRUNNER_STATE=`docker compose ps --format "{{{{.State}}" agent`
     if [ "$JOBRUNNER_STATE" = "running" ]; then
-        docker compose up --no-build --detach jobrunner
+        docker compose up --no-build --detach agent controller
     fi
 
-# Update jobrunner and restart
+# Update jobrunner services and restart
 deploy: && restart-if-running
-    docker compose pull --quiet jobrunner
+    docker compose pull --quiet agent controller
 
-# Run a jobrunner cli command
+# Run a controller cli command
 cli command *ARGS:
     {{ jobrunner_cli }}.{{ command }} {{ ARGS }}
 
-# run jobrunner db migrations
+# run controller db migrations
 migrate:
     {{ just_executable() }} cli controller.migrate
 
@@ -55,13 +59,13 @@ pause backend:
 unpause backend:
     {{ just_executable() }} cli controller.flags set paused= --backend {{ backend }}
 
-# show jobrunner logs (using `docker compose logs`)
+# show agent/controller logs (using `docker compose logs`)
 logs *args:
-    sudo journalctl -t jobrunner {{ args }}
+    sudo journalctl -t agent -t controller {{ args }}
 
-# show jobrunner logs for a specific job_id
+# show agent/controller logs for a specific job_id
 logs-id job_id:
-    sudo journalctl -t jobrunner -g {{ job_id }}
+    sudo journalctl -t agent -t controller -g {{ job_id }}
 
 # list all currently running jobs
 jobs-ls:
