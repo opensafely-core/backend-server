@@ -2,7 +2,6 @@ x-base-service: &base-service
   image: docker-proxy.opensafely.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
   init: true
   restart: unless-stopped
-  network_mode: bridge
   user: 10000:10000
   # run as the the current user to preserve file permissions
   group_add: ["${DOCKER_HOST_GROUPID}"]
