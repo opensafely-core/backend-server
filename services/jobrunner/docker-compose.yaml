@@ -36,7 +36,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       # use our hardcoded DNS
       - /etc/hosts:/etc/hosts:ro
-      # used to avoid ugly uid/gid lookup failures, but not strictly required
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
     environment:
@@ -57,7 +56,6 @@ services:
       - /home/opensafely/jobrunner/workdir:/workdir
       # use our hardcoded DNS
       - /etc/hosts:/etc/hosts:ro
-      # used to avoid ugly uid/gid lookup failures, but not strictly required
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
     environment:
