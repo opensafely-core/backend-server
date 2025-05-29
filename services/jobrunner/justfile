@@ -59,7 +59,7 @@ pause backend:
 unpause backend:
     {{ just_executable() }} cli controller.flags set paused= --backend {{ backend }}
 
-# show agent/controller logs (using `docker compose logs`)
+# show agent/controller logs
 logs *args:
     sudo journalctl -t agent -t controller {{ args }}
 
