@@ -1,20 +1,17 @@
-x-base-service: &base-service
-  image: docker-proxy.opensafely.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
-  init: true
-  restart: unless-stopped
-  user: 10000:10000
-  # run as the the current user to preserve file permissions
-  group_add: ["${DOCKER_HOST_GROUPID}"]
-  dns: 127.0.0.1  # disable dns, as there's no resolver running inside the container
-  env_file:
-    - /home/opensafely/config/01_defaults.env
-    - /home/opensafely/config/02_secrets.env
-    - /home/opensafely/config/03_backend.env
-    - /home/opensafely/config/04_local.env
-
 services:
   agent:
-    <<: *base-service
+    image: docker-proxy.opensafely.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
+    init: true
+    restart: unless-stopped
+    user: 10000:10000
+    # run as the the current user to preserve file permissions
+    group_add: ["${DOCKER_HOST_GROUPID}"]
+    dns: 127.0.0.1  # disable dns, as there's no resolver running inside the container
+    env_file:
+      - /home/opensafely/config/01_defaults.env
+      - /home/opensafely/config/02_secrets.env
+      - /home/opensafely/config/03_backend.env
+      - /home/opensafely/config/04_local.env
     container_name: agent
     command: /app/docker/scripts/agent.sh
     logging:
@@ -42,20 +39,3 @@ services:
       WORKDIR: /workdir
       # force using mounted docker socket
       DOCKER_HOST: unix:///var/run/docker.sock
-
-  controller:
-    <<: *base-service
-    container_name: controller
-    command: /app/docker/scripts/controller.sh
-    logging:
-      driver: journald
-      options:
-        tag: controller
-    volumes:
-      - /home/opensafely/jobrunner/workdir:/workdir
-      # use our hardcoded DNS
-      - /etc/hosts:/etc/hosts:ro
-      - /etc/group:/etc/group:ro
-      - /etc/passwd:/etc/passwd:ro
-    environment:
-      WORKDIR: /workdir
