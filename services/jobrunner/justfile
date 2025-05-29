@@ -1,4 +1,4 @@
-jobrunner_cli := 'docker compose run --rm controller python3 -m jobrunner.cli'
+jobrunner_cli := 'docker compose run --rm agent python3 -m jobrunner.cli'
 
 [private]
 default:
@@ -38,26 +38,9 @@ restart-if-running:
 deploy: && restart-if-running
     docker compose pull --quiet agent controller
 
-# Run a controller cli command
+# Run a cli command
 cli command *ARGS:
     {{ jobrunner_cli }}.{{ command }} {{ ARGS }}
-
-# run controller db migrations
-migrate:
-    {{ just_executable() }} cli controller.migrate
-
-# ensure backend is paused and cancel all running jobs
-# Use --status to check status of jobs before rebooting
-prepare-for-reboot backend *args:
-    {{ just_executable() }} cli controller.prepare_for_reboot --backend {{ backend }} {{ args }}
-
-# stop accepting new jobs
-pause backend:
-    {{ just_executable() }} cli controller.flags set paused=true --backend {{ backend }}
-
-# start accepting new jobs
-unpause backend:
-    {{ just_executable() }} cli controller.flags set paused= --backend {{ backend }}
 
 # show agent/controller logs
 logs *args:
@@ -75,14 +58,6 @@ jobs-ls:
 jobs-stats:
     docker stats --no-stream
 
-# manually enable database maintenance mode. Kill and re-queue all db jobs.
-db-maintenance-on backend:
-    {{ just_executable() }} cli controller.flags set mode=db-maintenance manual-db-maintenance=on --backend {{ backend }}
-
-# manually disable database maintenance mode
-db-maintenance-off backend:
-    {{ just_executable() }} cli controller.flags set mode= manual-db-maintenance= --backend {{ backend }}
-
 # update docker image
 update-docker-image image:
     #!/bin/bash
@@ -94,7 +69,3 @@ update-docker-image image:
     action_name="$(echo {{ image }} | awk -F: '{print $1}')"
     # delete dangling version of this image
     docker image prune --force --filter "label=org.opensafely.action=$action_name"
-
-# add a job run run
-add-job backend *args:
-    {{ just_executable() }} cli controller.add_job {{ args }} --backend {{ backend }}
