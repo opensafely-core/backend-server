@@ -42,7 +42,6 @@ services:
       WORKDIR: /workdir
       # force using mounted docker socket
       DOCKER_HOST: unix:///var/run/docker.sock
-      CONTROLLER_TASK_API_ENDPOINT: "http://controller:8000/"
 
   controller:
     <<: *base-service
