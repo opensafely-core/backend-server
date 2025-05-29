@@ -5,17 +5,17 @@ default:
   @just --list
 
 
-# show the status of the jobrunner services
+# show the status of the agent service
 status:
-    docker compose ps agent controller
+    docker compose ps agent
 
-# stop the jobrunner services
+# stop the agent services
 stop:
     docker compose stop
 
-# restart the jobrunner services
+# restart the agent service
 restart *args:
-    docker compose up --no-build {{ args }} --detach agent controller
+    docker compose up --no-build {{ args }} --detach agent
 
 alias start:=restart
 
@@ -23,32 +23,28 @@ restart-if-running:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    # Note that we check if the agent is running and, if so, restart the agent
-    # *and* the controller. This is a bit awkward but probably OK given that
-    # this state of affairs is supposed to be temporary.
-
     # The quadruple opening braces are not a typo: they are how we have to escape the braces
     # inside a Justfile (the closing braces do not need escaping)
     JOBRUNNER_STATE=`docker compose ps --format "{{{{.State}}" agent`
     if [ "$JOBRUNNER_STATE" = "running" ]; then
-        docker compose up --no-build --detach agent controller
+        docker compose up --no-build --detach agent
     fi
 
-# Update jobrunner services and restart
+# Update agent service and restart
 deploy: && restart-if-running
-    docker compose pull --quiet agent controller
+    docker compose pull --quiet agent
 
 # Run a cli command
 cli command *ARGS:
     {{ jobrunner_cli }}.{{ command }} {{ ARGS }}
 
-# show agent/controller logs
+# show logs
 logs *args:
-    sudo journalctl -t agent -t controller {{ args }}
+    sudo journalctl -t agent {{ args }}
 
-# show agent/controller logs for a specific job_id
+# show logs for a specific job_id
 logs-id job_id:
-    sudo journalctl -t agent -t controller -g {{ job_id }}
+    sudo journalctl -t agent -g {{ job_id }}
 
 # list all currently running jobs
 jobs-ls:
