@@ -20,7 +20,7 @@ grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
 sleep 3
 
 # test jobrunner service up
-docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec controller true || { docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs; exit 1; }
+docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec agent true || { docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs; exit 1; }
 
 # test collector service up
 systemctl status collector || { journalctl -u collector --no-pager; exit 2; }
