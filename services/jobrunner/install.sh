@@ -41,10 +41,6 @@ done
 
 chown -R opensafely:opensafely "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE"
 
-# create initial db if not present
-test -f "$DIR/workdir/db.sqlite" || just -f $DIR/justfile migrate
-
-
 # backend specific unit overrides
 test -d "$BACKEND_SRC_DIR/jobrunner.service.d" && cp -Lr "$BACKEND_SRC_DIR/jobrunner.service.d" $DIR/
 

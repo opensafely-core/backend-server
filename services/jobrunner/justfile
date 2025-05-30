@@ -1,21 +1,21 @@
-jobrunner_cli := 'docker compose run --rm controller python3 -m jobrunner.cli'
+jobrunner_cli := 'docker compose run --rm agent python3 -m jobrunner.cli'
 
 [private]
 default:
   @just --list
 
 
-# show the status of the jobrunner services
+# show the status of the agent service
 status:
-    docker compose ps agent controller
+    docker compose ps agent
 
-# stop the jobrunner services
+# stop the agent services
 stop:
     docker compose stop
 
-# restart the jobrunner services
+# restart the agent service
 restart *args:
-    docker compose up --no-build {{ args }} --detach agent controller
+    docker compose up --no-build {{ args }} --detach agent
 
 alias start:=restart
 
@@ -23,49 +23,28 @@ restart-if-running:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    # Note that we check if the agent is running and, if so, restart the agent
-    # *and* the controller. This is a bit awkward but probably OK given that
-    # this state of affairs is supposed to be temporary.
-
     # The quadruple opening braces are not a typo: they are how we have to escape the braces
     # inside a Justfile (the closing braces do not need escaping)
     JOBRUNNER_STATE=`docker compose ps --format "{{{{.State}}" agent`
     if [ "$JOBRUNNER_STATE" = "running" ]; then
-        docker compose up --no-build --detach agent controller
+        docker compose up --no-build --detach agent
     fi
 
-# Update jobrunner services and restart
+# Update agent service and restart
 deploy: && restart-if-running
-    docker compose pull --quiet agent controller
+    docker compose pull --quiet agent
 
-# Run a controller cli command
+# Run a cli command
 cli command *ARGS:
     {{ jobrunner_cli }}.{{ command }} {{ ARGS }}
 
-# run controller db migrations
-migrate:
-    {{ just_executable() }} cli controller.migrate
-
-# ensure backend is paused and cancel all running jobs
-# Use --status to check status of jobs before rebooting
-prepare-for-reboot backend *args:
-    {{ just_executable() }} cli controller.prepare_for_reboot --backend {{ backend }} {{ args }}
-
-# stop accepting new jobs
-pause backend:
-    {{ just_executable() }} cli controller.flags set paused=true --backend {{ backend }}
-
-# start accepting new jobs
-unpause backend:
-    {{ just_executable() }} cli controller.flags set paused= --backend {{ backend }}
-
-# show agent/controller logs (using `docker compose logs`)
+# show logs
 logs *args:
-    sudo journalctl -t agent -t controller {{ args }}
+    sudo journalctl -t agent {{ args }}
 
-# show agent/controller logs for a specific job_id
+# show logs for a specific job_id
 logs-id job_id:
-    sudo journalctl -t agent -t controller -g {{ job_id }}
+    sudo journalctl -t agent -g {{ job_id }}
 
 # list all currently running jobs
 jobs-ls:
@@ -74,14 +53,6 @@ jobs-ls:
 # show docker stats for all currently running jobs
 jobs-stats:
     docker stats --no-stream
-
-# manually enable database maintenance mode. Kill and re-queue all db jobs.
-db-maintenance-on backend:
-    {{ just_executable() }} cli controller.flags set mode=db-maintenance manual-db-maintenance=on --backend {{ backend }}
-
-# manually disable database maintenance mode
-db-maintenance-off backend:
-    {{ just_executable() }} cli controller.flags set mode= manual-db-maintenance= --backend {{ backend }}
 
 # update docker image
 update-docker-image image:
@@ -94,7 +65,3 @@ update-docker-image image:
     action_name="$(echo {{ image }} | awk -F: '{print $1}')"
     # delete dangling version of this image
     docker image prune --force --filter "label=org.opensafely.action=$action_name"
-
-# add a job run run
-add-job backend *args:
-    {{ just_executable() }} cli controller.add_job {{ args }} --backend {{ backend }}

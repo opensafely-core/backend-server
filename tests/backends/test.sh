@@ -20,6 +20,18 @@ tout() {
 
 just manage
 
+# Fake a minimal controller HTTP endpoint
+controller_port=8000
+controller_tmpdir="$(mktemp -d)"
+mkdir -p "$controller_tmpdir/test/tasks"
+echo '{"tasks": []}' > "$controller_tmpdir/test/tasks/index.html"
+python3 -m http.server -d "$controller_tmpdir" "$controller_port" &
+controller_pid=$!
+trap "kill $controller_pid 2>/dev/null" EXIT INT TERM
+
+# Override the config to point the agent at our fake controller (IP is Docker gateway)
+echo -e "\nCONTROLLER_TASK_API_ENDPOINT=http://172.17.0.1:$controller_port/" >> /home/opensafely/config/04_local.env
+
 # jobrunner.service runs `just deploy` which will not start jobrunner if it not
 # already running, so manually start it here
 just -f ~opensafely/jobrunner/justfile start
@@ -52,18 +64,15 @@ test "$(id -g opensafely)" == "10000"
 
 # test service is up
 
-just -f ~opensafely/jobrunner/justfile update-docker-image ehrql:v1
-just -f ~opensafely/jobrunner/justfile add-job test https://github.com/opensafely/research-template generate_dataset
-
 script=$(mktemp)
 cat << EOF > "$script"
-until journalctl -t controller -n 10 | grep -q 'Completed successfully status=StatusCode.SUCCEEDED workspace=test action=generate_dataset'
+until journalctl -t agent -n 10 | grep -qF 'agent.main loop started'
 do
     sleep 2
 done
 EOF
 
-tout 60s bash "$script" || { journalctl -t controller -t agent; exit 1; }
+tout 60s bash "$script" || { journalctl -t agent; exit 1; }
 
 systemctl status --no-pager collector || { journalctl -u collector; exit 1; }
 
