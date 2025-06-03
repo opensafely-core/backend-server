@@ -91,3 +91,7 @@ manage-tpp: install-packages install update-users install-jobrunner install-airl
 
 test:
   echo "Please see `just tests/`"
+
+# upgrade all apt packages
+apt-upgrade:
+  apt-get update && apt-get upgrade -y && apt-get autoremove -y
