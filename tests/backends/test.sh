@@ -78,3 +78,7 @@ systemctl status --no-pager collector || { journalctl -u collector; exit 1; }
 
 # run airlock tests
 ./tests/check-airlock.sh
+
+# Test the upgrade command completes without error (we have to use Y to accept
+# the upgrade because declining causes a non-zero exit)
+echo 'Y' | just apt-upgrade
