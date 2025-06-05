@@ -91,3 +91,33 @@ manage-tpp: install-packages install update-users install-jobrunner install-airl
 
 test:
   echo "Please see `just tests/`"
+
+# upgrade all apt packages
+apt-upgrade:
+  #!/bin/bash
+  set -euo pipefail
+
+  package_to_hold='docker.io'
+
+  apt-get update
+  apt-mark hold "$package_to_hold"
+  apt-get upgrade -y
+  apt-get autoremove -y
+
+  if apt list --upgradable "$package_to_hold" 2>/dev/null | grep -qF "$package_to_hold"; then
+      echo
+      echo "  => WARNING <="
+      echo
+      echo "  The '$package_to_hold' package has an update pending. This usually requires"
+      echo "  a restart of all running Docker containers. To avoid disruption to user"
+      echo "  jobs you should first run a prepare_for_reboot on the controller."
+      echo
+      echo "  Note that jobs will have to re-run from the start so if there are"
+      echo "  currently jobs which have been running a long time you may wish to delay"
+      echo "  upgrading."
+      echo
+      echo "  Choose 'n' below to decline the update, or 'Y' to proceed."
+      echo
+    apt-mark unhold "$package_to_hold"
+    apt-get upgrade
+  fi
