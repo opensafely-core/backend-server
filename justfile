@@ -34,7 +34,7 @@ check:
 install-packages: check
   ./scripts/install_packages.sh
 
-# install/update groups & system level configuration 
+# install/update groups & system level configuration
 install: check
   ./scripts/install.sh
 
