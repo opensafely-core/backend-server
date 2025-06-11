@@ -69,9 +69,6 @@ install-airlock: check install-opensafely-user
 install-collector: check
   ./services/collector/install.sh
 
-install-timers: check
-  ./services/timers/install.sh
-
 # install everything for a backend
 manage: check
   #!/bin/bash
@@ -87,7 +84,7 @@ manage: check
 manage-test: install-packages install update-users install-jobrunner install-airlock install-collector
 
 [private]
-manage-tpp: install-packages install update-users install-jobrunner install-airlock install-collector install-timers
+manage-tpp: install-packages install update-users install-jobrunner install-airlock install-collector
 
 test:
   echo "Please see `just tests/`"
