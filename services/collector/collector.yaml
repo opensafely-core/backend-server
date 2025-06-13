@@ -1,4 +1,5 @@
 exporters:
+  # we use http reather than grpc so we can go via out https proxy
   otlphttp:
     endpoint: https://collector.opensafely.org:443
     headers:
@@ -8,7 +9,7 @@ exporters:
       # starts forwarding it properly
       x-honeycomb-dataset: jobrunner-metrics
   logging:
-    logLevel: info
+    verbosity: basic
 receivers:
   hostmetrics:
     collection_interval: 30s
@@ -17,6 +18,9 @@ receivers:
       cpu: {}
       load: {}
       disk: {}
+      # Do not sum our disks, we want to measure them separately
+      # TODO: this is going to be backend specific, so we will want to
+      # parameterise this somehow in future
       filesystem:
         include_devices:
           devices:
@@ -31,8 +35,12 @@ processors:
     detectors:
       - env
       - system
-  timestamp:
-    round_to_nearest: 1s
+  transform:
+    error_mode: ignore
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(time, TruncateTime(time, Duration("1s")))
   batch:
     send_batch_size: 8192
     timeout: 200ms
@@ -304,6 +312,33 @@ processors:
           direction: write
         action: insert
         new_name: system.disk.merged.write
+        operations:
+          - action: aggregate_labels
+            aggregation_type: sum
+            label_set: []
+      - include: system.filesystem.usage
+        experimental_match_labels:
+          state: free
+        action: insert
+        new_name: system.filesystem.usage.free
+        operations:
+          - action: aggregate_labels
+            aggregation_type: sum
+            label_set: []
+      - include: system.filesystem.usage
+        experimental_match_labels:
+          state: reserved
+        action: insert
+        new_name: system.filesystem.usage.reserved
+        operations:
+          - action: aggregate_labels
+            aggregation_type: sum
+            label_set: []
+      - include: system.filesystem.usage
+        experimental_match_labels:
+          state: used
+        action: insert
+        new_name: system.filesystem.usage.used
         operations:
           - action: aggregate_labels
             aggregation_type: sum
@@ -657,6 +692,7 @@ processors:
           - system.disk.operation_time
           - system.disk.operations
           - system.filesystem.inodes.usage
+          - system.filesystem.usage
           - system.memory.usage
           - system.network.connections
           - system.network.connections.tcp
@@ -678,7 +714,7 @@ service:
       processors:
         - metricstransform
         - filter
-        - timestamp
+        - transform
         - resourcedetection
         - batch
       exporters:
