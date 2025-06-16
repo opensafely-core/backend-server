@@ -13,6 +13,7 @@ lint:
   # run this from the parent directory so that shellcheck can locate the other files referred
   # to in these scripts
   cd .. && shellcheck -x */*.sh services/*/*.sh services/*/bin/* services/*/sbin/* scripts/user.bashrc scripts/load-env  tests/run-in-lxd.sh tests/build-lxd-image.sh
+  ../bin/otelcol_hny_linux_amd64-1.8.0 validate --config ../services/collector/collector.yaml
 
 # build resources required to run tests
 build: testuser-key build-test-image
