@@ -66,7 +66,7 @@ test "$(id -g opensafely)" == "10000"
 
 script=$(mktemp)
 cat << EOF > "$script"
-until journalctl -t agent -n 10 | grep -qF 'agent.main loop started'
+until journalctl -t agent -n 100 | grep -qF 'agent.main loop started'
 do
     sleep 2
 done
