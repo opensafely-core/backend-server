@@ -237,7 +237,7 @@ ones are a bit awkward to type) and you will be able to select the
 correct job if there are multiple matches.
 
 
-### Killing a job 
+### Killing a job
 
 To kill a running job (or prevent it starting if it hasn't yet) use the
 `kill_job` command:
@@ -273,7 +273,7 @@ interpreter connected to the TPP SQL Server.
 
 For session-scoped, `#`-prefixed temporary tables:
 
-    SELECT t.name, p.rows 
+    SELECT t.name, p.rows
     FROM tempdb.sys.tables t
     JOIN tempdb.sys.partitions p
       ON t.object_id = p.object_id
