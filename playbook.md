@@ -265,13 +265,6 @@ The only way to gauge whether a DB job is stuck is to look at the docker logs
 for the running job. You can look at the log timestamps to see when it issued
 the current query.
 
-
-There is a helpful script to view this at a glance: `current-queries.sh`. It
-will show the last SQL timestamp of all running *cohortextractor* jobs, giving
-you an idea of how long the job has been waiting on the db for.
-
-`current-queries.sh v` will *also* print the actual SQL, which can be very large.
-
 #### Assessing query progress in mssql
 
 To estimate the rowcount of a table which is being `INSERT`ed to,
