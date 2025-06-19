@@ -35,7 +35,7 @@ sleep 3
 docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec agent true || { docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs; exit 1; }
 
 # test collector service up
-systemctl status collector || { journalctl -u collector --no-pager; exit 2; }
+./tests/check-collector.sh
 
 # run airlock tests
 ./tests/check-airlock.sh

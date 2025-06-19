@@ -74,7 +74,7 @@ EOF
 
 tout 60s bash "$script" || { journalctl -t agent; exit 1; }
 
-systemctl status --no-pager collector || { journalctl -u collector; exit 1; }
+./tests/check-collector.sh
 
 # run airlock tests
 ./tests/check-airlock.sh
