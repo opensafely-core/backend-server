@@ -25,7 +25,7 @@ controller_port=8000
 controller_tmpdir="$(mktemp -d)"
 mkdir -p "$controller_tmpdir/test/tasks"
 echo '{"tasks": []}' > "$controller_tmpdir/test/tasks/index.html"
-python3 -m http.server -d "$controller_tmpdir" "$controller_port" &
+python3 -m http.server -d "$controller_tmpdir" "$controller_port" >/tmp/controller.log 2>&1 &
 controller_pid=$!
 trap "kill $controller_pid 2>/dev/null" EXIT INT TERM
 
