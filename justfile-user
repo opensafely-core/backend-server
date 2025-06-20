@@ -3,3 +3,5 @@ default:
   @test jobrunner/justfile && just -f jobrunner/justfile -l --list-prefix jobrunner/
   @echo
   @test airlock/justfile && just -f airlock/justfile -l --list-prefix airlock/
+  @echo
+  @test collector/justfile && just -f collector/justfile -l --list-prefix collector/

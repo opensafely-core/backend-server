@@ -1,0 +1,21 @@
+[private]
+default:
+  @just --list
+
+
+# restart collector
+restart:
+    sudo systemctl restart collector.service
+
+alias start := restart
+
+
+# stop collector
+stop:
+    sudo systemctl stop collector.service
+
+# show collector logs
+logs *args:
+    sudo journalctl -u collector --output=cat {{ args }}
+
+
