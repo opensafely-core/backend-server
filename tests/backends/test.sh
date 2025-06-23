@@ -64,7 +64,7 @@ EOF
 
 tout 60s bash "$script" || { journalctl -t agent; exit 1; }
 
-./tests/check-collector.sh
+./tests/check-collector.sh test
 
 # run airlock tests
 ./tests/check-airlock.sh
