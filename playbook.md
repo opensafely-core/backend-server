@@ -120,6 +120,12 @@ For example, to update the ehrQL Docker image, first ensure that ehrQL's CI has 
 just jobrunner/update-docker-image ehrql:v1
 ```
 
+#### Updating tpp-database-utils
+
+```bash
+just jobrunner/update-docker-image tpp-database-utils:latest
+```
+
 ## Debugging jobs
 
 ### Show currently running jobs
