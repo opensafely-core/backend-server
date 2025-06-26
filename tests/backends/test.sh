@@ -18,19 +18,9 @@ tout() {
 
 ./tests/check-bootstrap.sh test
 
+./tests/stub-controller.sh test
+
 just manage
-
-# Fake a minimal controller HTTP endpoint
-controller_port=8000
-controller_tmpdir="$(mktemp -d)"
-mkdir -p "$controller_tmpdir/test/tasks"
-echo '{"tasks": []}' > "$controller_tmpdir/test/tasks/index.html"
-python3 -m http.server -d "$controller_tmpdir" "$controller_port" &
-controller_pid=$!
-trap "kill $controller_pid 2>/dev/null" EXIT INT TERM
-
-# Override the config to point the agent at our fake controller (IP is Docker gateway)
-echo -e "\nCONTROLLER_TASK_API_ENDPOINT=http://172.17.0.1:$controller_port/" >> /home/opensafely/config/04_local.env
 
 # jobrunner.service runs `just deploy` which will not start jobrunner if it not
 # already running, so manually start it here
@@ -74,7 +64,7 @@ EOF
 
 tout 60s bash "$script" || { journalctl -t agent; exit 1; }
 
-systemctl status --no-pager collector || { journalctl -u collector; exit 1; }
+./tests/check-collector.sh test
 
 # run airlock tests
 ./tests/check-airlock.sh
