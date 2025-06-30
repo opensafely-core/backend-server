@@ -329,33 +329,34 @@ processors:
           - action: aggregate_labels
             aggregation_type: sum
             label_set: []
-      - include: system.filesystem.usage
-        experimental_match_labels:
-          state: free
-        action: insert
-        new_name: system.filesystem.usage.free
-        operations:
-          - action: aggregate_labels
-            aggregation_type: sum
-            label_set: []
-      - include: system.filesystem.usage
-        experimental_match_labels:
-          state: reserved
-        action: insert
-        new_name: system.filesystem.usage.reserved
-        operations:
-          - action: aggregate_labels
-            aggregation_type: sum
-            label_set: []
-      - include: system.filesystem.usage
-        experimental_match_labels:
-          state: used
-        action: insert
-        new_name: system.filesystem.usage.used
-        operations:
-          - action: aggregate_labels
-            aggregation_type: sum
-            label_set: []
+      # Note: we do not want aggregated filesystem data
+      #- include: system.filesystem.usage
+      #  experimental_match_labels:
+      #    state: free
+      #  action: insert
+      #  new_name: system.filesystem.usage.free
+      #  operations:
+      #    - action: aggregate_labels
+      #      aggregation_type: sum
+      #      label_set: []
+      #- include: system.filesystem.usage
+      #  experimental_match_labels:
+      #    state: reserved
+      #  action: insert
+      #  new_name: system.filesystem.usage.reserved
+      #  operations:
+      #    - action: aggregate_labels
+      #      aggregation_type: sum
+      #      label_set: []
+      #- include: system.filesystem.usage
+      #  experimental_match_labels:
+      #    state: used
+      #  action: insert
+      #  new_name: system.filesystem.usage.used
+      #  operations:
+      #    - action: aggregate_labels
+      #      aggregation_type: sum
+      #     label_set: []
       - include: system.filesystem.inodes.usage
         experimental_match_labels:
           state: free
