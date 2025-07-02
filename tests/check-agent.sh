@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# shellcheck source=/dev/null
 source /home/opensafely/config/load-env
-
 
 tout() {
 	local duration=$1
