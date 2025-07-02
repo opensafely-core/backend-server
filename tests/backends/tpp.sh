@@ -22,10 +22,7 @@ grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
 
 sleep 3
 
-# test jobrunner service up
-docker compose -f ~opensafely/jobrunner/docker-compose.yaml exec agent true || { docker compose -f ~opensafely/jobrunner/docker-compose.yaml logs; exit 1; }
-
-# test collector service up
+./tests/check-agent.sh
 ./tests/check-collector.sh
 
 # run airlock tests
