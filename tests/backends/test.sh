@@ -41,8 +41,6 @@ test "$(id -g opensafely)" == "10000"
 
 ./tests/check-agent.sh
 ./tests/check-collector.sh
-
-# run airlock tests
 ./tests/check-airlock.sh
 
 # Test the upgrade command completes without error (we have to use Y to accept

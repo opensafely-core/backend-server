@@ -24,6 +24,4 @@ sleep 3
 
 ./tests/check-agent.sh
 ./tests/check-collector.sh
-
-# run airlock tests
 ./tests/check-airlock.sh

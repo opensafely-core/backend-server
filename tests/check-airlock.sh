@@ -23,3 +23,11 @@ if ! docker exec airlock pgrep --full run_file_uploader >/dev/null; then
   docker exec airlock ps aux
   exit 1
 fi
+
+
+service="$(docker exec airlock env | grep OTEL_SERVICE_NAME)"
+if test "$service" != "OTEL_SERVICE_NAME=airlock-$BACKEND"; then
+    echo "Misconfigured OTEL_SERVICE_NAME: $service"
+    docker exec airlock env
+    exit 1
+fi

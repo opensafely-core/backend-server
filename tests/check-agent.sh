@@ -27,3 +27,11 @@ done
 EOF
 
 tout 60s bash "$script" || { journalctl -t agent; exit 1; }
+
+
+service="$(docker exec agent env | grep OTEL_SERVICE_NAME)"
+if test "$service" != "OTEL_SERVICE_NAME=agent-$BACKEND"; then
+    echo "Misconfigured OTEL_SERVICE_NAME: $service"
+    docker exec agent env
+    exit 1
+fi
