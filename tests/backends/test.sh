@@ -1,19 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-tout() {
-	local duration=$1
-	shift
-
-	code=0
-    timeout --foreground "$duration" "$@" || code=$?
-
-	if test "$code" == "124"; then
-		echo "Timeout waiting for: $*"
-	fi
-	return $code
-}
-
 ./scripts/bootstrap.sh test
 
 ./tests/check-bootstrap.sh test
@@ -52,21 +39,8 @@ fi
 test "$(id -u opensafely)" == "10000"
 test "$(id -g opensafely)" == "10000"
 
-# test service is up
-
-script=$(mktemp)
-cat << EOF > "$script"
-until journalctl -t agent -n 100 | grep -qF 'agent.main loop started'
-do
-    sleep 2
-done
-EOF
-
-tout 60s bash "$script" || { journalctl -t agent; exit 1; }
-
-./tests/check-collector.sh test
-
-# run airlock tests
+./tests/check-agent.sh
+./tests/check-collector.sh
 ./tests/check-airlock.sh
 
 # Test the upgrade command completes without error (we have to use Y to accept
