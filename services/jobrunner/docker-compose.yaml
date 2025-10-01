@@ -36,6 +36,7 @@ services:
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
     environment:
+      OTEL_SERVICE_NAME: "${OTEL_SERVICE_NAME}"
       WORKDIR: /workdir
       # force using mounted docker socket
       DOCKER_HOST: unix:///var/run/docker.sock

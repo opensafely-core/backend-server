@@ -21,13 +21,10 @@ umask 027
 mkdir -p $DIR/workdir
 cp -a services/jobrunner/* $DIR/
 cp $SRC_DIR/bin/* ~opensafely/bin/
+
 # setup some automated config for docker group id
 echo "DOCKER_HOST_GROUPID=$(getent group docker | awk -F: '{print $3}')" > $DIR/.env
-
-# run the dev container on the test-backend
-if [ "$BACKEND" = "test" ]; then
-  echo "JOB_RUNNER_DOCKER_IMAGE=job-runner-split" >> $DIR/.env
-fi
+echo "OTEL_SERVICE_NAME=agent-$BACKEND" >> $DIR/.env
 
 chown -R opensafely:opensafely $DIR
 

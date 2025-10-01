@@ -20,7 +20,7 @@ restart *args:
 
 # show airlock logs
 logs *args:
-    sudo journalctl -t airlock {{ args }}
+    sudo journalctl -t airlock --output=cat {{ args }}
 
 # update to the certificate for airlock from backends.opensafely.org
 update-certs:

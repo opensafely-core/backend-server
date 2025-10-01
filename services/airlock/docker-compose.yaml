@@ -19,6 +19,7 @@ services:
       - /home/opensafely/config/03_backend.env
       - /home/opensafely/config/04_local.env
     environment:
+      OTEL_SERVICE_NAME: "${OTEL_SERVICE_NAME}"
       AIRLOCK_WORK_DIR: /workdir/
       AIRLOCK_WORKSPACE_DIR: /workspaces/
       AIRLOCK_REQUEST_DIR: /requests/

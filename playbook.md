@@ -120,6 +120,12 @@ For example, to update the ehrQL Docker image, first ensure that ehrQL's CI has 
 just jobrunner/update-docker-image ehrql:v1
 ```
 
+#### Updating tpp-database-utils
+
+```bash
+just jobrunner/update-docker-image tpp-database-utils:latest
+```
+
 ## Debugging jobs
 
 ### Show currently running jobs
@@ -237,7 +243,7 @@ ones are a bit awkward to type) and you will be able to select the
 correct job if there are multiple matches.
 
 
-### Killing a job 
+### Killing a job
 
 To kill a running job (or prevent it starting if it hasn't yet) use the
 `kill_job` command:
@@ -265,13 +271,6 @@ The only way to gauge whether a DB job is stuck is to look at the docker logs
 for the running job. You can look at the log timestamps to see when it issued
 the current query.
 
-
-There is a helpful script to view this at a glance: `current-queries.sh`. It
-will show the last SQL timestamp of all running *cohortextractor* jobs, giving
-you an idea of how long the job has been waiting on the db for.
-
-`current-queries.sh v` will *also* print the actual SQL, which can be very large.
-
 #### Assessing query progress in mssql
 
 To estimate the rowcount of a table which is being `INSERT`ed to,
@@ -280,7 +279,7 @@ interpreter connected to the TPP SQL Server.
 
 For session-scoped, `#`-prefixed temporary tables:
 
-    SELECT t.name, p.rows 
+    SELECT t.name, p.rows
     FROM tempdb.sys.tables t
     JOIN tempdb.sys.partitions p
       ON t.object_id = p.object_id

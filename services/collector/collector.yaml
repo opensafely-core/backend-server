@@ -1,5 +1,6 @@
 exporters:
-  otlphttp:
+  # we use http reather than grpc so we can go via out https proxy
+  otlphttp/metrics:
     endpoint: https://collector.opensafely.org:443
     headers:
       Authorization: "Basic ${COLLECTOR_BASIC_AUTH}"
@@ -7,8 +8,13 @@ exporters:
       # But we set it anyway, incase in future the gateway collector suddenly
       # starts forwarding it properly
       x-honeycomb-dataset: jobrunner-metrics
+  otlphttp/traces:
+    endpoint: https://collector.opensafely.org:443
+    headers:
+      Authorization: "Basic ${COLLECTOR_BASIC_AUTH}"
   logging:
-    logLevel: info
+    verbosity: basic
+
 receivers:
   hostmetrics:
     collection_interval: 30s
@@ -17,6 +23,9 @@ receivers:
       cpu: {}
       load: {}
       disk: {}
+      # Do not sum our disks, we want to measure them separately
+      # TODO: this is going to be backend specific, so we will want to
+      # parameterise this somehow in future
       filesystem:
         include_devices:
           devices:
@@ -26,13 +35,25 @@ receivers:
       network: {}
       paging: {}
       processes: {}
+  otlp/localhost:
+    protocols:
+      http:
+        endpoint: localhost:4318
+  otlp/docker:
+    protocols:
+      http:
+        endpoint: "${DOCKER_BRIDGE_IP}:4318"
 processors:
   resourcedetection:
     detectors:
       - env
       - system
-  timestamp:
-    round_to_nearest: 1s
+  transform:
+    error_mode: ignore
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(time, TruncateTime(time, Duration("1s")))
   batch:
     send_batch_size: 8192
     timeout: 200ms
@@ -308,6 +329,34 @@ processors:
           - action: aggregate_labels
             aggregation_type: sum
             label_set: []
+      # Note: we do not want aggregated filesystem data
+      #- include: system.filesystem.usage
+      #  experimental_match_labels:
+      #    state: free
+      #  action: insert
+      #  new_name: system.filesystem.usage.free
+      #  operations:
+      #    - action: aggregate_labels
+      #      aggregation_type: sum
+      #      label_set: []
+      #- include: system.filesystem.usage
+      #  experimental_match_labels:
+      #    state: reserved
+      #  action: insert
+      #  new_name: system.filesystem.usage.reserved
+      #  operations:
+      #    - action: aggregate_labels
+      #      aggregation_type: sum
+      #      label_set: []
+      #- include: system.filesystem.usage
+      #  experimental_match_labels:
+      #    state: used
+      #  action: insert
+      #  new_name: system.filesystem.usage.used
+      #  operations:
+      #    - action: aggregate_labels
+      #      aggregation_type: sum
+      #     label_set: []
       - include: system.filesystem.inodes.usage
         experimental_match_labels:
           state: free
@@ -657,6 +706,7 @@ processors:
           - system.disk.operation_time
           - system.disk.operations
           - system.filesystem.inodes.usage
+          - system.filesystem.usage
           - system.memory.usage
           - system.network.connections
           - system.network.connections.tcp
@@ -678,9 +728,19 @@ service:
       processors:
         - metricstransform
         - filter
-        - timestamp
+        - transform
         - resourcedetection
         - batch
       exporters:
         - logging
-        - otlphttp
+        - otlphttp/metrics
+    traces:
+      receivers:
+        - otlp/localhost
+        - otlp/docker
+      processors:
+        - resourcedetection
+        - batch
+      exporters:
+        - logging
+        - otlphttp/traces

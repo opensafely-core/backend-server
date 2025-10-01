@@ -31,6 +31,8 @@ mkdir -p "$REQUESTS_DIR"
 find "$REQUESTS_DIR" -type f -exec chmod 640 {} +
 
 
+echo "OTEL_SERVICE_NAME=airlock-$BACKEND" > $DIR/.env
+
 systemctl enable "$DIR/airlock.service"
 systemctl enable "$DIR/airlock.timer"
 systemctl start airlock.timer
