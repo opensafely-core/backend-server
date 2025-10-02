@@ -43,6 +43,21 @@ sudo snap set lxd shiftfs.enable=true
 sudo lxd init --auto
 ```
 
+#### Firewall setup for LXD
+
+To configure ufw to allow network traffic to/from LXD instances, you'll need the name of your internet interface.
+
+You're looking for the thing that comes after `dev` in the output of `ip route show default`, eg `eth0` or `wlp0s20f3`.
+
+Then as root:
+
+```
+ufw allow in on lxdbr0
+ufw allow out on lxdbr0
+ufw route allow in on lxdbr0 out on <interface-name>
+ufw reload
+```
+
 ### Running tests
 
 To run tests:
