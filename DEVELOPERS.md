@@ -12,6 +12,8 @@ Directory layout:
   * scripts and config for our test backend
 * ./backends/tpp
   * scripts and config for TPP backends
+* ./backends/ted
+  * scripts and config for the TED backend
 * ./services/jobrunner
   * scripts and config templates for jobrunner
 * ./keys/$USER

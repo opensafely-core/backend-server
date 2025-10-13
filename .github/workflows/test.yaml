@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        backend_name: ['test', 'tpp']
+        backend_name: ['test', 'tpp', 'ted']
     runs-on: ubuntu-22.04
     steps:
     - name: Setup lxd

@@ -100,3 +100,4 @@ just disable-user USER
 ## Specific Backend Details
 
  - [TPP](backends/tpp/README.md)
+ - [TED](backends/ted/README.md)
