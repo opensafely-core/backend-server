@@ -9,6 +9,8 @@ OVERRIDE_FILE="backends/$BACKEND/airlock.override.yaml"
 
 mkdir -p $DIR
 cp -a ./services/airlock/* "$DIR"
+# ensure certs directory exists for certificate refreshes
+mkdir -p "$DIR/certs"
 
 if test -f "$OVERRIDE_FILE"; then
     cp "$OVERRIDE_FILE" "$DIR/docker-compose.override.yaml"
