@@ -706,7 +706,6 @@ processors:
           - system.disk.operation_time
           - system.disk.operations
           - system.filesystem.inodes.usage
-          - system.filesystem.usage
           - system.memory.usage
           - system.network.connections
           - system.network.connections.tcp
