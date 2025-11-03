@@ -1,0 +1,11 @@
+[Unit]
+Description=Run weekly airlock jobs
+Requires=airlock_runjobs.service
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+Unit=airlock_runjobs.service
+
+[Install]
+WantedBy=timers.target

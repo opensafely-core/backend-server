@@ -37,3 +37,8 @@ systemctl enable "$DIR/airlock.service"
 systemctl enable "$DIR/airlock.timer"
 systemctl start airlock.timer
 systemctl start airlock.service || { journalctl -u airlock.service; exit 1; }
+
+systemctl enable "$DIR/airlock_runjobs.service"
+systemctl enable "$DIR/airlock_runjobs.timer"
+systemctl start airlock_runjobs.timer
+systemctl start airlock_runjobs.service || { journalctl -u airlock_runjobs.service; exit 1; }

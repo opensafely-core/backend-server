@@ -1,0 +1,12 @@
+[Unit]
+Description=Run weekly airlock jobs
+Wants=airlock_runjobs.timer
+
+[Service]
+WorkingDirectory=/home/opensafely/airlock
+ExecStart=/usr/local/bin/just runjobs weekly
+User=opensafely
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
