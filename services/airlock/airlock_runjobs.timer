@@ -1,9 +1,9 @@
 [Unit]
-Description=Run weekly airlock jobs
+Description=Run airlock jobs daily
 Requires=airlock_runjobs.service
 
 [Timer]
-OnCalendar=weekly
+OnCalendar=daily
 Persistent=true
 Unit=airlock_runjobs.service
 
