@@ -90,3 +90,5 @@ create-test-certificates:
     update-ca-certificates
 
 
+runjobs frequency="weekly":
+    docker compose run --rm airlock python manage.py runjobs {{ frequency }}
