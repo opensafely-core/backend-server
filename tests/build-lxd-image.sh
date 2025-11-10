@@ -23,7 +23,10 @@ lxc image delete "$name" 2>/dev/null || true
 lxc delete -f "$name" 2>/dev/null || true
 echo "done."
 echo -n "Creating lxc vm..."
-lxc launch ubuntu:22.04 "$name" --quiet -c security.nesting=true
+lxc launch ubuntu:22.04 "$name" --quiet \
+    -c security.nesting=true \
+    -c security.privileged=true \
+    -c raw.lxc="lxc.apparmor.profile=unconfined"
 echo "done."
 wait_for_cloud_init "$name"
 
@@ -37,6 +40,11 @@ sed 's/^#.*//' "$BACKEND_SERVER_PATH"/core-packages.txt \
     | lxc_env xargs apt-get install --no-install-recommends -y
 sed 's/^#.*//' "$BACKEND_SERVER_PATH"/packages.txt \
     | lxc_env xargs apt-get install --no-install-recommends -y
+
+lxc_env bash -c "cat <<'EOF' >/etc/sysctl.d/99-unprivileged-ports.conf
+net.ipv4.ip_unprivileged_port_start = 0
+EOF
+sysctl -w net.ipv4.ip_unprivileged_port_start=0 >/dev/null"
 
 # preload ehrql:v1
 #lxc exec "$name" -- docker pull ghcr.io/opensafely-core/ehrql:v1

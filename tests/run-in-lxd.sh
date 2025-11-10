@@ -37,7 +37,21 @@ cleanup() {
 
 trap cleanup EXIT INT
 
-lxc launch "$TEST_IMAGE" "$CONTAINER" --quiet --ephemeral -c security.nesting=True
+# ensure no stale container lingers from previous runs
+lxc delete -f "$CONTAINER" || true
+
+# Allow nested Docker to open privileged ports by lowering the per-namespace
+# threshold before the VM boots. LXD sets this sysctl for us, so Docker no
+# longer needs (and fails) to change it at container start.
+lxc init "$TEST_IMAGE" "$CONTAINER" --quiet --ephemeral \
+    -c security.nesting=True \
+    -c security.privileged=true \
+    -c raw.lxc="lxc.apparmor.profile=unconfined"
+lxc start "$CONTAINER"
+if ! lxc exec "$CONTAINER" -- bash -c "echo 'net.ipv4.ip_unprivileged_port_start = 0' > /etc/sysctl.d/99-unprivileged-ports.conf && sysctl -w net.ipv4.ip_unprivileged_port_start=0 >/dev/null"; then
+    echo "Warning: unable to set net.ipv4.ip_unprivileged_port_start=0 inside container; nested Docker may fail to bind privileged ports" >&2
+fi
+
 wait_for_cloud_init() {
     local instance=$1
     echo -n "Waiting for cloud-init to finish"
