@@ -1,10 +1,10 @@
 [Unit]
-Description=Run weekly airlock jobs
+Description=Run daily airlock jobs
 Wants=airlock_runjobs.timer
 
 [Service]
 WorkingDirectory=/home/opensafely/airlock
-ExecStart=/usr/local/bin/just runjobs weekly
+ExecStart=/usr/local/bin/just runjobs daily
 User=opensafely
 Type=oneshot
 
