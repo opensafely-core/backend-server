@@ -60,9 +60,6 @@ install-jobrunner: check install-opensafely-user install-docker-network
 install-docker-network:
   ./services/jobrunner/sbin/jobrunner-network-config.sh
 
-install-release-hatch: check
-  ./services/release-hatch/install.sh
-
 install-airlock: check install-opensafely-user
   ./services/airlock/install.sh
 

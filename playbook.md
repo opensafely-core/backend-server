@@ -2,8 +2,9 @@
 
 ## Updating the infrastructure
 
-To update to the latest version of the backend-server, make sure you have local
-checkout of [opensafely-core/backend-server](https://github.com/opensafely-core/backend-server) at
+To update to the latest version of the backend-server, navigate to `/srv/backend-server`, 
+make sure you have local checkout of
+[opensafely-core/backend-server](https://github.com/opensafely-core/backend-server) at
 the version you want to apply, then run:
 
     sudo just manage
@@ -11,6 +12,12 @@ the version you want to apply, then run:
 This will apply all current backend server configuration, including users, groups,
 and jobrunner configuration.
 
+### Updating changes to services
+
+To update changes to a single service (e.g. jobrunner or airlock) without updating
+all system packages etc, run w.g:
+
+    sudo just install-airlock
 
 ## opensafely user
 
@@ -112,18 +119,21 @@ Note that the script provides the repository name, so you must provide
 only the last component of the image name. For example to update the R
 image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
 
-#### Updating ehrQL
-
-For example, to update the ehrQL Docker image, first ensure that ehrQL's CI has finished the `tag-new-version` & `build-and-publish-docker-image` jobs, then run:
-
-```bash
-just jobrunner/update-docker-image ehrql:v1
-```
-
 #### Updating tpp-database-utils
 
 ```bash
 just jobrunner/update-docker-image tpp-database-utils:latest
+```
+
+#### Action images
+
+Action images (ehrql, r, python etc) are pulled automatically when a job that
+uses them runs.
+
+If necessary, they can be updated manually. For example, to update the ehrQL Docker image, run:
+
+```bash
+just jobrunner/update-docker-image ehrql:v1
 ```
 
 ## Debugging jobs
