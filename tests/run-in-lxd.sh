@@ -5,6 +5,7 @@
 # script
 # 
 set -euo pipefail
+CLOUD_INIT_TIMEOUT=${CLOUD_INIT_TIMEOUT:-300}
 SCRIPT=$1
 LOG=$SCRIPT.log
 TEST_IMAGE=backend-server-test
@@ -36,8 +37,31 @@ cleanup() {
 
 trap cleanup EXIT INT
 
-lxc launch "$TEST_IMAGE" "$CONTAINER" --quiet --ephemeral -c security.nesting=True
-lxc exec "$CONTAINER" -- cloud-init status --wait
+# ensure no stale container lingers from previous runs
+lxc delete -f "$CONTAINER" || true
+
+# Allow nested Docker to open privileged ports by lowering the per-namespace
+# threshold before the VM boots. LXD sets this sysctl for us, so Docker no
+# longer needs (and fails) to change it at container start.
+lxc init "$TEST_IMAGE" "$CONTAINER" --quiet --ephemeral \
+    -c security.nesting=True \
+    -c security.privileged=true \
+    -c raw.lxc="lxc.apparmor.profile=unconfined"
+lxc start "$CONTAINER"
+if ! lxc exec "$CONTAINER" -- bash -c "echo 'net.ipv4.ip_unprivileged_port_start = 0' > /etc/sysctl.d/99-unprivileged-ports.conf && sysctl -w net.ipv4.ip_unprivileged_port_start=0 >/dev/null"; then
+    echo "Warning: unable to set net.ipv4.ip_unprivileged_port_start=0 inside container; nested Docker may fail to bind privileged ports" >&2
+fi
+
+wait_for_cloud_init() {
+    local instance=$1
+    echo -n "Waiting for cloud-init to finish"
+    if ! lxc exec "$instance" -- timeout "$CLOUD_INIT_TIMEOUT" cloud-init status --wait; then
+        echo  -e "\ncloud-init did not finish within ${CLOUD_INIT_TIMEOUT}s for $instance; continuing" >&2
+        lxc exec "$instance" -- cloud-init status --long || true
+    fi
+}
+
+wait_for_cloud_init "$CONTAINER"
 
 if test -z "${DEBUG:-}"; then
     # if we're not in debug mode, just copy files. This does not require shiftfs,
@@ -52,9 +76,7 @@ else
 fi
 
 
-
-
-lxc exec "$CONTAINER" -- cloud-init status --wait
+wait_for_cloud_init "$CONTAINER"
 # run test script
 set +e # we handle the error manually
 echo -n "Running $SCRIPT in $CONTAINER LXD container..."
