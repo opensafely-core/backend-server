@@ -18,7 +18,7 @@ jobs:
       run: sudo apt-get install -y shellcheck
     - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # 3.0.0
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Run lint
       run: just tests/lint
   tests:
@@ -36,7 +36,7 @@ jobs:
     - name: Setup just
       uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # 3.0.0
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Prepare test image
       run: |
         # some debugging info in case stuff fails
