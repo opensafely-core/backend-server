@@ -111,13 +111,17 @@ just jobrunner/deploy
 
 ### Update docker image
 
-Run:
+> [!NOTE]
+> [Action images](#action-images) do not usually need to be manually updated.
+
+To update a docker image, run:
 
     just jobrunner/update-docker-image image[:tag]
 
 Note that the script provides the repository name, so you must provide
-only the last component of the image name. For example to update the R
-image, image name to provide is `r`, not `ghcr.io/opensafely-core/r`.
+only the last component of the image name. For example to update the
+`tpp-database-utils` image, the image name to provide is `tpp-database-utils`,
+not `ghcr.io/opensafely-core/tpp-database-utils`.
 
 #### Updating tpp-database-utils
 
