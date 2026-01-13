@@ -238,46 +238,26 @@ Strace it:
     strace -fyp <pid>
 
 
-### Retrying a job which failed with "Internal error"
+### Killing a job task
 
-When a job fails with the message "Internal error" this means that
-something unexpected happened and an exception other than JobError was
-raised. This can be a bug in our code, or something unexpected in the
-environment. (Windows has sometimes given us an "I/O Error" on
-perfectly normal file operations.)
+The RAP Agent runs tasks with job information that it receives from the RAP Controller.
+If something goes wrong with the execution of a task, the Agent keep retrying it.
 
-When this happens the job's container and volume are not
-automatically cleaned up and so it's possible to retry the job without
-having to start from scratch. You can run this with:
+If necessary a task can be killed - this will kill and delete and running docker
+containers and delete any associated volumes. Note that if the Agent is running and
+receiving task updates from the Controller, it will attempt to retry the task again.
 
-    just jobrunner/job-retry <job_id>
+To kill a running task use the
+`kill_task` command:
 
-The `job_id` actually only has to be a sub-string of the job ID (full
-ones are a bit awkward to type) and you will be able to select the
-correct job if there are multiple matches.
-
-
-### Killing a job
-
-To kill a running job (or prevent it starting if it hasn't yet) use the
-`kill_job` command:
-
-    just jobrunner/kill-job --cleanup <job_id> [... <job_id>]
+    just jobrunner/kill_task <job_id> [... <job_id>]
 
 The `job_id` actually only has to be a sub-string of the job ID (full
 ones are a bit awkward to type) and you will be able to select the
 correct job if there are multiple matches.
 
-Multiple job IDs can be supplied to kill multiple jobs simultaneously.
+Multiple job IDs can be supplied to kill multiple job tasks simultaneously.
 
-The `--cleanup` flag deletes any associated containers and volumes,
-which is generally what you want.
-
-If you want to kill a job but leave the container and volume in place
-for debugging then omit this flag.
-
-The command is idempotent so you can always run it again later with the
-`--cleanup` flag.
 
 ### Debugging slow queries
 
