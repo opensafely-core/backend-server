@@ -2,12 +2,6 @@
 # Do *not* set -eu, as this is source *into* a shell
 
 if groups | grep -q developers; then
-    # lets be temporarily obnoxious 
-    echo ""
-    echo -e "\033[5m\x1b[1;31mNOTICE: The system configuration has changed recently! READ CAREFULLY! \033[0m"
-    echo ""
-    # The above can be deleted after a bit
-
     echo "You are logged in under your personal username."
     echo ""
     echo "To operate OpenSAFELY services, please switch to the shared opensafely user:"
