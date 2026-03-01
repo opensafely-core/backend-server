@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: Install lint dependencies
       run: sudo apt-get install -y shellcheck
-    - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # 3.0.0
+    - uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # 3.1.0
     - name: Checkout
       uses: actions/checkout@v6
     - name: Run lint
@@ -34,7 +34,7 @@ jobs:
       with:
         channel: latest/stable
     - name: Setup just
-      uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # 3.0.0
+      uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # 3.1.0
     - name: Checkout
       uses: actions/checkout@v6
     - name: Prepare test image
