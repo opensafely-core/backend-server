@@ -1,7 +1,7 @@
 exporters:
-  # we use http reather than grpc so we can go via out https proxy
+  # we use http rather than grpc so we can go via out https proxy
   otlphttp/metrics:
-    endpoint: https://collector.opensafely.org:443
+    endpoint: "${COLLECTOR_ADDRESS}"
     headers:
       Authorization: "Basic ${COLLECTOR_BASIC_AUTH}"
       # THIS DOESNT WORK - the gateway collector does not forward it properly
@@ -9,7 +9,7 @@ exporters:
       # starts forwarding it properly
       x-honeycomb-dataset: jobrunner-metrics
   otlphttp/traces:
-    endpoint: https://collector.opensafely.org:443
+    endpoint: "${COLLECTOR_ADDRESS}"
     headers:
       Authorization: "Basic ${COLLECTOR_BASIC_AUTH}"
   logging:

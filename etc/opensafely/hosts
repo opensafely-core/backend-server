@@ -1,2 +1,2 @@
 # Hardcoded values for our core DNS names for all backends
-157.245.31.108 jobs.opensafely.org github-proxy.opensafely.org docker-proxy.opensafely.org collector.opensafely.org backends.opensafely.org controller.opensafely.org
+127.0.0.1 jobs.ted.bennettoxford.org github-proxy.ted.bennettoxford.org docker-proxy.ted.bennettoxford.org collector.ted.bennettoxford.org backends.ted.bennettoxford.org controller.ted.bennettoxford.org

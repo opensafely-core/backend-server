@@ -1,6 +1,6 @@
 services:
   airlock:
-    image: docker-proxy.opensafely.org/opensafely-core/airlock:latest
+    image: ghcr.io/opensafely-core/airlock:latest
     container_name: airlock
     init: true
     restart: unless-stopped
