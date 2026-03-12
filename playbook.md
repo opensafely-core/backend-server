@@ -247,10 +247,9 @@ If necessary a task can be killed - this will kill and delete and running docker
 containers and delete any associated volumes. Note that if the Agent is running and
 receiving task updates from the Controller, it will attempt to retry the task again.
 
-To kill a running task use the
-`kill_task` command:
+To kill a running task use the `kill_task` cli command:
 
-    just jobrunner/kill_task <job_id> [... <job_id>]
+    just jobrunner/cli kill_task <job_id> [... <job_id>]
 
 The `job_id` actually only has to be a sub-string of the job ID (full
 ones are a bit awkward to type) and you will be able to select the
@@ -302,20 +301,6 @@ into the matching `/srv/medium_privacy/workspaces/` directory.
 
 To remove a level 4 file, you can just delete the file from the correct
 `/srv/medium_privacy/workspaces/$WORKSPACE` directory.
-
-
-#### Removing a Level 4 file from TPP
-
-Medium privacy outputs are copied from L3 to L4 every five minutes by a sync
-script controlled by TPP. *Note: this sync script is unidirectional, so any
-changes to L4 are not reflected back to the source files in the VM.*
-
-Once you have removed the file from `/srv/medium_privacy` as per above, you then need to:
-
-1. Login to L4 (after deleting the file from L3)
-2. Browse to `D:\Level4Files\workspaces\$WORKSPACE`
-3. Permanently delete the file (using SHIFT+DEL or by emptying the recycle bin after deleting normally).
-
 
 ## Start up and Shutdown
 
