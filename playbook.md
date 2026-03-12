@@ -247,10 +247,9 @@ If necessary a task can be killed - this will kill and delete and running docker
 containers and delete any associated volumes. Note that if the Agent is running and
 receiving task updates from the Controller, it will attempt to retry the task again.
 
-To kill a running task use the
-`kill_task` command:
+To kill a running task use the `kill_task` cli command:
 
-    just jobrunner/kill_task <job_id> [... <job_id>]
+    just jobrunner/cli kill_task <job_id> [... <job_id>]
 
 The `job_id` actually only has to be a sub-string of the job ID (full
 ones are a bit awkward to type) and you will be able to select the
@@ -303,89 +302,22 @@ into the matching `/srv/medium_privacy/workspaces/` directory.
 To remove a level 4 file, you can just delete the file from the correct
 `/srv/medium_privacy/workspaces/$WORKSPACE` directory.
 
-
-#### Removing a Level 4 file from TPP
-
-Medium privacy outputs are copied from L3 to L4 every five minutes by a sync
-script controlled by TPP. *Note: this sync script is unidirectional, so any
-changes to L4 are not reflected back to the source files in the VM.*
-
-Once you have removed the file from `/srv/medium_privacy` as per above, you then need to:
-
-1. Login to L4 (after deleting the file from L3)
-2. Browse to `D:\Level4Files\workspaces\$WORKSPACE`
-3. Permanently delete the file (using SHIFT+DEL or by emptying the recycle bin after deleting normally).
-
-
 ## Start up and Shutdown
 
 ### Preparing for reboot
 
-Sometimes we need to restart Docker, or reboot the VM in which we're
-running, or reboot the entire host machine. When the happens, it's nicer
-if we can automatically restart any running jobs rather than have them
-fail and force the user to manually restart them.
+This functionality is now managed by the controller:
 
-To do this, first stop the [job-runner service](#startingstopping-the-service):
-
-```sh
-just jobrunner/stop
-```
-
-After the service is stopped you can run the `prepare_for_reboot` command:
-
-```sh
-just jobrunner/prepare-for-reboot
-```
-
-This is quite a destructive command as it will destroy the containers
-and volumes for any running jobs. It will also reset any currently
-running jobs to the pending state.
-
-The next time job-runner restarts (which should be after the reboot) it
-will pick up these jobs again as if it had not run them before and the
-user should not have to do anything.
+https://github.com/opensafely-core/job-runner/blob/main/DEVELOPERS.md#prepare-for-reboot
 
 ### Manual DB Maintenance mode
 
-Sometimes, we need to just stop db jobs from running.
+This functionality is now managed by the controller:
 
-This can be done with the following commands, which will kill running db jobs
-and re-queue them to run when db-maintenance mode is switched off.
-
-```sh
-just jobrunner/db-maintenance-on
-```
-and
-```sh
-just jobrunner/db-maintenance-off
-```
-
-### Planned maintenance
-
-Sometimes we are informed that a reboot will take place out of hours. In this case, in order to ensure a graceful shutdown and to avoid someone having to work late, the [preparing for reboot](#preparing-for-reboot) section can be run as a single command with a sleep statement.
-
-For example, this will start shutting things down in four hours:
-
-```sh
-sleep $((4*3600)); just jobrunner/stop && just jobrunner/prepare-for-reboot
-```
+https://github.com/opensafely-core/job-runner/blob/main/DEVELOPERS.md#turn-manual-database-maintenance-mode-onoff-on-a-specific-backend
 
 ### Pausing new jobs
 
-When we know ahead of time that there will be a period when the system is going to be unavailable, such as planned maintenance, we may decide to stop accepting new jobs. This may be because they're unlikely to complete in time or to give current jobs a better chance of finishing.
+This functionality is now managed by the controller:
 
-
-Stop accepting new jobs:
-
-```sh
-just jobrunner/pause
-```
-
-Start accepting new jobs again:
-
-```sh
-just jobrunner/unpause
-```
-
-Setting and unsetting flags takes effect immediately, so it's not necessary to restart jobrunner.
+https://github.com/opensafely-core/job-runner/blob/main/DEVELOPERS.md#pause-a-backend
