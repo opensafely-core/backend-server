@@ -1,2 +1,9 @@
-# Hardcoded values for our core DNS names for all backends
-127.0.0.1 jobs.ted.bennettoxford.org github-proxy.ted.bennettoxford.org docker-proxy.ted.bennettoxford.org collector.ted.bennettoxford.org backends.ted.bennettoxford.org controller.ted.bennettoxford.org
+# Specific values for TED backend
+# disable these, as shouldn't be used
+127.0.0.1 github-proxy.ted.bennettoxford.org docker-proxy.ted.bennettoxford.org collector.ted.bennettoxford.org backends.ted.bennettoxford.org
+# TODO: point to external VM. Needed for airlock login.
+127.0.0.1 jobs.ted.bennettoxford.org
+# Note: 10.10.80.68 is the TED vM address, for temporary controller. should point to external VM, once up
+10.10.80.68 controller.ted.bennettoxford.org
+# db server
+10.10.70.10 sqlsvr-dataprd-ted-uks.database.windows.net
