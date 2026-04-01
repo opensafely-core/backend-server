@@ -75,7 +75,7 @@ create-test-certificates:
     mkdir -p "$(dirname $SSL_CERT)"
 
     # generate a self signed certificate
-    openssl req -x509 -newkey ed25519 -keyout $SELFSIGNED_KEY -out $SELFSIGNED_CERT \
+    openssl req -x509 -newkey rsa:2048 -keyout $SELFSIGNED_KEY -out $SELFSIGNED_CERT \
         -sha256 -days 365 -nodes \
         -subj "/C=GB/O=OpenSAFELY/CN=$HOSTNAME/emailAddress=test@example.com" \
         -addext "subjectAltName = DNS:$HOSTNAME"
