@@ -26,13 +26,13 @@ fi
 
 
 clean_name="$(basename "$SCRIPT")"
-CONTAINER="backend-server-${clean_name%.*}"
+CONTAINER="backend-server-run-${clean_name%.*}"
 
 # this function is used in a trap, so ignore SC2317
 # shellcheck disable=SC2317
 cleanup() {
     # ephemeral container deleted when stopped
-    lxc stop "$CONTAINER"
+    lxc stop "$CONTAINER" || true
 }
 
 trap cleanup EXIT INT

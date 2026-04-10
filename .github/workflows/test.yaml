@@ -32,7 +32,7 @@ jobs:
     - name: Setup lxd
       uses: canonical/setup-lxd@8c6a87bfb56aa48f3fb9b830baa18562d8bfd4ee # 1
       with:
-        channel: latest/stable
+        channel: 5.21/stable
     - name: Setup just
       uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # 3.1.0
     - name: Checkout
@@ -43,7 +43,10 @@ jobs:
         df -h
         just tests/build
         # delete base ubuntu image as we sometimes run out of diskspace
-        lxc image delete "$(lxc image ls -f csv | grep "ubuntu" | awk -F, '{print $2}')"
+        base_image="$(lxc image ls -f csv | awk -F, '$1 ~ /ubuntu/ { print $2; exit }')"
+        if [ -n "$base_image" ]; then
+          lxc image delete "$base_image"
+        fi
         sudo lxc image ls
         df -h
     - name: Run tests
