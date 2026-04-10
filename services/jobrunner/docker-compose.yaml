@@ -1,6 +1,6 @@
 services:
   agent:
-    image: ghcr.io/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
+    image: docker-proxy.ted.bennettoxford.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
     init: true
     restart: unless-stopped
     user: 10000:10000
