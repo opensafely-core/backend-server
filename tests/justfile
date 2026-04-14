@@ -10,10 +10,15 @@ default:
 
 # lint some shellscripts
 lint:
+  #!/usr/bin/env bash
+  set -euo pipefail
   # run this from the parent directory so that shellcheck can locate the other files referred
   # to in these scripts
   cd .. && shellcheck -x */*.sh services/*/*.sh services/*/bin/* services/*/sbin/* scripts/user.bashrc scripts/load-env  tests/run-in-lxd.sh tests/build-lxd-image.sh
-  ../bin/otelcol_hny_linux_amd64-1.8.0 validate --config ../services/collector/collector.yaml
+  # The collector config is normally validated after deployment env files are rendered.
+  # Provide a fallback endpoint here so local lint can validate the templated config.
+  export COLLECTOR_ADDRESS="${COLLECTOR_ADDRESS:-https://collector.invalid:443}"
+  ./bin/otelcol_hny_linux_amd64-1.8.0 validate --config ./services/collector/collector.yaml
 
 # build resources required to run tests
 build: testuser-key build-test-image
