@@ -13,11 +13,22 @@ airlock shares the same configuration as jobrunner, which currently lives
 in `/home/opensafely/config/*.env`. In particular, it uses `AIRLOCK_API_TOKEN` to
 sign and validate requests. This currently duplicates `JOB_SERVER_TOKEN`.
 
-The only additional configuration is the TLS cert/key files. These live at
-`~opensafely/airlock/certs/airlock.{crt,key}`, and are used by the
-docker container to configure TLS. 
+# TLS certificates
 
-The default install will generate self-signed certifcates, but these can replaced.
+TLS certificates are configured and renewed externally via the
+backends.opensafely.org configuration on dokku4. The are stored in the backend
+at at `~opensafely/airlock/certs/airlock.{crt,key}`, and are used by the docker
+container to enable TLS in gunicorn.
+
+When first setting up airlock for real on a new host, you will need to copy the
+private key from dokku4 to the new host - it is reused, so will not change.
+
+After that, the regular `just autodeploy` mechanism will automatically pull
+down new public certificates as they are renewed as part of a deployment. See
+`just update-certs` command for details.
+
+When the envvar TEST=true, then self-signed certificates will be generated, and
+the automatic updates will be skipped. This is used in the test suite.
 
 # Useful commands
 
