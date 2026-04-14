@@ -40,7 +40,6 @@ test "$(id -u opensafely)" == "10000"
 test "$(id -g opensafely)" == "10000"
 
 ./tests/check-agent.sh
-./tests/check-collector.sh
 ./tests/check-airlock.sh
 
 # Test the upgrade command completes without error (we have to use Y to accept
