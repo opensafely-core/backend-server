@@ -95,3 +95,54 @@ vagrant-run ssh_username="vagrant":
     
     vagrant up
     just vagrant-ssh {{ ssh_username }}
+
+
+launch-instance ami_id="" security_group_id="sg-040cc7023e7e8746f" instance_type="t3.micro":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    security_group="{{ security_group_id }}"
+    ami_id={{ ami_id }}
+
+    if [ "$security_group" = "sg-040cc7023e7e8746f" ]; then
+        echo "WARNING: Security group $security_group is overly permissive, do not use in production"
+    fi
+
+    if [ "$ami_id" = "" ]; then
+
+        if [ ! -f packer/manifest.json ]; then
+            echo 'ERROR: packer/manifest.json not found. Run `just packer-build-aws` or provide a specific ami-id'
+            exit 1
+        fi
+
+        echo "Finding latest ami from packer/manifest.json"
+        ami_id=$(jq -r '
+            [.builds[] | select(.name == "emis-base" and .builder_type == "amazon-ebs")]
+            | sort_by(.build_time)
+            | last
+            | if . == null then null else .artifact_id | split(":")[1] end
+            ' packer/manifest.json)
+    fi
+
+    if [ -z "$ami_id" ] || [ "$ami_id" = "null" ]; then
+        echo "ERROR: no emis-base build found in packer/manifest.json"
+        exit 1
+    fi
+
+    echo "Using ami $ami_id"
+
+    name="$(whoami)-emis-test-$(date +%Y%m%d%H%M)"
+
+    echo "Creating instance $name"
+
+    # We pass user-data here (run-instances will base64 encode it for us), so we can override
+    # the user-data baked into the AMI if we need to, without recreating the entire AMI
+    uv run aws ec2 run-instances \
+      --image-id $ami_id \
+      --count 1 \
+      --instance-type {{ instance_type }} \
+      --iam-instance-profile "Name=EmisInstanceRole" \
+      --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$name}]" "ResourceType=volume,Tags=[{Key=Name,Value=$name}]" \
+      --security-group-ids "$security_group" \
+      --user-data file://cloud-init-emis/user-data
+

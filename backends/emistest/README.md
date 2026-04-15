@@ -81,6 +81,28 @@ just packer-build-aws -var instance_type=t3.medium
 
 Note you may need different credentials in order to use larger instance types.
 
+## Launch an instance
+
+```
+just launch-instance
+```
+
+Note: this requires admin credentials.
+
+This will use the build data at packer/manifest.json to find the latest `emis-base` AMI ID.
+It will use a test security group which is too open, and will warn you about it. By default it
+will launch a t3.micro instance.
+
+Note old AMIs may have been deregistered, so if you didn't build
+the last AMI, it may try to use an invalid one.
+
+To provide a custom ami/security group/instance type:
+
+```
+just launch-instance ami_id=ami-xxxxx security-group-id=sg-xxxxx instance_type=xxxx
+```
+
+
 ## Running on vagrant
 
 Test the provisioning by running with vagant/virtualbox.
