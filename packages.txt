@@ -3,6 +3,8 @@
 gpg
 unattended-upgrades
 libpam-pwquality
+# required for password changes
+cracklib-runtime
 # debug tools
 python3
 vim
