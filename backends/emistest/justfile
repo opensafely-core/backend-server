@@ -1,0 +1,97 @@
+set dotenv-load := true
+set positional-arguments := true
+
+# list available commands
+default:
+    @{{ just_executable() }} --list
+
+# Clean up temporary files
+clean:
+    rm -rf .venv
+
+# Install production requirements into and remove extraneous packages from venv
+prodenv:
+    uv sync --no-dev
+
+# Install dev requirements into venv without removing extraneous packages
+devenv:
+    uv sync --inexact
+
+upgrade-package package:
+    uv lock --upgrade-package {{ package }}
+
+# Upgrade all packages to the latest versions
+upgrade-all:
+    uv lock --upgrade
+
+aws-configure:
+  uv run aws configure
+
+aws-session-token token:
+  uv run aws configure set aws_session_token {{ token }}
+
+packer-validate:
+    uv run packer validate packer/emis-base.pkr.hcl
+
+packer-init:
+    uv run packer init packer/emis-base.pkr.hcl
+
+_packer-build source args="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    user=$(whoami)
+    uv run packer build \
+        -only "{{ source }}" \
+        -var "build_version=0.0.1" \
+        -var "user=$user" {{ args }} \
+        packer/emis-base.pkr.hcl 
+
+
+packer-build-vagrant *args: vagrant-clean
+    just _packer-build vagrant.emis-test "{{ args }}"
+
+
+packer-build-aws *args:
+    just _packer-build amazon-ebs.emis-base "{{ args }}"
+    
+
+vagrant-clean:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo "Cleaning vagrant environment"
+    if [ -d vagrant_box ]; then
+        cd vagrant_box
+        vagrant destroy 2>/dev/null || true
+        cd ..
+        rm -rf vagrant_box
+    fi
+
+    if [ -d vagrant_output ]; then
+        rm -rf vagrant_output
+    fi
+
+
+# ssh to a running vagrant box as your user (defaults to vagrant user)
+vagrant-ssh ssh_username="vagrant":
+    #!/usr/bin/env bash
+    cd vagrant_box
+    vagrant ssh-config | grep -E -o 'Port (\d+)'
+    sshport=$(vagrant ssh-config | grep -Po 'Port \K[^ ]+')
+    ssh -p $sshport -o StrictHostKeyChecking=no {{ ssh_username }}@localhost
+
+
+# Setup a new vagrant box after running packer-provision-vagrant
+vagrant-run ssh_username="vagrant":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    mkdir vagrant_box
+    cp vagrant_output/package.box ./vagrant_box
+    cd vagrant_box
+    vagrant box add --force test-emis-box package.box
+    vagrant init test-emis-box
+    
+    vagrant up
+    just vagrant-ssh {{ ssh_username }}
