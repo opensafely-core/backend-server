@@ -6,3 +6,9 @@ tests/backends/*.log
 tests/*.log
 .test-image
 tests/keys/testuser*
+
+.venv/
+
+vagrant_output/
+vagrant_box/
+backends/emistest/packer/manifest.json
