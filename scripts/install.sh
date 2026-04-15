@@ -51,7 +51,16 @@ if ! grep -q "etc/opensafely/bashrc" /etc/bash.bashrc; then
 fi
 
 # reduce motd noise
-chmod a-x /etc/update-motd.d/{10-help-text,50-motd-news,91-contract-ua-esm-status,91-release-upgrade}
+motd_files=(
+    /etc/update-motd.d/10-help-text
+    /etc/update-motd.d/50-motd-news
+    /etc/update-motd.d/91-contract-ua-esm-status
+    /etc/update-motd.d/91-release-upgrade
+    /etc/update-motd.d/99-bento  # vagrant only
+)
+for f in "${motd_files[@]}"; do
+    [ -f "$f" ] && chmod a-x "$f"
+done
 
 grep -q "^UMASK.*027" /etc/login.defs || sed -i 's/^UMASK.*$/UMASK 027/' /etc/login.defs
 
