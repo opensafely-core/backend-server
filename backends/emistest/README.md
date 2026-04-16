@@ -99,7 +99,7 @@ the last AMI, it may try to use an invalid one.
 To provide a custom ami/security group/instance type:
 
 ```
-just launch-instance ami_id=ami-xxxxx security-group-id=sg-xxxxx instance_type=xxxx
+just launch-instance ami-xxxxx sg-xxxxx <instance_type>
 ```
 
 
