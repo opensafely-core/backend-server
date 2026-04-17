@@ -97,14 +97,14 @@ vagrant-run ssh_username="vagrant":
     just vagrant-ssh {{ ssh_username }}
 
 
-launch-instance ami_id="" security_group_id="sg-040cc7023e7e8746f" instance_type="t3.micro":
+launch-instance ami_id="" security_group_id="sg-0edc735fb4f6f9393" instance_type="t3.micro":
     #!/usr/bin/env bash
     set -euo pipefail
 
     security_group="{{ security_group_id }}"
     ami_id={{ ami_id }}
 
-    if [ "$security_group" = "sg-040cc7023e7e8746f" ]; then
+    if [ "$security_group" = "sg-0edc735fb4f6f9393" ]; then
         echo "WARNING: Security group $security_group is overly permissive, do not use in production"
     fi
 
@@ -131,18 +131,56 @@ launch-instance ami_id="" security_group_id="sg-040cc7023e7e8746f" instance_type
 
     echo "Using ami $ami_id"
 
+    # EFS mount needs availability zone and subnet id. Our emis test EFS (fs-0f575eaf788fb79c9)
+    # is in a single availability zone (1a), so retrieve just that subnet
+    echo "Finding subnet for EFS mount target in availablity zone eu-west-1a"
+    subnet_id=$(uv run aws ec2 describe-subnets \
+        --region eu-west-1 \
+        --filters "Name=vpc-id,Values=vpc-099c7f5528ff10c61" "Name=availability-zone,Values=eu-west-1a" \
+        | jq -r '.Subnets[0].SubnetId')
+    echo "Using subnet $subnet_id"
+
     name="$(whoami)-emis-test-$(date +%Y%m%d%H%M)"
 
     echo "Creating instance $name"
 
     # We pass user-data here (run-instances will base64 encode it for us), so we can override
     # the user-data baked into the AMI if we need to, without recreating the entire AMI
-    uv run aws ec2 run-instances \
+    instance_id=$(uv run aws ec2 run-instances \
       --image-id $ami_id \
       --count 1 \
       --instance-type {{ instance_type }} \
       --iam-instance-profile "Name=EmisInstanceRole" \
       --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$name}]" "ResourceType=volume,Tags=[{Key=Name,Value=$name}]" \
       --security-group-ids "$security_group" \
-      --user-data file://cloud-init-emis/user-data
+      --subnet-id "$subnet_id" \
+      --block-device-mapping "[ { \"DeviceName\": \"/dev/sda1\", \"Ebs\": { \"VolumeSize\": 16 } } ]" \
+      --user-data file://cloud-init-emis/user-data \
+      | jq -r '.Instances[0].InstanceId'
+    )
 
+    # Find emistest elastic IP
+    echo "Finding elastic IP"
+    elastic_ip_address=$(uv run aws ec2 describe-addresses \
+        --region eu-west-1 \
+        --filters "Name=tag:Name,Values=emistest" \
+        | jq -r .Addresses[0]
+    )
+    association_id=$(echo "$elastic_ip_address" | jq -r .AssociationId)
+    allocation_id=$(echo "$elastic_ip_address" | jq -r .AllocationId)
+    elastic_public_ip=$(echo "$elastic_ip_address" | jq -r .PublicIp)
+
+    if [ "$association_id" != "null" ]; then
+        # Dissociate the elastic IP from any current instance
+        aws ec2 disassociate-address --association-id "$association_id"
+    fi
+
+    echo "Waiting for instance..."
+    uv run aws ec2 wait instance-running --instance-ids "$instance_id" --region eu-west-1
+
+    # Associate it with the new instance
+    aws ec2 associate-address \
+        --instance-id "$instance_id" \
+        --allocation-id "$allocation_id"
+
+    echo "Instance is running at $elastic_public_ip"

@@ -4,6 +4,8 @@ users:
   - name: opensafely
     shell: /bin/bash
     lock_passwd: true
+    uid: 10000
+
 # ensure we have the hostname in /etc/hosts
 manage_etc_hosts: true
 
@@ -28,6 +30,22 @@ write_files:
 
 runcmd:
   - /usr/local/bin/populate-secrets.sh
+  # mount the EFS filesystem
+  - mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-0f575eaf788fb79c9.efs.eu-west-1.amazonaws.com:/   /efs
+  - chmod -R go-rwx /efs
+  # ensure folders exist in mounted storage and opensafely user has ownership
+  - |
+    for f in /home/opensafely/config/*.env; do
+        . "$f"
+    done
+    for output_dir in "$HIGH_PRIVACY_STORAGE_BASE/workspaces" "$MEDIUM_PRIVACY_STORAGE_BASE/workspaces" "$MEDIUM_PRIVACY_STORAGE_BASE/requests" "$AIRLOCK_HOST_BASEDIR"; do
+        mkdir -p "$output_dir"
+        chmod -R 750 $output_dir
+    done
+    for dir in "$HIGH_PRIVACY_STORAGE_BASE" "$MEDIUM_PRIVACY_STORAGE_BASE" "$AIRLOCK_HOST_BASEDIR" "$AIRLOCK_REPO_DIR"; do
+        chown -R opensafely:opensafely $dir
+    done
+  # restart services
   - systemctl restart airlock.service
   - systemctl restart airlock_runjobs.service
   - systemctl restart jobrunner.service

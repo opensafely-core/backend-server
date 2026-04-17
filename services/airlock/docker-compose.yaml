@@ -26,9 +26,9 @@ services:
       DJANGO_DEBUG: "False"
     command: gunicorn --config gunicorn.conf.py --certfile /certs/airlock.crt --keyfile /certs/airlock.key airlock.wsgi
     volumes:
-      - /home/opensafely/airlock/workdir:/workdir
-      - /srv/medium_privacy/workspaces:/workspaces:ro
-      - /srv/medium_privacy/requests:/requests
+      - "${AIRLOCK_HOST_BASEDIR}/workdir:/workdir"
+      - "${MEDIUM_PRIVACY_STORAGE_BASE}/workspaces:/workspaces:ro"
+      - "${MEDIUM_PRIVACY_STORAGE_BASE}/requests:/requests"
       - ./certs:/certs
       # use our hardcoded DNS
       - /etc/hosts:/etc/hosts:ro

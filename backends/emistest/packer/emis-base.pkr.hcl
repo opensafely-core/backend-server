@@ -80,17 +80,6 @@ source "vagrant" "emis-test" {
   skip_add = true
 }
 
-# Data source to retrieve config from parameter store
-data "amazon-parameterstore" "test" {
-  name = "/emis/test"
-  with_decryption = false
-}
-
-data "amazon-parameterstore" "test1" {
-  name = "/emis/test1"
-  with_decryption = false
-}
-
 # Define how to build
 build {
   sources = [
@@ -112,10 +101,11 @@ build {
       "git checkout ${var.backend_server_branch}",
       "./scripts/bootstrap.sh emistest",
       "./backends/emistest/scripts/install_aws_cli.sh",
+      "./backends/emistest/scripts/setup_efs.sh",
       "just manage",
       # note just manage doesn't upgrade anything; we don't use just apt-upgrade here
       # because it's deliberately interactive and intended for a running backend instance
-      "apt update && apt upgrade -y && apt autoremove -y"
+      "apt update && apt upgrade -y && apt autoremove -y",
     ]
   }
 

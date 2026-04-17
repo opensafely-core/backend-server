@@ -16,7 +16,6 @@ umask 027
 # shellcheck source=/dev/null
 . scripts/load-env
 
-
 # set up jobrunner
 mkdir -p $DIR/workdir
 cp -a services/jobrunner/* $DIR/

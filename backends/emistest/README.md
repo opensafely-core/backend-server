@@ -140,3 +140,16 @@ Clean up the vagrant output with:
 ```
 just vagrant-clean
 ```
+
+## Notes on EFS
+
+In this backend, the storage dirs mounted into running jobs and Airlock are
+located in a mounted EFS file system. During the AMI build, local directories
+are created at the relevant locations so that Airlock/job-runner can be installed
+and started up. The userdata at [cloud-init-emis/user-data](cloud-init-emis/user-data)
+is used when an instance is launched from the AMI, and mounts the EFS filesystem (to `/efs`).
+
+The test EFS for this backend was created manually in the AWS console, with its own
+security group, which has a single inbound rule, allowing access from the security
+group assigned to the launched EC2 instances. It is in a single availabilty zone for
+cost purposes during testing.
