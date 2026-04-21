@@ -6,8 +6,8 @@ set -euo pipefail
 set +u
 sed 's/^#.*//' purge-packages.txt | xargs apt-get purge -y
 apt-get update
-sed 's/^#.*//' core-packages.txt | xargs apt-get install --no-install-recommends -y
-sed 's/^#.*//' packages.txt | xargs apt-get install --no-install-recommends -y
+sed 's/^#.*//' core-packages.txt | xargs apt-get install --no-install-recommends --no-upgrade -y
+sed 's/^#.*//' packages.txt | xargs apt-get install --no-install-recommends --no-upgrade -y
 apt-get autoremove -y
 set -u
 
