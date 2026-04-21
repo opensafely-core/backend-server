@@ -93,10 +93,10 @@ apt-upgrade:
 
   package_to_hold='docker.io'
 
-  apt-get update
+  apt update
   apt-mark hold "$package_to_hold"
-  apt-get upgrade -y
-  apt-get autoremove -y
+  apt upgrade -y
+  apt autoremove -y
 
   if apt list --upgradable "$package_to_hold" 2>/dev/null | grep -qF "$package_to_hold"; then
       echo
@@ -113,5 +113,5 @@ apt-upgrade:
       echo "  Choose 'n' below to decline the update, or 'Y' to proceed."
       echo
     apt-mark unhold "$package_to_hold"
-    apt-get upgrade
+    apt upgrade
   fi
