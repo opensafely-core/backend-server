@@ -30,6 +30,9 @@ write_files:
 
 runcmd:
   - /usr/local/bin/populate-secrets.sh
+  # For testing only: update Airlock config to use a dev users file that already exists in the efs mount
+  - echo "AIRLOCK_API_TOKEN=" >> /home/opensafely/config/04_local.env
+  - echo "AIRLOCK_DEV_USERS_FILE=/workspaces/dev_users.json" >> /home/opensafely/config/04_local.env
   # mount the EFS filesystem
   - mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-0f575eaf788fb79c9.efs.eu-west-1.amazonaws.com:/   /efs
   - chmod -R go-rwx /efs
