@@ -1,12 +1,13 @@
 services:
   agent:
-    image: docker-proxy.opensafely.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
+    image: docker-proxy.ted.bennettoxford.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
     init: true
     restart: unless-stopped
     user: 10000:10000
     # run as the the current user to preserve file permissions
     group_add: ["${DOCKER_HOST_GROUPID}"]
-    dns: 127.0.0.1  # disable dns, as there's no resolver running inside the container
+    # Note: TED backend currently doesn't have proxy, so we need to access github/ghcr.io airectly, so enable dns
+    #dns: 127.0.0.1  # disable dns, as there's no resolver running inside the container
     env_file:
       - /home/opensafely/config/01_defaults.env
       - /home/opensafely/config/02_secrets.env

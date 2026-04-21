@@ -83,6 +83,9 @@ manage-test: install-packages install update-users install-jobrunner install-air
 [private]
 manage-tpp: install-packages install update-users install-jobrunner install-airlock install-collector
 
+[private]
+manage-ted: install-packages install update-users install-jobrunner install-airlock
+
 test:
   echo "Please see `just tests/`"
 

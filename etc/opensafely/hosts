@@ -1,2 +1,6 @@
-# Hardcoded values for our core DNS names for all backends
-157.245.31.108 jobs.opensafely.org github-proxy.opensafely.org docker-proxy.opensafely.org collector.opensafely.org backends.opensafely.org controller.opensafely.org
+# Specific values for TED backend
+206.189.115.132 controller.ted.bennettoxford.org jobs.ted.bennettoxford.org
+# db server
+10.10.70.10 sqlsvr-dataprd-ted-uks.database.windows.net
+# resolve the airlock host from within the VM, for convenience
+127.0.0.1 airlock.ted
