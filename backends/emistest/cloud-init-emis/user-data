@@ -1,0 +1,34 @@
+#cloud-config
+# having an explict user specified disables the default ubuntu user
+users:
+  - name: opensafely
+    shell: /bin/bash
+    lock_passwd: true
+# ensure we have the hostname in /etc/hosts
+manage_etc_hosts: true
+
+write_files:
+  # Write bash script to populate secrets
+  # We can store secrets in parameter store (as secure-string type) or in secretsmanager
+  # Using parameter store (using aws account kms key) for now b/c free
+  # Instance must be launched with an IAM role that has the correct access (EmisInstanceRole)
+  - path: /usr/local/bin/populate-secrets.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      declare -A secrets=(
+        [AIRLOCK_API_TOKEN]="/emis/test-secret"
+        [JOB_SERVER_TOKEN]="/emis/test-secret"
+        [PRIVATE_REPO_ACCESS_TOKEN]="/emis/test-private-repo-access-token"
+      )
+      for var in "${!secrets[@]}"; do
+        value=$(aws ssm get-parameter --region eu-west-1 --name "${secrets[$var]}" --with-decryption --output text --query Parameter.Value)
+        sed -i "s|^${var}=.*|${var}=${value}|" /home/opensafely/config/02_secrets.env
+      done
+
+runcmd:
+  - /usr/local/bin/populate-secrets.sh
+  - systemctl restart airlock.service
+  - systemctl restart airlock_runjobs.service
+  - systemctl restart jobrunner.service
+  - systemctl restart collector.service
