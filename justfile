@@ -66,6 +66,9 @@ install-airlock: check install-opensafely-user
 install-collector: check
   ./services/collector/install.sh
 
+install-litestream: check
+  ./services/litestream/install.sh
+
 # install everything for a backend
 manage: check
   #!/bin/bash
@@ -84,7 +87,7 @@ manage-test: install-packages install update-users install-jobrunner install-air
 manage-tpp: install-packages install update-users install-jobrunner install-airlock install-collector
 
 [private]
-manage-emistest: install-packages install update-users install-jobrunner install-airlock install-collector
+manage-emistest: install-packages install update-users install-jobrunner install-litestream install-airlock install-collector
 
 test:
   echo "Please see `just tests/`"

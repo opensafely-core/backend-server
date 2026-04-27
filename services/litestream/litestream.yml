@@ -1,0 +1,8 @@
+# See https://litestream.io/reference/config/
+# https://litestream.io/guides/file/#network-attached-storage-nas
+
+dbs:
+ - path: /populated/by/install/script           # Database to replicate from
+   replica:
+     path: /populated/by/install/script               # File-based replication (EFS)
+     type: file                         
