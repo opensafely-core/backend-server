@@ -4,6 +4,8 @@ users:
   - name: opensafely
     shell: /bin/bash
     lock_passwd: true
+    uid: 10000
+
 # ensure we have the hostname in /etc/hosts
 manage_etc_hosts: true
 
@@ -28,3 +30,23 @@ write_files:
 
 runcmd:
   - /usr/local/bin/populate-secrets.sh
+  # mount the EFS filesystem; hard-coded for now
+  - mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-0f575eaf788fb79c9.efs.eu-west-1.amazonaws.com:/   /efs
+  # Remove permissions for group and other (only root and owner can access)
+  - chmod -R go-rwx /efs
+  # ensure folders exist in mounted storage and opensafely user has ownership
+  - |
+    # Note: this is doing what scripts/load-env does, but that doesn't seem to work here
+    for f in /home/opensafely/config/*.env; do
+        . "$f"
+    done
+    # Set directory permissions to 750 (see jobrunner/install.sh)
+    for output_dir in "$HIGH_PRIVACY_STORAGE_BASE/workspaces" "$MEDIUM_PRIVACY_STORAGE_BASE/workspaces" "$MEDIUM_PRIVACY_STORAGE_BASE/requests" "$AIRLOCK_HOST_BASEDIR" "$JOBRUNNER_HOST_BASEDIR"; do
+        mkdir -p "$output_dir"
+        chmod 750 $output_dir
+    done
+    # Set workspace file permissions to 640 (see jobrunner/install.sh)
+    for output_dir in "$HIGH_PRIVACY_STORAGE_BASE/workspaces" "$MEDIUM_PRIVACY_STORAGE_BASE/workspaces"; do
+      # only group read access, no world access
+      find "$output_dir" -type f -exec chmod 640 {} +
+    done
