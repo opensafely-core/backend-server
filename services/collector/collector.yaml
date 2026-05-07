@@ -731,7 +731,6 @@ service:
         - resourcedetection
         - batch
       exporters:
-        - logging
         - otlphttp/metrics
     traces:
       receivers:
@@ -741,5 +740,4 @@ service:
         - resourcedetection
         - batch
       exporters:
-        - logging
         - otlphttp/traces
