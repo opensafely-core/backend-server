@@ -58,22 +58,18 @@ A plain `just` will list other commands available, with help
 Currently in `/srv/high_privacy` and `/srv/medium_privacy`. Files owned by
 `opensafely` user. Medium privacy files can be read by `reviewers` group.
 
-### job-runner
+### agent
  
 Repo: https://github.com/opensafely-core/job-runner
 
-Manages the jobs and their state. Currently deployed in `/home/opensafely` as a git
-checkout and managed by a systemd unit.  Plan is to move this to docker
-soonish.
+Manages the jobs and their state. Deployed in `/home/opensafely/jobrunner` as a docker-compose managed service
 
 ## Common goals for all backends
 
  * docker installed and configured appropriately
  * maintain developers' linux accounts and ssh keys
- * maintain level2/3/4 groups and membership of those groups
  * shared account for running each services, which developers can su to.
  * directories for high and medium privacy outputs, with access
- * access controlled by groups
 
 ## Users and permissions
 
