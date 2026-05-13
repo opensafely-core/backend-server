@@ -18,7 +18,7 @@ just -f ~opensafely/jobrunner/justfile start
 just manage
 
 # test for ssh keys
-grep -q SimonDavy@OPENCORONA ~bloodearnest/.ssh/authorized_keys
+grep -q DavidEvans@OPENCORONA ~evansd/.ssh/authorized_keys
 
 sleep 3
 
