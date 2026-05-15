@@ -18,20 +18,20 @@ just manage
 
 # override developers field to be able to disable user
 # user must exist, using test author :shrug:
-developers=/dev/null just disable-user bloodearnest
+developers=/dev/null just disable-user evansd
 
-if test -f ~bloodearnest/.ssh; then
-    echo "bloodearnest .ssh/authorized_keys not deleted"
+if test -f ~evansd/.ssh; then
+    echo "evansd .ssh/authorized_keys not deleted"
     exit 1
 fi
 
-if groups bloodearnest | grep -q developers; then
-    echo "bloodearnest still in developers group"
+if groups evansd | grep -q developers; then
+    echo "evansd still in developers group"
     exit 1
 fi
 
-if ! passwd -S bloodearnest | grep -q "bloodearnest L"; then
-    echo "bloodearnest password not locked"
+if ! passwd -S evansd | grep -q "evansd L"; then
+    echo "evansd password not locked"
     exit 1
 fi
 
