@@ -22,10 +22,15 @@ write_files:
         [AIRLOCK_API_TOKEN]="/emis/test-secret"
         [JOB_SERVER_TOKEN]="/emis/test-secret"
         [PRIVATE_REPO_ACCESS_TOKEN]="/emis/test-private-repo-access-token"
+        [AIRLOCK_DATABASE_URL]="/emis/airlock-db-url"
       )
       for var in "${!secrets[@]}"; do
         value=$(aws ssm get-parameter --region eu-west-1 --name "${secrets[$var]}" --with-decryption --output text --query Parameter.Value)
-        sed -i "s|^${var}=.*|${var}=${value}|" /home/opensafely/config/02_secrets.env
+        if grep -q "^${var}=" /home/opensafely/config/02_secrets.env; then
+          sed -i "s|^${var}=.*|${var}=${value}|" /home/opensafely/config/02_secrets.env
+        else
+          echo "${var}=${value}" >> /home/opensafely/config/02_secrets.env
+        fi
       done
 
 runcmd:
@@ -50,3 +55,11 @@ runcmd:
       # only group read access, no world access
       find "$output_dir" -type f -exec chmod 640 {} +
     done
+  # For testing only: update Airlock config to use a dev users file that already exists in the efs mount
+  # - echo "AIRLOCK_API_TOKEN=" >> /home/opensafely/config/04_local.env
+  # - echo "AIRLOCK_DEV_USERS_FILE=/workspaces/dev_users.json" >> /home/opensafely/config/04_local.env
+  # Reinstall airlock to pick up env var changes
+  # First stop any running docker container and the autodeploy service
+  - docker stop airlock
+  - systemctl stop airlock.service
+  - cd /srv/backend-server && just install-airlock
