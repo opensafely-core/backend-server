@@ -12,7 +12,6 @@ services:
     ports:
       - "443:8000"
     user: 10000:10000
-    dns: 127.0.0.1  # disable dns, as there's no resolver running inside the container
     env_file:
       - /home/opensafely/config/01_defaults.env
       - /home/opensafely/config/02_secrets.env
