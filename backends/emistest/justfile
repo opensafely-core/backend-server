@@ -104,10 +104,6 @@ launch-instance ami_id="" security_group_id="sg-0edc735fb4f6f9393" instance_type
     security_group="{{ security_group_id }}"
     ami_id={{ ami_id }}
 
-    if [ "$security_group" = "sg-0edc735fb4f6f9393" ]; then
-        echo "WARNING: Security group $security_group is overly permissive, do not use in production"
-    fi
-
     if [ "$ami_id" = "" ]; then
 
         echo "Finding latest emis-base ami"
@@ -154,28 +150,63 @@ launch-instance ami_id="" security_group_id="sg-0edc735fb4f6f9393" instance_type
         --filters "Name=tag:Name,Values=emistest" \
         | jq -r .Addresses[0]
     )
-    association_id=$(echo "$elastic_ip_address" | jq -r .AssociationId)
-    allocation_id=$(echo "$elastic_ip_address" | jq -r .AllocationId)
-    elastic_public_ip=$(echo "$elastic_ip_address" | jq -r .PublicIp)
 
-    if [ "$association_id" != "null" ]; then
-        # Dissociate the elastic IP from any current instance
-        aws ec2 disassociate-address --association-id "$association_id"
+    if [ "$elastic_ip_address" != "null" ]; then
+        association_id=$(echo "$elastic_ip_address" | jq -r .AssociationId)
+        allocation_id=$(echo "$elastic_ip_address" | jq -r .AllocationId)
+        public_ip=$(echo "$elastic_ip_address" | jq -r .PublicIp)
+
+        if [ "$association_id" != "null" ]; then
+            # Dissociate the elastic IP from any current instance
+            aws ec2 disassociate-address --association-id "$association_id"
+        fi
+    else
+        echo "No elastic IP found"
     fi
 
-    echo "Waiting for instance..."
+    echo "Instance ID $instance_id; waiting for instance to be running..."
     uv run aws ec2 wait instance-running --instance-ids "$instance_id" --region eu-west-1
 
-    # Associate it with the new instance
-    echo "Associating elastic ip..."
-    aws ec2 associate-address \
-        --instance-id "$instance_id" \
-        --allocation-id "$allocation_id"
+    if [ "$elastic_ip_address" != "null" ]; then
+        # Associate it with the new instance
+        echo "Associating elastic ip..."
+        aws ec2 associate-address \
+            --instance-id "$instance_id" \
+            --allocation-id "$allocation_id"
+    else
+        # No elastic ip; return the public ip for the instance
+        public_ip=$(uv run aws ec2 describe-instances --instance-ids "$instance_id" \
+        | jq -r '.Reservations[0].Instances[0].PublicIpAddress')
+    fi
 
     # Wait and report when the instance has finished its status checks; it will be up
     # but won't necessarily have finished replacing secrets/env vars and restarting
     # services yet 
     echo "Waiting for instance to be initialised, this may take a few minutes..."
-    uv run aws ec2 wait instance-status-ok --instance-ids "$instance_id" --region eu-west-1
 
-    echo "Instance ID $instance_id is running at $elastic_public_ip"
+    # This can take a while, poll every 15s and report status
+    # (we could use `aws ec2 wait instance-status-ok...` but we'd get no progress report) 
+
+    TIMEOUT=300
+    ELAPSED=0
+    INTERVAL=15
+
+    while true; do
+        JSON=$(aws ec2 describe-instance-status --instance-ids "$instance_id" \
+            --include-all-instances)
+        STATE=$(echo "$JSON" | jq -r '.InstanceStatuses[0].InstanceState.Name')
+        SYSTEM_STATUS=$(echo "$JSON" | jq -r '.InstanceStatuses[0].SystemStatus.Status')
+        INSTANCE_STATUS=$(echo "$JSON" | jq -r '.InstanceStatuses[0].InstanceStatus.Status')
+
+        echo "$(date '+%H:%M:%S') — state: $STATE | system status: $SYSTEM_STATUS | instance status: $INSTANCE_STATUS"
+        [ "$SYSTEM_STATUS" == "ok" ] && [ "$INSTANCE_STATUS" == "ok" ] && break
+
+        if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
+            echo "Warning: timed out after ${TIMEOUT}s  — state: $STATE | system status: $SYSTEM_STATUS | instance status: $INSTANCE_STATUS"
+            exit 1
+        fi
+        sleep "$INTERVAL"
+        ELAPSED=$((ELAPSED + INTERVAL))
+    done
+
+    echo "Instance ID $instance_id is running at $public_ip"
