@@ -101,7 +101,7 @@ build {
       "git checkout ${var.backend_server_branch}",
       "./scripts/bootstrap.sh emistest",
       "./backends/emistest/scripts/install_aws_cli.sh",
-      "./backends/emistest/scripts/setup_efs.sh",
+      "./backends/emistest/scripts/install_emis_packages.sh",
       "just manage",
       # note just manage doesn't upgrade anything; we don't use just apt-upgrade here
       # because it's deliberately interactive and intended for a running backend instance
