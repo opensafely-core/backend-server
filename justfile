@@ -110,8 +110,14 @@ apt-upgrade:
     echo "  currently jobs which have been running a long time you may wish to delay"
     echo "  upgrading."
     echo
-    echo "  Choose 'n' below to decline the update, or 'Y' to proceed."
+    echo "  Choose 'n' below to decline the update, or 'y' to proceed."
     echo
-    apt-mark unhold "$package_to_hold"
-    apt upgrade
+
+    read -p "Kill all running containers and upgrade Docker? [y/N] " -r
+    if [[ ! "$REPLY" =~ ^[Yy]$ ]]
+    then
+      exit 0
+    fi
+
+    apt install --only-upgrade --allow-change-held-packages "$package_to_hold"
   fi
