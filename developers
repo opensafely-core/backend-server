@@ -1,9 +1,5 @@
-# Check the Developer Permissions Log before adding a user to this file!
-# https://www.bennett.wiki/products/developer-permissions-log
-# Note: users added here must have the Deployment Admin role, however not
-# all Deployment Admin users require this access and will not necessarily
-# be listed here. 
-bloodearnest
+# Note this is NOT the list of OpenSAFELY developers but a separate list
+# of those with access to the TED backend
 madwort
 inglesp
 evansd
@@ -11,3 +7,4 @@ iaindillingham
 rebkwok
 lucyb
 jongmassey
+Providence-o
