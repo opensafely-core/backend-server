@@ -29,6 +29,11 @@ update-certs:
     # ensure env is loaded 
     . ~opensafely/config/load-env
 
+    if test "${SKIP_SSL_UPDATES:-}" = "true"; then
+        echo "Skipping cert updates SKIP_SSL_UPDATES is set"
+        exit 0
+    fi
+
     echo "Checking for certificate updates"
     openssl s_client -showcerts -connect backends.opensafely.org:443 </dev/null 2>/dev/null| sed -n '/^-----BEGIN CERT/,/^-----END CERT/p' > certs/fullchain.latest.pem
     update=false
