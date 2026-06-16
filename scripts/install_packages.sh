@@ -11,6 +11,11 @@ sed 's/^#.*//' packages.txt | xargs apt-get install --no-install-recommends --no
 apt-get autoremove -y
 set -u
 
+# Because upgrading Docker involves killing all running containers we need to coordinate
+# when it happens and don't want it happening automatically. There is special code in
+# `just apt-upgrade` to handle this package.
+apt-mark hold docker.io
+
 if apt list --upgradable 2>/dev/null | grep -q "upgradable from"; then
   echo "=============================== APT UPDATES AVAILABLE ==============================="
   echo

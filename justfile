@@ -91,18 +91,18 @@ apt-upgrade:
   #!/bin/bash
   set -euo pipefail
 
-  package_to_hold='docker.io'
+  # This package is held by a command in scripts/install_packages.sh
+  docker_package='docker.io'
 
   apt update
-  apt-mark hold "$package_to_hold"
   apt upgrade -y
   apt autoremove -y
 
-  if apt list --upgradable "$package_to_hold" 2>/dev/null | grep -qF "$package_to_hold"; then
+  if apt list --upgradable "$docker_package" 2>/dev/null | grep -qF "$docker_package"; then
     echo
     echo "  => WARNING <="
     echo
-    echo "  The '$package_to_hold' package has an update pending. This usually requires"
+    echo "  The '$docker_package' package has an update pending. This usually requires"
     echo "  a restart of all running Docker containers. To avoid disruption to user"
     echo "  jobs you should first run a prepare_for_reboot on the controller."
     echo
@@ -119,5 +119,5 @@ apt-upgrade:
       exit 0
     fi
 
-    apt install --only-upgrade --allow-change-held-packages "$package_to_hold"
+    apt install --only-upgrade --allow-change-held-packages "$docker_package"
   fi
