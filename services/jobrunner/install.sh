@@ -24,7 +24,12 @@ cp $SRC_DIR/bin/* ~opensafely/bin/
 
 # setup some automated config for docker group id
 echo "DOCKER_HOST_GROUPID=$(getent group docker | awk -F: '{print $3}')" > $DIR/.env
-echo "OTEL_SERVICE_NAME=agent-$BACKEND" >> $DIR/.env
+
+# Add env vars required for otel and mounted volumes in docker-compose.yaml
+{
+  echo "BASE_DOMAIN=$BASE_DOMAIN"
+  echo "OTEL_SERVICE_NAME=agent-$BACKEND"
+} >> $DIR/.env
 
 chown -R opensafely:opensafely $DIR
 

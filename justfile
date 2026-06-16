@@ -29,6 +29,11 @@ check:
     echo "Backend 'backends/$BACKEND' does not exist in this repo"
     exit 1
   fi
+  if test -z $BASE_DOMAIN
+  then
+    echo "BASE_DOMAIN is not set in .env";
+    exit 1
+  fi
 
 # install required system packages
 install-packages: check
