@@ -15,8 +15,8 @@ done
 
 # running this set -u sometimes causes issues with packaging scripts, it seems
 set +u
-sed 's/^#.*//' purge-packages.txt | xargs apt-get purge -y
 apt-get update
+sed 's/^#.*//' purge-packages.txt | xargs apt-get purge -y
 sed 's/^#.*//' core-packages.txt | xargs apt-get install --no-install-recommends --no-upgrade -y
 sed 's/^#.*//' packages.txt | xargs apt-get install --no-install-recommends --no-upgrade -y
 apt-get autoremove -y
