@@ -4,6 +4,7 @@ set -euo pipefail
 # files containing lists of gh user names for the different roles
 # note: probably will be API calls to job-server in future
 developers="${developers:-developers}"
+BASE_DOMAIN="${BASE_DOMAIN:-}"
 
 # add a user, add to groups, and
 add_user() {
@@ -26,7 +27,7 @@ add_user() {
     done
     echo "$user groups: $(groups "$user")"
 
-    ./scripts/update-user-ssh-keys.sh "$user"
+    ./scripts/update-user-ssh-keys.sh "$user" "$BASE_DOMAIN"
 }
 
 # add a list of users from a file, to specific groups

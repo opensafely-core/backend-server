@@ -35,6 +35,7 @@ find "$REQUESTS_DIR" -type f -exec chmod 640 {} +
 
 # Add env vars required for otel and mounted volumes in docker-compose.yaml
 {
+  echo "BASE_DOMAIN=$BASE_DOMAIN"
   echo "OTEL_SERVICE_NAME=airlock-$BACKEND"
   echo "MEDIUM_PRIVACY_STORAGE_BASE=\"$MEDIUM_PRIVACY_STORAGE_BASE\""
   echo "AIRLOCK_HOST_BASEDIR=\"$AIRLOCK_HOST_BASEDIR\""

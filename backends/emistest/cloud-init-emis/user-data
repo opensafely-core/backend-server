@@ -19,9 +19,10 @@ write_files:
     content: |
       #!/bin/bash
       declare -A secrets=(
-        [AIRLOCK_API_TOKEN]="/emis/test-secret"
-        [JOB_SERVER_TOKEN]="/emis/test-secret"
-        [PRIVATE_REPO_ACCESS_TOKEN]="/emis/test-private-repo-access-token"
+        [AIRLOCK_API_TOKEN]="/emis/staging-job-server-token"
+        [JOB_SERVER_TOKEN]="/emis/staging-job-server-token"
+        [CONTROLLER_TASK_API_TOKEN]="/emis/staging-job-server-token"
+        [PRIVATE_REPO_ACCESS_TOKEN]="/emis/staging-private-repo-access-token"
         [AIRLOCK_DATABASE_URL]="/emis/airlock-db-url"
       )
       for var in "${!secrets[@]}"; do
@@ -55,6 +56,7 @@ runcmd:
       # only group read access, no world access
       find "$output_dir" -type f -exec chmod 640 {} +
     done
+  - echo "USING_DUMMY_DATA_BACKEND=True" >> /home/opensafely/config/04_local.env
   # For testing only: update Airlock config to use a dev users file that already exists in the efs mount
   # - echo "AIRLOCK_API_TOKEN=" >> /home/opensafely/config/04_local.env
   # - echo "AIRLOCK_DEV_USERS_FILE=/workspaces/dev_users.json" >> /home/opensafely/config/04_local.env
