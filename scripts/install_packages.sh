@@ -2,6 +2,17 @@
 # Install/update all the base packages.
 set -euo pipefail
 
+# Rewrite apt sources to use our proxy. This operation is idempotent so we can just run
+# it every time. We handle both newer and older style layouts so this doesn't become
+# another thing to change when we update base Ubuntu versions
+for target in /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+  [[ -e "$target" ]] || continue
+
+  sed --in-place --regexp-extended \
+    's#http://(archive|security)\.ubuntu\.com/#https://\1-ubuntu.opensafely.org/#g' \
+    "$target"
+done
+
 # running this set -u sometimes causes issues with packaging scripts, it seems
 set +u
 sed 's/^#.*//' purge-packages.txt | xargs apt-get purge -y
