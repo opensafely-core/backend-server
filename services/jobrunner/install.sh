@@ -26,6 +26,7 @@ echo "DOCKER_HOST_GROUPID=$(getent group docker | awk -F: '{print $3}')" > $DIR/
 
 # Add env vars required for otel and mounted volumes in docker-compose.yaml
 {
+  echo "BASE_DOMAIN=$BASE_DOMAIN"
   echo "OTEL_SERVICE_NAME=agent-$BACKEND"
   echo "MEDIUM_PRIVACY_STORAGE_BASE=\"$MEDIUM_PRIVACY_STORAGE_BASE\""
   echo "HIGH_PRIVACY_STORAGE_BASE=\"$HIGH_PRIVACY_STORAGE_BASE\""
