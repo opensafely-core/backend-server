@@ -34,6 +34,10 @@ variable "backend_server_branch" {
   default = "main"
 }
 
+variable "base_domain" {
+  type    = string
+  default = "emis-staging.opensafely.org"
+}
 
 # Data source to find the latest 24.04 Ubuntu AMI
 data "amazon-ami" "ubuntu" {
@@ -99,9 +103,9 @@ build {
       "git clone https://github.com/opensafely-core/backend-server.git /srv/backend-server",
       "cd /srv/backend-server",
       "git checkout ${var.backend_server_branch}",
-      "./scripts/bootstrap.sh emistest",
-      "./backends/emistest/scripts/install_aws_cli.sh",
-      "./backends/emistest/scripts/install_emis_packages.sh",
+      "./scripts/bootstrap.sh emisv2 ${var.base_domain}",
+      "./backends/emisv2/scripts/install_aws_cli.sh",
+      "./backends/emisv2/scripts/install_emis_packages.sh",
       "just manage",
       # note just manage doesn't upgrade anything; we don't use just apt-upgrade here
       # because it's deliberately interactive and intended for a running backend instance
@@ -114,14 +118,14 @@ build {
     # Allows running as root: https://developer.hashicorp.com/packer/docs/provisioners/shell#sudo-example
     execute_command = "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
     environment_vars = [
-      "BACKEND=emistest",
-      "CLOUD_INIT_SRC_DIR=/srv/backend-server/backends/emistest/cloud-init-vagrant",
+      "BACKEND=emisv2",
+      "CLOUD_INIT_SRC_DIR=/srv/backend-server/backends/emisv2/cloud-init-vagrant",
       "COPY_CLOUD_INIT=true"
     ]
     only = ["vagrant.emis-test"]
     inline = [
       # clean up, set cloud-init
-      "/srv/backend-server/backends/emistest/scripts/clean-image.sh",
+      "/srv/backend-server/backends/emisv2/scripts/clean-image.sh",
     ]
   }
 
@@ -129,13 +133,13 @@ build {
     # Allows running as root: https://developer.hashicorp.com/packer/docs/provisioners/shell#sudo-example
     execute_command = "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
     environment_vars = [
-      "BACKEND=emistest",
-      "CLOUD_INIT_SRC_DIR=/srv/backend-server/backends/emistest/cloud-init-emis"
+      "BACKEND=emisv2",
+      "CLOUD_INIT_SRC_DIR=/srv/backend-server/backends/emisv2/cloud-init-emis"
     ]
     only = ["amazon-ebs.emis-base"]
     inline = [
       # clean up, set cloud-init
-      "/srv/backend-server/backends/emistest/scripts/clean-image.sh",
+      "/srv/backend-server/backends/emisv2/scripts/clean-image.sh",
     ]
   }
 

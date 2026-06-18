@@ -11,4 +11,4 @@ tests/keys/testuser*
 
 vagrant_output/
 vagrant_box/
-backends/emistest/packer/manifest.json
+backends/emisv2/packer/manifest.json
