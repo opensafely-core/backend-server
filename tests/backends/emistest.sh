@@ -1,15 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-./scripts/bootstrap.sh emistest
+./scripts/bootstrap.sh emisv2
 
-./tests/check-bootstrap.sh emistest
+./tests/check-bootstrap.sh emisv2
 
 # run the emis-only install-aws script
-./backends/emistest/scripts/install_aws_cli.sh
+./backends/emisv2/scripts/install_aws_cli.sh
 
 # set up stub controller now, so that the agent will start ok
-./tests/stub-controller.sh emistest
+./tests/stub-controller.sh emisv2
 
 just manage
 
