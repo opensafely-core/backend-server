@@ -89,7 +89,7 @@ manage-test: install-packages install update-users install-jobrunner install-air
 manage-tpp: install-packages install update-users install-jobrunner install-airlock install-collector
 
 [private]
-manage-emistest: install-packages install update-users install-jobrunner install-airlock install-collector
+manage-emisv2: install-packages install update-users install-jobrunner install-airlock install-collector
 
 test:
   echo "Please see `just tests/`"
