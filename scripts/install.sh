@@ -28,6 +28,9 @@ systemctl disable rsync
 cp -a --no-preserve ownership etc/opensafely /etc/
 chmod 0755 /etc/opensafely/
 chmod 0640 /etc/opensafely/*
+# the glob above clobbers profile.d's execute bit; restore it so login shells
+# can traverse in to source backend.sh
+chmod 0755 /etc/opensafely/profile.d
 
 ln -sf /etc/opensafely/profile /etc/profile.d/opensafely.sh
 ln -sf /etc/opensafely/sudoers /etc/sudoers.d/opensafely
