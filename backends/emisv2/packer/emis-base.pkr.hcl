@@ -95,9 +95,9 @@ build {
   provisioner "shell" {
     # Allows running as root: https://developer.hashicorp.com/packer/docs/provisioners/shell#sudo-example
     execute_command = "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-    environment_vars = [
-      "TEST=true",  # means airlock/install.sh will create test certificates for airlock
-    ]
+    # environment_vars = [
+    #   "TEST=true",  # means airlock/install.sh will create test certificates for airlock - uncomment for vagrant testing
+    # ]
     inline = [
       "mkdir -p /srv/",
       "git clone https://github.com/opensafely-core/backend-server.git /srv/backend-server",
