@@ -66,7 +66,8 @@ wait_for_cloud_init "$CONTAINER"
 if test -z "${DEBUG:-}"; then
     # if we're not in debug mode, just copy files. This does not require shiftfs,
     # so works in GHA and on more systems.
-    tar c . | lxc exec "$CONTAINER" -- tar x --one-top-level=$BACKEND_SERVER_DIR
+    lxc exec "$CONTAINER" -- mkdir -p "$BACKEND_SERVER_DIR"
+    tar c . | lxc exec "$CONTAINER" -- tar x -C "$BACKEND_SERVER_DIR"
     DEBIAN_FRONTEND=noninteractive
 else
     # in debug mode, it is useful to have the project mounted in the the
