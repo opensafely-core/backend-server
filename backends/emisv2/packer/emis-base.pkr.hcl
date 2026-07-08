@@ -8,6 +8,11 @@ packer {
   }
 }
 
+data "amazon-parameterstore" "airlock-cert-key" {
+  name = "/emis/airlock-cert-key"
+  with_decryption = true
+}
+
 # Variables for customization
 variable "aws_region" {
   type    = string
@@ -58,6 +63,12 @@ source "amazon-ebs" "emis-base" {
   region        = var.aws_region
   source_ami    = data.amazon-ami.ubuntu.id
 
+  # IAM role assign on the build instance when it's running.
+  # Has access to parameters required during the build which won't be exposed in logs etc.
+  # Currently only the Airlock ssl cert key
+  # (see backends/emisv2/scripts/write_airlock_cert_key.sh).
+  iam_instance_profile = "EmisBuilder"
+
   ssh_username = "ubuntu"
 
   # Tag the AMI
@@ -96,7 +107,7 @@ build {
     # Allows running as root: https://developer.hashicorp.com/packer/docs/provisioners/shell#sudo-example
     execute_command = "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
     # environment_vars = [
-    #   "TEST=true",  # means airlock/install.sh will create test certificates for airlock - uncomment for vagrant testing
+      # "TEST=true",  # means airlock/install.sh will create test certificates for airlock - uncomment for vagrant testing
     # ]
     inline = [
       "mkdir -p /srv/",
@@ -106,6 +117,7 @@ build {
       "./scripts/bootstrap.sh emisv2 ${var.base_domain}",
       "./backends/emisv2/scripts/install_aws_cli.sh",
       "./backends/emisv2/scripts/install_emis_packages.sh",
+      "./backends/emisv2/scripts/write_airlock_cert_key.sh",
       "just manage",
       # note just manage doesn't upgrade anything; we don't use just apt-upgrade here
       # because it's deliberately interactive and intended for a running backend instance
