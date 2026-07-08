@@ -34,6 +34,10 @@ write_files:
         fi
       done
 
+      # populate Airlock cert key
+      key=$(aws ssm get-parameter --region eu-west-1 --name '/emis/airlock-cert-key' --with-decryption  --output text --query 'Parameter.Value')
+      printf '%b\n' "$key" > /home/opensafely/airlock/certs/airlock.key
+
 runcmd:
   - /usr/local/bin/populate-secrets.sh
   # mount the EFS filesystem; hard-coded for now
