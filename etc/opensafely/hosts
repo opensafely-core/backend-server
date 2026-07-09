@@ -1,2 +1,2 @@
-# Hardcoded values for our core DNS names for all backends
-157.245.31.108 jobs.${BASE_DOMAIN} release.${BASE_DOMAIN} github-proxy.${BASE_DOMAIN} docker-proxy.${BASE_DOMAIN} collector.${BASE_DOMAIN} backends.${BASE_DOMAIN} controller.${BASE_DOMAIN} archive-ubuntu.${BASE_DOMAIN} security-ubuntu.${BASE_DOMAIN}
+# Hardcoded values for our core DNS names for all production backends
+157.245.31.108 jobs.opensafely.org release.opensafely.org github-proxy.opensafely.org docker-proxy.opensafely.org collector.opensafely.org backends.opensafely.org controller.opensafely.org archive-ubuntu.opensafely.org security-ubuntu.opensafely.org
