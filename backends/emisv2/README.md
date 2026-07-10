@@ -90,13 +90,17 @@ just launch-instance
 Note: this requires admin credentials.
 
 This will use the latest `emis-base` AMI by default.
-It will use a test security group which is too open, and will warn you about it. By default it
-will launch a t3.micro instance.
+It will use an existing security group which has outbound rules set to limit
+outbound traffic to ONLY the dokku-emis-staging IP (where the staging job-server,
+RAP Controller, proxy and otel-gateway live) and to an RDS security group
+associated with the RDS Postgres instance for the Airlock DB.
 
-To provide a custom ami/security group/instance type:
+By default it will launch a t3.micro instance.
+
+To provide a custom ami:
 
 ```
-just launch-instance ami-xxxxx sg-xxxxx <instance_type>
+just launch-instance ami-xxxxx <instance_type>
 ```
 
 
