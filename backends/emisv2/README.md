@@ -91,9 +91,12 @@ Note: this requires admin credentials.
 
 This will use the latest `emis-base` AMI by default.
 It will use an existing security group which has outbound rules set to limit
-outbound traffic to ONLY the dokku-emis-staging IP (where the staging job-server,
-RAP Controller, proxy and otel-gateway live) and to an RDS security group
-associated with the RDS Postgres instance for the Airlock DB.
+outbound traffic to ONLY:
+- the dokku-emis-staging IP (where the staging job-server, RAP Controller, proxy and otel-gateway live)
+- the security group associated with the RDS Postgres instance for the Airlock DB
+- security groups for VPC endpoints to allow fetching from the AWS parameter store
+    - for com.amazonaws.eu-west-1.ssm
+    - for com.amazonaws.eu-west-1.kms (to decrypt secure string parameters)
 
 By default it will launch a t3.micro instance.
 
