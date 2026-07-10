@@ -64,8 +64,13 @@ runcmd:
   # For testing only: update Airlock config to use a dev users file that already exists in the efs mount
   # - echo "AIRLOCK_API_TOKEN=" >> /home/opensafely/config/04_local.env
   # - echo "AIRLOCK_DEV_USERS_FILE=/workspaces/dev_users.json" >> /home/opensafely/config/04_local.env
-  # Reinstall airlock to pick up env var changes
-  # First stop any running docker container and the autodeploy service
+  # Reinstall airlock and jobrunner to pick up env var changes
+  # First stop any running docker container and service, then re-install, which will restart services
   - docker stop airlock
   - systemctl stop airlock.service
   - cd /srv/backend-server && just install-airlock
+  - systemctl stop jobrunner.service
+  - cd /srv/backend-server && just install-jobrunner
+  # The jobrunner service only pulls the image, it doesn't start the container, so
+  # we also need to start it now
+  - cd /home/opensafely && just jobrunner/start
