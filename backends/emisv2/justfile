@@ -97,11 +97,11 @@ vagrant-run ssh_username="vagrant":
     just vagrant-ssh {{ ssh_username }}
 
 
-launch-instance ami_id="" security_group_id="sg-0edc735fb4f6f9393" instance_type="t3.micro":
+launch-instance ami_id="" instance_type="t3.micro":
     #!/usr/bin/env bash
     set -euo pipefail
 
-    security_group="{{ security_group_id }}"
+    security_group="sg-0edc735fb4f6f9393"  # emistest-ec2 security group
     ami_id={{ ami_id }}
 
     if [ "$ami_id" = "" ]; then
