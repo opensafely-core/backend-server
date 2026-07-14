@@ -9,3 +9,6 @@ lucyb
 jongmassey
 Providence-o
 alarthast
+
+# If the final line is missing a newline then it will be ignored.
+# Adding this comment here to prevent that happening.
