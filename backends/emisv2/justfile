@@ -1,0 +1,212 @@
+set dotenv-load := true
+set positional-arguments := true
+
+# list available commands
+default:
+    @{{ just_executable() }} --list
+
+# Clean up temporary files
+clean:
+    rm -rf .venv
+
+# Install production requirements into and remove extraneous packages from venv
+prodenv:
+    uv sync --no-dev
+
+# Install dev requirements into venv without removing extraneous packages
+devenv:
+    uv sync --inexact
+
+upgrade-package package:
+    uv lock --upgrade-package {{ package }}
+
+# Upgrade all packages to the latest versions
+upgrade-all:
+    uv lock --upgrade
+
+aws-configure:
+  uv run aws configure
+
+aws-session-token token:
+  uv run aws configure set aws_session_token {{ token }}
+
+packer-validate:
+    uv run packer validate packer/emis-base.pkr.hcl
+
+packer-init:
+    uv run packer init packer/emis-base.pkr.hcl
+
+_packer-build source args="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    user=$(whoami)
+    uv run packer build \
+        -only "{{ source }}" \
+        -var "build_version=0.0.1" \
+        -var "user=$user" {{ args }} \
+        packer/emis-base.pkr.hcl 
+
+
+packer-build-vagrant *args: vagrant-clean
+    just _packer-build vagrant.emis-test "{{ args }}"
+
+
+packer-build-aws *args:
+    just _packer-build amazon-ebs.emis-base "{{ args }}"
+    
+
+vagrant-clean:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo "Cleaning vagrant environment"
+    if [ -d vagrant_box ]; then
+        cd vagrant_box
+        vagrant destroy 2>/dev/null || true
+        cd ..
+        rm -rf vagrant_box
+    fi
+
+    if [ -d vagrant_output ]; then
+        rm -rf vagrant_output
+    fi
+
+
+# ssh to a running vagrant box as your user (defaults to vagrant user)
+vagrant-ssh ssh_username="vagrant":
+    #!/usr/bin/env bash
+    cd vagrant_box
+    vagrant ssh-config | grep -E -o 'Port (\d+)'
+    sshport=$(vagrant ssh-config | grep -Po 'Port \K[^ ]+')
+    ssh -p $sshport -o StrictHostKeyChecking=no {{ ssh_username }}@localhost
+
+
+# Setup a new vagrant box after running packer-provision-vagrant
+vagrant-run ssh_username="vagrant":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    mkdir vagrant_box
+    cp vagrant_output/package.box ./vagrant_box
+    cd vagrant_box
+    vagrant box add --force test-emis-box package.box
+    vagrant init test-emis-box
+    
+    vagrant up
+    just vagrant-ssh {{ ssh_username }}
+
+
+launch-instance ami_id="" instance_type="t3.micro":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    security_group="sg-0edc735fb4f6f9393"  # emistest-ec2 security group
+    ami_id={{ ami_id }}
+
+    if [ "$ami_id" = "" ]; then
+
+        echo "Finding latest emis-base ami"
+        ami_id=$(aws ec2 describe-images \
+            --filters "Name=name,Values=emis-base-*" \
+            --query 'sort_by(Images, &CreationDate)[-1].ImageId' \
+            --output text)
+    fi
+
+    echo "Using ami $ami_id"
+
+    # EFS mount needs availability zone and subnet id. Our emis test EFS (fs-0f575eaf788fb79c9)
+    # is in a single availability zone (1a), so retrieve just that subnet
+    echo "Finding subnet for EFS mount target in availablity zone eu-west-1a"
+    subnet_id=$(uv run aws ec2 describe-subnets \
+        --region eu-west-1 \
+        --filters "Name=vpc-id,Values=vpc-099c7f5528ff10c61" "Name=availability-zone,Values=eu-west-1a" \
+        | jq -r '.Subnets[0].SubnetId')
+    echo "Using subnet $subnet_id"
+
+    name="$(whoami)-emis-test-$(date +%Y%m%d%H%M)"
+
+    echo "Creating instance $name"
+
+    # We pass user-data here (run-instances will base64 encode it for us), so we can override
+    # the user-data baked into the AMI if we need to, without recreating the entire AMI
+    instance_id=$(uv run aws ec2 run-instances \
+      --image-id $ami_id \
+      --count 1 \
+      --instance-type {{ instance_type }} \
+      --iam-instance-profile "Name=EmisInstanceRole" \
+      --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$name}]" "ResourceType=volume,Tags=[{Key=Name,Value=$name}]" \
+      --security-group-ids "$security_group" \
+      --subnet-id "$subnet_id" \
+      --block-device-mapping "[ { \"DeviceName\": \"/dev/sda1\", \"Ebs\": { \"VolumeSize\": 16 } } ]" \
+      --user-data file://cloud-init-emis/user-data \
+      | jq -r '.Instances[0].InstanceId'
+    )
+
+    # Find emistest elastic IP
+    echo "Finding elastic IP"
+    elastic_ip_address=$(uv run aws ec2 describe-addresses \
+        --region eu-west-1 \
+        --filters "Name=tag:Name,Values=emistest" \
+        | jq -r .Addresses[0]
+    )
+
+    if [ "$elastic_ip_address" != "null" ]; then
+        association_id=$(echo "$elastic_ip_address" | jq -r .AssociationId)
+        allocation_id=$(echo "$elastic_ip_address" | jq -r .AllocationId)
+        public_ip=$(echo "$elastic_ip_address" | jq -r .PublicIp)
+
+        if [ "$association_id" != "null" ]; then
+            # Dissociate the elastic IP from any current instance
+            aws ec2 disassociate-address --association-id "$association_id"
+        fi
+    else
+        echo "No elastic IP found"
+    fi
+
+    echo "Instance ID $instance_id; waiting for instance to be running..."
+    uv run aws ec2 wait instance-running --instance-ids "$instance_id" --region eu-west-1
+
+    if [ "$elastic_ip_address" != "null" ]; then
+        # Associate it with the new instance
+        echo "Associating elastic ip..."
+        aws ec2 associate-address \
+            --instance-id "$instance_id" \
+            --allocation-id "$allocation_id"
+    else
+        # No elastic ip; return the public ip for the instance
+        public_ip=$(uv run aws ec2 describe-instances --instance-ids "$instance_id" \
+        | jq -r '.Reservations[0].Instances[0].PublicIpAddress')
+    fi
+
+    # Wait and report when the instance has finished its status checks; it will be up
+    # but won't necessarily have finished replacing secrets/env vars and restarting
+    # services yet 
+    echo "Waiting for instance to be initialised, this may take a few minutes..."
+
+    # This can take a while, poll every 15s and report status
+    # (we could use `aws ec2 wait instance-status-ok...` but we'd get no progress report) 
+
+    TIMEOUT=300
+    ELAPSED=0
+    INTERVAL=15
+
+    while true; do
+        JSON=$(aws ec2 describe-instance-status --instance-ids "$instance_id" \
+            --include-all-instances)
+        STATE=$(echo "$JSON" | jq -r '.InstanceStatuses[0].InstanceState.Name')
+        SYSTEM_STATUS=$(echo "$JSON" | jq -r '.InstanceStatuses[0].SystemStatus.Status')
+        INSTANCE_STATUS=$(echo "$JSON" | jq -r '.InstanceStatuses[0].InstanceStatus.Status')
+
+        echo "$(date '+%H:%M:%S') — state: $STATE | system status: $SYSTEM_STATUS | instance status: $INSTANCE_STATUS"
+        [ "$SYSTEM_STATUS" == "ok" ] && [ "$INSTANCE_STATUS" == "ok" ] && break
+
+        if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
+            echo "Warning: timed out after ${TIMEOUT}s  — state: $STATE | system status: $SYSTEM_STATUS | instance status: $INSTANCE_STATUS"
+            exit 1
+        fi
+        sleep "$INTERVAL"
+        ELAPSED=$((ELAPSED + INTERVAL))
+    done
+
+    echo "Instance ID $instance_id is running at $public_ip"

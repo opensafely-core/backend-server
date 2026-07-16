@@ -16,15 +16,22 @@ umask 027
 # shellcheck source=/dev/null
 . scripts/load-env
 
-
 # set up jobrunner
-mkdir -p $DIR/workdir
+mkdir -p "$JOBRUNNER_HOST_BASEDIR/workdir"
 cp -a services/jobrunner/* $DIR/
 cp $SRC_DIR/bin/* ~opensafely/bin/
 
 # setup some automated config for docker group id
 echo "DOCKER_HOST_GROUPID=$(getent group docker | awk -F: '{print $3}')" > $DIR/.env
-echo "OTEL_SERVICE_NAME=agent-$BACKEND" >> $DIR/.env
+
+# Add env vars required for otel and mounted volumes in docker-compose.yaml
+{
+  echo "BASE_DOMAIN=$BASE_DOMAIN"
+  echo "OTEL_SERVICE_NAME=agent-$BACKEND"
+  echo "MEDIUM_PRIVACY_STORAGE_BASE=\"$MEDIUM_PRIVACY_STORAGE_BASE\""
+  echo "HIGH_PRIVACY_STORAGE_BASE=\"$HIGH_PRIVACY_STORAGE_BASE\""
+  echo "JOBRUNNER_HOST_BASEDIR=\"$JOBRUNNER_HOST_BASEDIR\""
+} >> $DIR/.env
 
 chown -R opensafely:opensafely $DIR
 

@@ -29,6 +29,11 @@ check:
     echo "Backend 'backends/$BACKEND' does not exist in this repo"
     exit 1
   fi
+  if test -z $BASE_DOMAIN
+  then
+    echo "BASE_DOMAIN is not set in .env";
+    exit 1
+  fi
 
 # install required system packages
 install-packages: check
@@ -82,6 +87,9 @@ manage-test: install-packages install update-users install-jobrunner install-air
 
 [private]
 manage-tpp: install-packages install update-users install-jobrunner install-airlock install-collector
+
+[private]
+manage-emisv2: install-packages install update-users install-jobrunner install-airlock install-collector
 
 test:
   echo "Please see `just tests/`"

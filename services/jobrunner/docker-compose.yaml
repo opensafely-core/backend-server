@@ -1,6 +1,6 @@
 services:
   agent:
-    image: docker-proxy.opensafely.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
+    image: docker-proxy.${BASE_DOMAIN}/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
     init: true
     restart: unless-stopped
     user: 10000:10000
@@ -25,10 +25,11 @@ services:
       # what to pass to the host docker as a bindmount source directory, which
       # needs to be on the host.
       # We can potentially fix this by adding an explicit bind mount source configs, if we want to
-      # Note: we cannot interpolate the multiple envfiles here, so we have to hard code these paths.
-      - /srv/high_privacy:/srv/high_privacy
-      - /srv/medium_privacy:/srv/medium_privacy
-      - /home/opensafely/jobrunner/workdir:/workdir
+      # Note: we cannot interpolate the multiple envfiles here
+      # env vars used here are set in the .env local to this docker-compose file via the install.sh script
+      - "${MEDIUM_PRIVACY_STORAGE_BASE}:${MEDIUM_PRIVACY_STORAGE_BASE}"
+      - "${HIGH_PRIVACY_STORAGE_BASE}:${HIGH_PRIVACY_STORAGE_BASE}"
+      - "${JOBRUNNER_HOST_BASEDIR}/workdir:/workdir"
       # docker control
       - /var/run/docker.sock:/var/run/docker.sock
       # use our hardcoded DNS
