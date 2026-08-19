@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Creates a Docker network and configures it to have access to only the
-# specified list of IPs. Example usage:
+# specified list of IPs.
 #
-#   jobrunner-network-config.sh my-network-name 8.8.8.8 170.30.0.0/16
+# Network name and IPs are sourced via ./scripts/load-env.
 #
 # Requires root in order to call `iptables`.
 
