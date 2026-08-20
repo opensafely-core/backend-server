@@ -35,7 +35,7 @@ This will set up your shell with the correct environment variables.
 /home/opensafely/airlock    # airlock service workdir and configuration
 /home/opensafely/collector  # otel collector service
 
-## jobrunner service
+## jobrunner service (RAP Agent)
 
 The jobrunner is installed in `/home/opensafely/jobrunner`.
 
@@ -285,22 +285,6 @@ For tables within the `OpenCORONATempTables` database:
 
     SELECT COUNT(*) FROM <name of table> (NOLOCK).
 
-
-### Removing a Level 4 file
-
-There are times when these medium privacy outputs may need to be deleted. For
-example, the researcher or output checkers may realise they should have been
-marked as high privacy, or the researcher may no longer need the output and
-want to preserve disk space.
-
-All outputs are put into the `/srv/high_privacy/workspaces/` directory for
-a workspace on the VM.
-
-Outputs that have been marked as having a medium privacy level are then copied
-into the matching `/srv/medium_privacy/workspaces/` directory.
-
-To remove a level 4 file, you can just delete the file from the correct
-`/srv/medium_privacy/workspaces/$WORKSPACE` directory.
 
 ## Start up and Shutdown
 

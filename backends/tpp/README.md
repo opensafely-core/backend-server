@@ -59,19 +59,15 @@ must SSH in again to actually access it.
  - login to host is via authenticated firewall and RDP, accounts managed by
    TPP.
  - Outgoing internet is restricted to https to our cloudflare IPs
- - TPP maintain a one-way push of medium privacy output files to the
-   Level 4 server.
- - As TPP was early adopter, many users have RDP access to this machine.
- - Goal is to reduce that to just the OpenSAFELY platform team. As such, we are
-   only granting core OpenSAFELY team access to the VM.
+ - Incoming internet access is restricted to the Level 4 server (to allow access to Airlock)
+ - Only limited developers have RDP access to this machine. User who need to view and release output files have access via Airlock on Level 4 only.
 
 
 ### Level 4 Server
 
  - TPP provide a windows VM on the same host.
  - Login is via same firewall, but separate RDP account.
- - Redaction and publishing happens here.
- - Files pushed here from level 3.
+ - Review and release of outputs via Airlock happens here.
 
 ### Implications
 

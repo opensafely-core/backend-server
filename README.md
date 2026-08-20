@@ -3,10 +3,11 @@
 OpenSAFELY backends are deployed on servers inside our partners' secure
 environments. These servers are provisioned and managed by the provider,
 with limited network access. They are designed to run the
-[job-runner](https://github.com/opensafely-core/job-runner) process,
-which polls jobs.opensafely.org for work, and then runs the requested
-actions securely inside docker containers. It also handles the process for
-redaction, review and publication of outputs.
+[RAP agent](https://github.com/opensafely-core/job-runner) process,
+which polls the RAP controller (controller.opensafely.org) for work, and then runs the requested
+actions securely inside docker containers.
+They also run [Airlock](https://github.com/opensafely-core/airlock), which
+handles the process for review and release of outputs.
 
 Due to being deployed in different partner's environments, and us not
 always having full administrative control of that environment, each
@@ -45,11 +46,10 @@ A plain `just` will list other commands available, with help
 ## Base assumptions
 
  * Ubuntu server (22.04 baseline)
- * Internet access to {jobs,docker-proxy,github-proxy}.opensafely.org
- * Internet access to an official ubuntu archive
+ * Internet access to opensafely.org domains (see [system-requirements](system-requirements.md#network-requirements))
  * SSH access for developers to the backend host
  * sudo access on the host in some form
- * Just bash and git needed on the host to bootstrap backend.
+ * Just, bash and git needed on the host to bootstrap backend.
 
 ## Components
 
@@ -63,6 +63,18 @@ Currently in `/srv/high_privacy` and `/srv/medium_privacy`. Files owned by
 Repo: https://github.com/opensafely-core/job-runner
 
 Manages the jobs and their state. Deployed in `/home/opensafely/jobrunner` as a docker-compose managed service
+
+### airlock
+ 
+Repo: https://github.com/opensafely-core/airlock
+
+Manages requests to release output files. Deployed in `/home/opensafely/airlock` as a docker-compose managed service
+
+### collector
+
+See [services/collector](services/collector)
+
+Collects and emits host metrics. Deployed in `/home/opensafely/collector` as a systemd service running the otel binary directly. Sends metrics to the [otel gateway](https://github.com/opensafely-core/sysadmin/tree/main/services/otel-gateway) at collector.opensafely.org.
 
 ## Common goals for all backends
 
