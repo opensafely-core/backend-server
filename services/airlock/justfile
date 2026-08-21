@@ -30,7 +30,7 @@ update-certs:
     . ~opensafely/config/load-env
 
     echo "Checking for certificate updates"
-    openssl s_client -showcerts -connect backends.opensafely.org:443 </dev/null 2>/dev/null| sed -n '/^-----BEGIN CERT/,/^-----END CERT/p' > certs/fullchain.latest.pem
+    openssl s_client -showcerts -connect "backends.${BASE_DOMAIN}:443" </dev/null 2>/dev/null| sed -n '/^-----BEGIN CERT/,/^-----END CERT/p' > certs/fullchain.latest.pem
     update=false
 
     # if we have no fullchain cert yet

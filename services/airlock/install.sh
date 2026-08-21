@@ -21,7 +21,10 @@ fi
 # airlock/workdir will be created automatically by docker compose when it
 # attempts to mount it, but it will have root ownership by default &
 # the opensafely user needs to own it.
-mkdir -p $DIR/workdir
+mkdir -p "$AIRLOCK_HOST_BASEDIR"/workdir
+
+chown -R opensafely:opensafely "$AIRLOCK_HOST_BASEDIR"
+chmod -R go-rwx "$AIRLOCK_HOST_BASEDIR"
 
 chown -R opensafely:opensafely "$DIR"
 chmod -R go-rwx "$DIR"
@@ -30,15 +33,26 @@ REQUESTS_DIR="$MEDIUM_PRIVACY_STORAGE_BASE/requests"
 mkdir -p "$REQUESTS_DIR"
 find "$REQUESTS_DIR" -type f -exec chmod 640 {} +
 
-
-echo "OTEL_SERVICE_NAME=airlock-$BACKEND" > $DIR/.env
+# Add env vars required for otel and mounted volumes in docker-compose.yaml
+{
+  echo "BASE_DOMAIN=$BASE_DOMAIN"
+  echo "OTEL_SERVICE_NAME=airlock-$BACKEND"
+  echo "MEDIUM_PRIVACY_STORAGE_BASE=\"$MEDIUM_PRIVACY_STORAGE_BASE\""
+  echo "AIRLOCK_HOST_BASEDIR=\"$AIRLOCK_HOST_BASEDIR\""
+} >> $DIR/.env
 
 systemctl enable "$DIR/airlock.service"
 systemctl enable "$DIR/airlock.timer"
-systemctl start airlock.timer
-systemctl start airlock.service || { journalctl -u airlock.service; exit 1; }
-
 systemctl enable "$DIR/airlock_runjobs.service"
 systemctl enable "$DIR/airlock_runjobs.timer"
-systemctl start airlock_runjobs.timer
-systemctl start airlock_runjobs.service || { journalctl -u airlock_runjobs.service; exit 1; }
+
+# Check if DJANGO_SECRET_KEY is set; if not, skip starting the
+# services
+if [[ -z DJANGO_SECRET_KEY ]]; then
+    systemctl start airlock.timer
+    systemctl start airlock.service || { journalctl -u airlock.service; exit 1; }
+    systemctl start airlock_runjobs.timer
+    systemctl start airlock_runjobs.service || { journalctl -u airlock_runjobs.service; exit 1; }
+else
+    echo "DJANGO_SECRET_KEY not set, skipping Airlock service startup"
+fi

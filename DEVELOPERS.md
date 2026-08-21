@@ -10,6 +10,8 @@ Directory layout:
   * scripts and config for supported backends
 * ./backends/test
   * scripts and config for our test backend
+* ./backends/emistest
+  * AMI builder, scripts and config for our EMIS test backend
 * ./backends/tpp
   * scripts and config for TPP backends
 * ./services/jobrunner
