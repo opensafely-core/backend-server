@@ -1,0 +1,76 @@
+#cloud-config
+# having an explict user specified disables the default ubuntu user
+users:
+  - name: opensafely
+    shell: /bin/bash
+    lock_passwd: true
+    uid: 10000
+
+# ensure we have the hostname in /etc/hosts
+manage_etc_hosts: true
+
+write_files:
+  # Write bash script to populate secrets
+  # We can store secrets in parameter store (as secure-string type) or in secretsmanager
+  # Using parameter store (using aws account kms key) for now b/c free
+  # Instance must be launched with an IAM role that has the correct access (EmisInstanceRole)
+  - path: /usr/local/bin/populate-secrets.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      declare -A secrets=(
+        [AIRLOCK_API_TOKEN]="/emis/staging-job-server-token"
+        [JOB_SERVER_TOKEN]="/emis/staging-job-server-token"
+        [CONTROLLER_TASK_API_TOKEN]="/emis/staging-job-server-token"
+        [PRIVATE_REPO_ACCESS_TOKEN]="/emis/staging-private-repo-access-token"
+        [AIRLOCK_DATABASE_URL]="/emis/airlock-db-url"
+      )
+      for var in "${!secrets[@]}"; do
+        value=$(aws ssm get-parameter --region eu-west-1 --name "${secrets[$var]}" --with-decryption --output text --query Parameter.Value)
+        if grep -q "^${var}=" /home/opensafely/config/02_secrets.env; then
+          sed -i "s|^${var}=.*|${var}=${value}|" /home/opensafely/config/02_secrets.env
+        else
+          echo "${var}=${value}" >> /home/opensafely/config/02_secrets.env
+        fi
+      done
+
+      # populate Airlock cert key
+      key=$(aws ssm get-parameter --region eu-west-1 --name '/emis/airlock-cert-key' --with-decryption  --output text --query 'Parameter.Value')
+      printf '%b\n' "$key" > /home/opensafely/airlock/certs/airlock.key
+
+runcmd:
+  - /usr/local/bin/populate-secrets.sh
+  # mount the EFS filesystem; hard-coded for now
+  - mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-0f575eaf788fb79c9.efs.eu-west-1.amazonaws.com:/   /efs
+  # Remove permissions for group and other (only root and owner can access)
+  - chmod -R go-rwx /efs
+  # ensure folders exist in mounted storage and opensafely user has ownership
+  - |
+    # Note: this is doing what scripts/load-env does, but that doesn't seem to work here
+    for f in /home/opensafely/config/*.env; do
+        . "$f"
+    done
+    # Set directory permissions to 750 (see jobrunner/install.sh)
+    for output_dir in "$HIGH_PRIVACY_STORAGE_BASE/workspaces" "$MEDIUM_PRIVACY_STORAGE_BASE/workspaces" "$MEDIUM_PRIVACY_STORAGE_BASE/requests" "$AIRLOCK_HOST_BASEDIR" "$JOBRUNNER_HOST_BASEDIR"; do
+        mkdir -p "$output_dir"
+        chmod 750 $output_dir
+    done
+    # Set workspace file permissions to 640 (see jobrunner/install.sh)
+    for output_dir in "$HIGH_PRIVACY_STORAGE_BASE/workspaces" "$MEDIUM_PRIVACY_STORAGE_BASE/workspaces"; do
+      # only group read access, no world access
+      find "$output_dir" -type f -exec chmod 640 {} +
+    done
+  - echo "USING_DUMMY_DATA_BACKEND=True" >> /home/opensafely/config/04_local.env
+  # For testing only: update Airlock config to use a dev users file that already exists in the efs mount
+  # - echo "AIRLOCK_API_TOKEN=" >> /home/opensafely/config/04_local.env
+  # - echo "AIRLOCK_DEV_USERS_FILE=/workspaces/dev_users.json" >> /home/opensafely/config/04_local.env
+  # Reinstall airlock and jobrunner to pick up env var changes
+  # First stop any running docker container and service, then re-install, which will restart services
+  - docker stop airlock
+  - systemctl stop airlock.service
+  - cd /srv/backend-server && just install-airlock
+  - systemctl stop jobrunner.service
+  - cd /srv/backend-server && just install-jobrunner
+  # The jobrunner service only pulls the image, it doesn't start the container, so
+  # we also need to start it now
+  - cd /home/opensafely && just jobrunner/start

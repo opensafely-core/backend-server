@@ -1,0 +1,14 @@
+#cloud-config
+# having an explict user specified disables the default ubuntu user
+users:
+  - name: opensafely
+    shell: /bin/bash
+    lock_passwd: true
+# ensure we have the hostname in /etc/hosts
+manage_etc_hosts: true
+
+runcmd:
+  - systemctl restart airlock.service
+  - systemctl restart airlock_runjobs.service
+  - systemctl restart jobrunner.service
+  - systemctl restart collector.service

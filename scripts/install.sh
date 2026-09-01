@@ -28,6 +28,9 @@ systemctl disable rsync
 cp -a --no-preserve ownership etc/opensafely /etc/
 chmod 0755 /etc/opensafely/
 chmod 0640 /etc/opensafely/*
+# the glob above clobbers profile.d's execute bit; restore it so login shells
+# can traverse in to source backend.sh
+chmod 0755 /etc/opensafely/profile.d
 
 ln -sf /etc/opensafely/profile /etc/profile.d/opensafely.sh
 ln -sf /etc/opensafely/sudoers /etc/sudoers.d/opensafely
@@ -51,7 +54,16 @@ if ! grep -q "etc/opensafely/bashrc" /etc/bash.bashrc; then
 fi
 
 # reduce motd noise
-chmod a-x /etc/update-motd.d/{10-help-text,50-motd-news,91-contract-ua-esm-status,91-release-upgrade}
+motd_files=(
+    /etc/update-motd.d/10-help-text
+    /etc/update-motd.d/50-motd-news
+    /etc/update-motd.d/91-contract-ua-esm-status
+    /etc/update-motd.d/91-release-upgrade
+    /etc/update-motd.d/99-bento  # vagrant only
+)
+for f in "${motd_files[@]}"; do
+    [ -f "$f" ] && chmod a-x "$f"
+done
 
 grep -q "^UMASK.*027" /etc/login.defs || sed -i 's/^UMASK.*$/UMASK 027/' /etc/login.defs
 

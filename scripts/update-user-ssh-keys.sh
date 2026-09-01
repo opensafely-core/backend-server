@@ -2,6 +2,7 @@
 set -euo pipefail
 
 user=$1
+base_domain=$2
 TEST=${TEST:-}
 
 # generate clean authorized_keys file from current sources list. This
@@ -23,7 +24,7 @@ else
     # note: a quirk of the github ssh api here is that a non-existent user
     # returns an empty 200 response. Which is handy here for using with test
     # users
-    curl --silent --fail "https://github-proxy.opensafely.org/$user.keys" >> "$tmp"
+    curl --silent --fail "https://github-proxy.$base_domain/$user.keys" >> "$tmp"
 fi
 
 # ensure .ssh directory exists
