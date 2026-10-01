@@ -36,8 +36,15 @@ sed 's/^#.*//' "$BACKEND_SERVER_PATH"/purge-packages.txt \
 lxc_env apt-get autoremove --yes
 lxc_env apt-get update
 lxc_env apt-get upgrade --yes
+
+# We explicitly ignore the `cosign` package here because that requires special apt
+# configuration to install. This step is just pre-installing packages for faster local
+# test iteration, so it's not a disaster that we don't install it here. When we upgrade
+# to Resolute 26.04 from Jammy 22.04 we can remove this filter.
 sed 's/^#.*//' "$BACKEND_SERVER_PATH"/core-packages.txt \
+    | grep -v --fixed-strings cosign \
     | lxc_env xargs apt-get install --no-install-recommends -y
+
 sed 's/^#.*//' "$BACKEND_SERVER_PATH"/packages.txt \
     | lxc_env xargs apt-get install --no-install-recommends -y
 
