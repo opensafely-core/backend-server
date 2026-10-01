@@ -1,0 +1,9 @@
+# See: backend-server/scripts/install_resolute_cosign_sources.sh
+
+Package: *
+Pin: release o=Ubuntu,n=resolute
+Pin-Priority: -1
+
+Package: cosign
+Pin: release o=Ubuntu,n=resolute
+Pin-Priority: 500

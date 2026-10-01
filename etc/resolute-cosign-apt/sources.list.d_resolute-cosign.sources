@@ -1,0 +1,7 @@
+# See: backend-server/scripts/install_resolute_cosign_sources.sh
+
+Types: deb
+URIs: http://archive.ubuntu.com/ubuntu
+Suites: resolute resolute-updates resolute-security
+Components: universe
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg

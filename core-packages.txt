@@ -4,3 +4,4 @@ docker-compose-v2
 tzdata
 ca-certificates
 curl
+cosign
