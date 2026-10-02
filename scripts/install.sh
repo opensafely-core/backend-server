@@ -39,7 +39,8 @@ mkdir -p /usr/local/share/ca-certificates/opensafely
 # clean up old files
 rm -f /etc/opensafely/ssh-banner
 
-# explicitly allow these things for user to rx
+# explicitly allow these things for user to r/rx
+chmod 0644 /etc/opensafely/sigstore_trusted_root.json
 chmod 0755 /etc/opensafely/{banner,bashrc}
 
 # add login banner
