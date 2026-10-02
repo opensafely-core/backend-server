@@ -25,6 +25,4 @@ sleep 3
 ./tests/check-agent.sh
 ./tests/check-collector.sh
 ./tests/check-airlock.sh
-
-# Confirm that Cosign is installed and executable
-cosign version
+./tests/check-sync-verified-image.sh
