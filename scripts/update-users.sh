@@ -4,11 +4,13 @@ set -euo pipefail
 # files containing lists of gh user names for the different roles
 # note: probably will be API calls to job-server in future
 developers="${developers:-developers}"
+BASE_DOMAIN="${BASE_DOMAIN:-}"
 
 # add a user, add to groups, and
 add_user() {
     local user=$1
-    shift
+    local base_domain=$2
+    shift 2
     local groups=$*
     if id -u "$user" > /dev/null 2>&1; then
         echo "User $user already exists"
@@ -26,13 +28,14 @@ add_user() {
     done
     echo "$user groups: $(groups "$user")"
 
-    ./scripts/update-user-ssh-keys.sh "$user"
+    ./scripts/update-user-ssh-keys.sh "$user" "$base_domain"
 }
 
 # add a list of users from a file, to specific groups
 add_group() {
     local file=$1
-    shift
+    local base_domain=$2
+    shift 2
     local groups="$*"
     while read -r user; do
         if test "${user::1}" = "#"; then  # skip comments
@@ -40,7 +43,7 @@ add_group() {
         elif test -z "$user"; then  # skip blank lines
             continue
         else
-            add_user "$user" "$groups"
+            add_user "$user" "$base_domain" "$groups"
         fi
     done < "$file"
 }
@@ -48,7 +51,7 @@ add_group() {
 # developers group. They get docker and sudo access.
 # Required for all backends
 if test -f "$developers"; then
-    add_group "$developers" developers researchers reviewers docker sudo
+    add_group "$developers" "$BASE_DOMAIN" developers researchers reviewers docker sudo
 else
     echo "Missing developers file!"
     exit 1

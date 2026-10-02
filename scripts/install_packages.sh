@@ -14,7 +14,7 @@ for target in /etc/apt/sources.list /etc/apt/sources.list.d/*; do
   [[ -e "$target" ]] || continue
 
   sed --in-place --regexp-extended \
-    's#http://(archive|security)\.ubuntu\.com/#https://\1-ubuntu.opensafely.org/#g' \
+    "s#http://(archive|security)\.ubuntu\.com/#https://\1-ubuntu.${BASE_DOMAIN}/#g" \
     "$target"
 done
 

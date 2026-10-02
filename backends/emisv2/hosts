@@ -1,0 +1,2 @@
+# Hardcoded values for our core DNS names for emis-staging backends
+206.189.124.176 jobs.emis-staging.opensafely.org release.emis-staging.opensafely.org github-proxy.emis-staging.opensafely.org docker-proxy.emis-staging.opensafely.org collector.emis-staging.opensafely.org backends.emis-staging.opensafely.org controller.emis-staging.opensafely.org archive-ubuntu.emis-staging.opensafely.org security-ubuntu.emis-staging.opensafely.org

@@ -2,6 +2,7 @@
 set -euo pipefail
 
 BACKEND=${1:-}
+BASE_DOMAIN=${2:-"opensafely.org"}
 
 if test -z "$BACKEND"; then
     echo "You must specify a backend to bootstrap"
@@ -28,12 +29,13 @@ then
 fi
 
 # put in .env to ensure `just` has access to it
-echo "BACKEND=$BACKEND" > .env
+echo -e "BACKEND=$BACKEND\nBASE_DOMAIN=$BASE_DOMAIN" > .env
 
-# also put it in the default profile so everything else has access to it
+# also put BACKEND and BASE_DOMAIN in the default profile so everything else has access to them
 mkdir -p /etc/opensafely/profile.d
 BACKEND_PROFILE=/etc/opensafely/profile.d/backend.sh
-grep -q "$BACKEND" $BACKEND_PROFILE 2>/dev/null || printf "BACKEND=%s\nexport BACKEND" "$BACKEND" >> $BACKEND_PROFILE
+grep -q "$BACKEND" $BACKEND_PROFILE 2>/dev/null || printf "BACKEND=%s\nexport BACKEND\n" "$BACKEND" >> $BACKEND_PROFILE
+grep -q "$BASE_DOMAIN" $BACKEND_PROFILE 2>/dev/null || printf "BASE_DOMAIN=%s\nexport BASE_DOMAIN\n" "$BASE_DOMAIN" >> $BACKEND_PROFILE
 ln -sf $BACKEND_PROFILE /etc/profile.d/backend.sh
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]
