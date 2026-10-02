@@ -58,6 +58,7 @@ grep -q "^UMASK.*027" /etc/login.defs || sed -i 's/^UMASK.*$/UMASK 027/' /etc/lo
 
 # ensure shipped binaries (note: *not* just, as that fails as we're running it atm)
 cp bin/otel-cli /usr/local/bin/
+cp scripts/pull_verify_retag.py /usr/local/bin/
 chmod a+rx /usr/local/bin
 
 systemctl reload ssh
