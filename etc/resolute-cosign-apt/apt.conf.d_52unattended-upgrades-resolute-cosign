@@ -1,0 +1,5 @@
+# See: backend-server/scripts/install_resolute_cosign_sources.sh
+
+Unattended-Upgrade::Origins-Pattern {
+    "origin=Ubuntu,codename=resolute";
+};

@@ -1,11 +1,16 @@
 #!/bin/bash
 # Install/update all the base packages.
 set -euo pipefail
+script_dir="$( unset CDPATH && cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# We need these to install the SigStore Cosign tool on Ubuntu versions less than
+# Resolute 26.04
+"$script_dir/install_resolute_cosign_sources.sh"
 
 # Rewrite apt sources to use our proxy. This operation is idempotent so we can just run
 # it every time. We handle both newer and older style layouts so this doesn't become
 # another thing to change when we update base Ubuntu versions
-for target in /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+for target in /etc/apt/sources.list /etc/apt/sources.list.d/*; do
   [[ -e "$target" ]] || continue
 
   sed --in-place --regexp-extended \
