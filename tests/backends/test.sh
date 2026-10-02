@@ -42,6 +42,7 @@ test "$(id -g opensafely)" == "10000"
 ./tests/check-agent.sh
 ./tests/check-collector.sh
 ./tests/check-airlock.sh
+./tests/check-pull-verify-retag.sh
 
 # Test the upgrade command completes without error (we have to use Y to accept
 # the upgrade because declining causes a non-zero exit)
