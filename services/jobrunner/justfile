@@ -53,15 +53,3 @@ jobs-ls:
 # show docker stats for all currently running jobs
 jobs-stats:
     docker stats --no-stream
-
-# update docker image
-update-docker-image image:
-    #!/bin/bash
-    set -euo pipefail
-    # pull from proxy
-    docker pull docker-proxy.opensafely.org/opensafely-core/{{ image }}
-    # tag as if we'd pulled direct from ghcr.io
-    docker tag docker-proxy.opensafely.org/opensafely-core/{{ image }} ghcr.io/opensafely-core/{{ image }}
-    action_name="$(echo {{ image }} | awk -F: '{print $1}')"
-    # delete dangling version of this image
-    docker image prune --force --filter "label=org.opensafely.action=$action_name"
