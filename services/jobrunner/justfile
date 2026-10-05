@@ -32,7 +32,13 @@ restart-if-running:
 
 # Update agent service and restart
 deploy: && restart-if-running
-    docker compose pull --quiet agent
+    sync_verified_image.py \
+      --source docker-proxy.opensafely.org/opensafely-core/job-runner:latest \
+      --target local/job-runner:verified \
+      --enforce-github-repo opensafely-core/job-runner \
+      --enforce-branch main \
+      --trusted-root /etc/opensafely/sigstore_trusted_root.json \
+      --quiet
 
 # Run a cli command
 cli command *ARGS:

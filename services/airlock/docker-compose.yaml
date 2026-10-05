@@ -1,6 +1,7 @@
 services:
   airlock:
-    image: docker-proxy.opensafely.org/opensafely-core/airlock:latest
+    image: local/airlock:verified
+    pull_policy: never
     container_name: airlock
     init: true
     restart: unless-stopped
