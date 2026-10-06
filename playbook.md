@@ -109,37 +109,6 @@ As opensafely user:
 just jobrunner/deploy
 ```
 
-### Update docker image
-
-> [!NOTE]
-> [Action images](#action-images) do not usually need to be manually updated.
-
-To update a docker image, run:
-
-    just jobrunner/update-docker-image image[:tag]
-
-Note that the script provides the repository name, so you must provide
-only the last component of the image name. For example to update the
-`tpp-database-utils` image, the image name to provide is `tpp-database-utils`,
-not `ghcr.io/opensafely-core/tpp-database-utils`.
-
-#### Updating tpp-database-utils
-
-```bash
-just jobrunner/update-docker-image tpp-database-utils:latest
-```
-
-#### Action images
-
-Action images (ehrql, r, python etc) are pulled automatically when a job that
-uses them runs.
-
-If necessary, they can be updated manually. For example, to update the ehrQL Docker image, run:
-
-```bash
-just jobrunner/update-docker-image ehrql:v1
-```
-
 ## Debugging jobs
 
 ### Show currently running jobs
