@@ -39,7 +39,8 @@ mkdir -p /usr/local/share/ca-certificates/opensafely
 # clean up old files
 rm -f /etc/opensafely/ssh-banner
 
-# explicitly allow these things for user to rx
+# explicitly allow these things for user to r/rx
+chmod 0644 /etc/opensafely/sigstore_trusted_root.json
 chmod 0755 /etc/opensafely/{banner,bashrc}
 
 # add login banner
@@ -57,6 +58,8 @@ grep -q "^UMASK.*027" /etc/login.defs || sed -i 's/^UMASK.*$/UMASK 027/' /etc/lo
 
 # ensure shipped binaries (note: *not* just, as that fails as we're running it atm)
 cp bin/otel-cli /usr/local/bin/
+cp bin/sync_verified_image.py /usr/local/bin/
+chmod a+rx /usr/local/bin/sync_verified_image.py
 chmod a+rx /usr/local/bin
 
 systemctl reload ssh

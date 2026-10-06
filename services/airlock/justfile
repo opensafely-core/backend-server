@@ -10,9 +10,13 @@ default:
 
 # pull latest version and deploy
 deploy: && restart
-    echo "Pulling image"
-    docker compose --ansi never pull --quiet airlock
-
+    sync_verified_image.py \
+      --source docker-proxy.opensafely.org/opensafely-core/airlock:latest \
+      --target local/airlock:verified \
+      --enforce-github-repo opensafely-core/airlock \
+      --enforce-branch main \
+      --trusted-root /etc/opensafely/sigstore_trusted_root.json \
+      --quiet
 
 # restart airlock
 restart *args:

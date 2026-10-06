@@ -1,6 +1,7 @@
 services:
   agent:
-    image: docker-proxy.opensafely.org/opensafely-core/${JOB_RUNNER_DOCKER_IMAGE:-job-runner}:latest
+    image: local/job-runner:verified
+    pull_policy: never
     init: true
     restart: unless-stopped
     user: 10000:10000
