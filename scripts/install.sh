@@ -57,7 +57,6 @@ chmod a-x /etc/update-motd.d/{10-help-text,50-motd-news,91-contract-ua-esm-statu
 grep -q "^UMASK.*027" /etc/login.defs || sed -i 's/^UMASK.*$/UMASK 027/' /etc/login.defs
 
 # ensure shipped binaries (note: *not* just, as that fails as we're running it atm)
-cp bin/otel-cli /usr/local/bin/
 cp bin/sync_verified_image.py /usr/local/bin/
 chmod a+rx /usr/local/bin/sync_verified_image.py
 chmod a+rx /usr/local/bin

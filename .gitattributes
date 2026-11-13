@@ -1,3 +1,4 @@
 * text eol=lf
 bin/* binary
 bin/*.py -binary
+bin/*.txt -binary

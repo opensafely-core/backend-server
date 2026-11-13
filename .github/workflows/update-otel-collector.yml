@@ -1,0 +1,47 @@
+name: Update OpenTelemetry Collector
+
+on:
+  workflow_dispatch:
+  # Run daily overnight
+  schedule:
+    - cron: "23 3 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  update-otel-collector:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+
+    - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+      id: generate-token
+      with:
+        client-id: ${{ vars.CREATE_PR_APP_ID }}
+        private-key: ${{ secrets.CREATE_PR_APP_PRIVATE_KEY }}
+
+    - uses: bennettoxford/update-dependencies-action@b77a22bcfe1d06020d908e64c9828fe944da3a5e # v1
+      id: update
+      with:
+        token: ${{ steps.generate-token.outputs.token }}
+        update_command: ./scripts/update_otel_collector.sh
+        commit_message: "Update OpenTelemetry Collector"
+        pr_title: "Update OpenTelemetry Collector"
+        pr_body: "Updates the bundled OpenTelemetry Collector contrib binary."
+
+    - name: Notify slack of PR
+      if: ${{ steps.update.outputs.pull-request-operation != 'none' }}
+      uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
+      with:
+        method: chat.postMessage
+        token: ${{ secrets.BENNETTBOT_SLACK_BOT_TOKEN }}
+        payload: |
+          channel: "C080S7W2ZPX"
+          text: "
+            OpenTelemetry Collector updated:
+            ${{ steps.update.outputs.pull-request-url }}
+
+            Log into the server and run `just manage` after merging."
