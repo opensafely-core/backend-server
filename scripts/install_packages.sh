@@ -16,6 +16,7 @@ for target in /etc/apt/sources.list /etc/apt/sources.list.d/*; do
   sed --in-place --regexp-extended \
     's#http://(archive|security)\.ubuntu\.com/#https://\1-ubuntu.opensafely.org/#g' \
     "$target"
+  chmod 0644 "$target"
 done
 
 # running this set -u sometimes causes issues with packaging scripts, it seems

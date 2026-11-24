@@ -29,15 +29,22 @@ dst_dir="/etc/apt"
 
 echo 'Configuring Resolute 26.04 sources for Cosign package'
 
+# Explicitly set the file permissions we want on these files as git does not preserve
+# these
+chmod 0644 "$src_dir"/*
+
 # Give all Resolute packages apart from Cosign a negative pin priority which prevents
 # them being installed. Give Cosign the standard priority.
-cp "$src_dir/preferences.d_resolute-cosign.pref" \
+cp --preserve=mode \
+   "$src_dir/preferences.d_resolute-cosign.pref" \
    "$dst_dir/preferences.d/resolute-cosign.pref"
 
 # Add Resolute archives as available sources
-cp "$src_dir/sources.list.d_resolute-cosign.sources" \
+cp --preserve=mode \
+   "$src_dir/sources.list.d_resolute-cosign.sources" \
    "$dst_dir/sources.list.d/resolute-cosign.sources"
 
 # Allow unattended upgrades for Resolute packages i.e. just for Cosign
-cp "$src_dir/apt.conf.d_52unattended-upgrades-resolute-cosign" \
+cp --preserve=mode \
+   "$src_dir/apt.conf.d_52unattended-upgrades-resolute-cosign" \
    "$dst_dir/apt.conf.d/52unattended-upgrades-resolute-cosign"
